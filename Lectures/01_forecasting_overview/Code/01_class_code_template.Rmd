@@ -1,0 +1,48 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "01 - Course Overview, Introductions and an Overview of Forecasting"
+author: Fadel M. Megahed
+date: "`r format(Sys.Date(), format = '%B %d, %Y'`"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    number_sections: TRUE
+    theme: spacelab
+    paged_df: TRUE
+    code_folding: show
+    code_download: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      cache = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dpi = 600,
+                      dev = 'png',
+                      out.width = '100%')
+url1 <- "https://www.ericchowkokyew.com/wp-content/uploads/2019/07/image-2.png"
+```
+
+# R Setup and Required Packages
+
+In this course, the open-source R programming language is used. R is maintained by an international team of developers who make the language available at [The Comprehensive R Archive Network](https://cran.r-project.org/).  I recommend the [Hands-on Programming with R](https://rstudio-education.github.io/hopr/packages.html) for a brief overview of the software's functionality. 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+# Grammar of Graphics
+The grammar of graphics is a **framework** which follows a **layered approach** to describe and construct visualizations or graphics in a **structured manner**. It was introduced by [Leland Wilkinson](https://link.springer.com/book/10.1007/0-387-28695-0) and has inspired the development of the [ggplot2 package](https://ggplot2.tidyverse.org/) in R. In this course, we will often use the `ggplot2::ggplot()` to create graphs. 
+
+> ''ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details''
+
+```{r ggplotWebFigures, echo=FALSE, out.width="48%", fig.show='hold'}
+knitr::include_graphics(c("https://www.ericchowkokyew.com/wp-content/uploads/2019/07/image-2.png",
+                          "https://englelab.gatech.edu/useRguide/images/dataviz/ge_all.png"))
+``` 
+
+

@@ -1,0 +1,403 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "01 - Course Overview, Introductions and an Overview of Forecasting"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 6,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, xtable)
+remotes::install_github("mitchelloharawild/icons")
+```
+
+# Preface 
+
+### Learning Objectives for Today's Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+	\begin{itemize}
+			\item \textbf{Describe course objectives \& structure.}
+			\item \textbf{Describe what do we mean by \textcolor{miamired}{forecasting} and explain the \textcolor{miamired}{PIVASE} framework.}
+	\end{itemize}
+\end{block}
+
+
+# Course Expectations, Overview & Introductions
+
+### Different Types/Components of Analytics
+
+\begin{block}{\textbf{The analytics journey}}
+		\begin{itemize}[<+>]
+			\item \textcolor{miamired}{Pre-analytics/Data Management:} where one attempts to extract the needed data for analysis.
+			\item \textcolor{miamired}{Descriptive analytics:} where one attempts to understand the data through visualizations and descriptive statistics. 
+			\item \textcolor{miamired}{Predictive analytics:} statistical and machine learning models are used.
+			\item \textcolor{miamired}{Prescriptive analytics:} mathematical models are used to make recommendations for business actions.
+		\end{itemize}
+\end{block}
+
+
+### Miami's Business Analytics Curriculum: A Perspective
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\LARGE{\textbf{Business Analytics}}
+				[\textbf{Data Management}
+				[ISA 245]
+				[ISA 401]
+				[ISA 414]]
+				[\textbf{Descriptive}
+				[ISA 225]
+				[ISA 401]]
+				[\textbf{Explanatory/Predictive}
+				[ISA 291]
+				[\textcolor{miamired}{\textbf{ISA 444}}]
+				[ISA 491]]
+				[\textbf{Prescriptive}
+				[ISA 321]
+				[ISA 365]]]
+		\end{forest}}
+		\caption{My take on the courses within the business analytics major/minor at Miami University.}
+	\end{figure}
+
+
+### Course Objectives
+
+**By the end of this course, you should be able to:**
+
+  - **Explain the purpose of forecasting in a business setting.**  
+  - **Use the basic tools of forecasting including plots, summary measures, transformations, measures of forecast accuracy, and prediction intervals.**  
+  - **Forecast a nonseasonal time series using simple exponential smoothing.**  
+  - **Forecast a nonseasonal time series using linear exponential smoothing.**  
+  - **Use decomposition methods and Holt-Winters smoothing methods to forecast a seasonal time series.**   
+  - **Use ARIMA models to forecast a time series.**  
+  - **Use simple and multiple linear regression models to forecast a time series.**
+
+
+### Why should you care? - An Exploration of the Job Market {.allowframebreaks}
+	
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio, frame]{Figures/forecastAnalyst1.png}
+	\caption{Required qualifications for a \textit{forecast analyst} position.}
+\end{figure}
+
+\begin{figure}
+	\centering 
+	\includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio, frame]{Figures/forecastAnalyst2.png}
+	\caption{Required qualifications for a \textit{Risk Capacity Planning Analyst} at Paypal.}
+\end{figure}
+
+\begin{figure}
+	\centering 
+	\includegraphics[width=0.9\textwidth, height = 0.7\textheight, keepaspectratio, frame]{Figures/forecastAnalyst3.png}
+	\caption{Required qualifications for a \textit{Lead Business Intelligence Analyst} at Spectrum Health.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\href{https://tinyurl.com/y6l7k2cc}{\includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio, frame]{Figures/indeed.png}}
+	\caption{Number of full-time, entry-level, \$100,000+ jobs on \textit{Indeed.com}, with the term "forecasting" as of August 18, 2021. Click on the image to update the search.}
+\end{figure}
+
+
+### Instructional Approach
+
+\begin{figure}
+		\centering
+		\begin{tikzpicture}[node distance=2cm, font=\small]
+		\tikzstyle{start} = [rectangle, rounded corners, minimum width=0.3\textwidth, minimum height=1cm,text badly centered, text width=0.3\textwidth, draw=black, thick,font=\normalfont]
+		
+		\tikzstyle{categories} = [rectangle, rounded corners, minimum width=0.3\textwidth, minimum height=1cm,text centered, text width=0.3\textwidth, draw=black, fill=gray!10, thick]
+		
+		
+		\tikzstyle{arrow} = [->,>= triangle 45]
+		
+		% Begining of the creation of the figure
+		\node (start) [start] {\textbf{Instructional Approach}};
+		
+		% Level 1 nodes
+		\node (ia1) [categories, below of = start, xshift=-0.35\textwidth] {\textbf{\underline{In-class Learning}} \\ (A) Bring your A-game \\ (B) Very active learning env.};
+		\node (ia2) [categories, below of = start, xshift = 0in] {\textbf{\underline{Mutual Respect}} \\ (A) Conducive learning env. \\ (B) Interact \& contribute};	
+		\node (ia3) [categories, below of = start, xshift=0.35\textwidth] {\textbf{\underline{We will have fun}} \\ (A) Enjoyable class to teach \\ (B) V. cool learning materials};
+		
+		% Arrows
+		\draw [arrow] (start.south) -| (ia1);
+		\draw [arrow] (start.south) -| (ia2);
+		\draw [arrow] (start.south) -| (ia3);
+		\end{tikzpicture}
+		\caption{An overview of the instructional approach for ISA 444.}
+	\end{figure}
+
+
+### How will I Evaluate your Learning?
+
+\begin{figure}[h!]
+		\centering
+		\begin{tikzpicture}[node distance=2cm, font=\small]
+		\tikzstyle{start} = [rectangle, rounded corners, minimum width=0.3\textwidth, minimum height=1cm,text centered, text width=0.3\textwidth, draw=black, thick,font=\normalfont]
+		
+		\tikzstyle{categories} = [rectangle, rounded corners, minimum width=0.2\textwidth, minimum height=1cm,text centered, text width=0.2\textwidth, draw=black, fill=gray!10, thick]
+		
+		
+		\tikzstyle{arrow} = [->,>= triangle 45]
+		
+		% Begining of the creation of the figure
+		\node (start) [start] {\textbf{Evaluation Components}};
+		
+		% Level 1 nodes
+		\node (e1) [categories, below of = start, xshift=-0.35\textwidth] {Non-graded class \\ activities (0\%)};
+		\node (e3) [categories, right of = e1, xshift=0.25\textwidth] {Exams \\ (80\%)};
+		\node (e2) [categories, right of = e3, xshift=0.25\textwidth] {Graded class \\ activities (20\%)\footnotemark};
+		
+		\node (e4) [categories, below of = e3, xshift=-0.375\textwidth] {Exam I \\ (20\%)};
+		\node (e5) [categories, below of = e3, xshift=-0.125\textwidth] {Exam II \\ (20\%)};
+		\node (e6) [categories, below of = e3, xshift=0.125\textwidth] {Exam III \\ (20\%)};
+		\node (e7) [categories, below of = e3, xshift=0.375\textwidth] {Exam IV \\ (20\%)};
+		
+		% Arrows
+		\draw [arrow] (start.south) -| (e1);
+		\draw [arrow] (start.south) -| (e2);
+		\draw [arrow] (start.south) -| (e3);
+		
+		\draw [arrow] (e3.south) -- (e4.north);
+		\draw [arrow] (e3.south) -- (e5.north);
+		\draw [arrow] (e3.south) -- (e6.north);
+		\draw [arrow] (e3.south) -- (e7.north);
+		\end{tikzpicture}
+		\caption{An overview of the evaluation components for ISA 444.}
+	\end{figure}
+
+\footnotetext{Note that I drop the lowest three graded class assignments/activities. We should have 15+ of these graded assignments/activities during the semester.}
+
+
+### About Me - My Route to Miami University
+
+\begin{block}{\textbf{Academic Experience}}
+		\begin{itemize}
+			\item \textbf{Application of Data-Driven Decisions (D\textsuperscript{3})} in \textcolor{miamired}{\textbf{3 Continents}}.
+			\item \textcolor{miamired}{\textbf{Interests:}}  Health-care, logistics, occupational safety \& portfolios.
+			\item \textcolor{miamired}{Partnered with:} \href{https://www.aflac.com}{Aflac}, \href{https://www.fatiguescience.com/}{Fatigue Science}, \href{https://www.jbhunt.com/
+			}{JB Hunt}, \href{https://mavenmachines.com/}{Maven Machines} \& \href{http://tennibot.com/}{Tennibot}
+		\end{itemize}
+	\end{block}
+	\begin{center}
+		\fbox{\includegraphics[width=\textwidth, height=0.4\textheight, keepaspectratio]{map.JPG}}\\
+		Journey with Data-Driven Decision (D\textsuperscript{3}) Making. \\
+	\end{center}
+
+
+### Your Academic Background Motivation for Taking this Class
+\begin{block}{\textbf{In-Class Poll:}}
+		\textbf{Please use your phone, computer, or tablet and:}
+		\begin{itemize}
+			\item Go to \url{https://www.menti.com/}.
+			\item Insert the code shown on my screen.
+			\item Answer the two questions.
+		\end{itemize}
+\end{block}
+
+
+# So What is Forecasting?
+
+### When I Searched for Forecast on the Web
+\begin{figure}
+  \centering
+  \href{https://tinyurl.com/yyktgqz2}{\includegraphics[width=0.9\textwidth, height = 0.75\textheight, frame, keepaspectratio]{Figures/forecast.png}}
+  \caption{People tend to link forecasting to the "weather" (at least that is what search engines think).}
+\end{figure}
+
+### Definition -- from Bing
+
+\begin{figure}
+  \centering
+  \href{https://tinyurl.com/y5h5k4aj}{\includegraphics[width=0.9\textwidth, height = 0.75\textheight, frame, keepaspectratio]{Figures/forecastDef.png}}
+  \caption{The definition of the term "forecast" as obtained from Bing/Merriam-Webster.}
+\end{figure}
+
+
+### Definition and Purpose
+
+**Forecast** *is a prediction or estimate of an actual outcome expected in a future time period or for another situation.*\footnotemark
+
+- *The purpose of forecasting is to inform the process of planning.*  
+
+- *The purpose of planning is to develop a course of action so that things don't “just continue” based on a no-change forecast.*
+
+
+\footnotetext{The definition and purpose provided in this slide are from: Ord, K., Fildes, R., \& Kourentzes, N. (2017). Principles of Business Forecasting (2nd ed., p. 3). Wessex Press Inc.}
+
+
+### Working Definitions -- From Prof. Jones-Farmer
+
+\begin{block}{\textbf{Forecasting}}
+\textbf{The process of predicting a future event. The objective of most time series analyses is to \textcolor{miamired}{provide forecasts of future values of the time series.}}
+\end{block}
+
+\vspace{\baselineskip}
+
+\begin{block}{\textbf{Time Series}}
+A \textbf{\textcolor{miamired}{time series}} is a sequence of observations on a variable measured at successive points in time or over successive periods of time. In the simplest cases, observations are evenly spaced at regular intervals such as hourly, daily, weekly, monthly, or yearly, or at any other regular interval.\footnotemark
+\end{block}
+
+\footnotetext{Both definitions are based on \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+
+### The FAANG (- AAPL) Time Series Data - an R Exercise [1]
+
+\textcolor{miamired}{Let us get and generate the time series below.} **I promised this class will be fun!!!**
+
+\vspace{-0.5\baselineskip} 
+
+```{r timeseries, echo=FALSE, fig.fullwidth = TRUE, fig.height=2.25}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyquant, tidyverse, scales)
+FANG = tq_get(c('FB', 'AMZN', 'NFLX', 'GOOG'),
+              from = "2020-01-01") 
+FANG %>% ggplot(aes(x = date, y = adjusted, group = symbol)) + 
+  facet_wrap(~symbol, ncol = 2, scale = 'free_y') + 
+  geom_line() + scale_x_date(breaks = pretty_breaks(n=6)) +
+  labs(y = "Adjusted Closing Price", x = "Date") +
+  theme_bw() 
+```
+
+\vspace{-1.25\baselineskip} 
+
+\centering{\textcolor{darkgreen}{COVID-19 did not have any long-lasting effects on Tech stocks.}}
+
+
+### The FAANG (- AAPL) Time Series Data - an R Exercise [2]
+
+We can actually quantify my statement in \textcolor{darkgreen}{green} from the previous slide by computing the 
+percent change in each of the four stock prices when compared to January 2, 2020. \textcolor{miamired}{This can be done as follows: (see live coding session in class).\footnotemark}
+```{r pctChanges, echo=FALSE}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyquant, tidyverse) 
+
+min_date = min(FANG$date)
+max_date = max(FANG$date)
+
+FANG %>% filter(date == min_date) %>% select(symbol, adjusted) -> baseFANG
+FANG %>% filter(date == max_date) %>% select(symbol, adjusted) -> currentFANG 
+colnames(baseFANG)[2] = 'base'
+colnames(currentFANG)[2] = 'current'
+combinedFANG = left_join(baseFANG, currentFANG, by ="symbol") %>% 
+  mutate( pctChange = 100*(current - base)/base )
+cat(paste0('The percent changes (from January 2, 2020) in the AMZN, FB, GOOG and NFLX',
+    '\n', ' stocks are: ', round(combinedFANG[1,4],1), '%, ', 
+    round(combinedFANG[2,4],1), '%, ', round(combinedFANG[3,4],1), '%, and ', 
+    round(combinedFANG[4,4],1), '%, respectively.'))
+```
+
+\footnotetext{The printed numbers from my computations had a starting date of `r format(max_date, format = '%B %d, %Y')` and a current date of `r format(max_date, format = '%B %d, %Y')`. Thus, the numbers will change (slightly) unless we use the same ending date for our calculations.}
+
+
+### In-Class Activity
+
+Based on the previous exercise, use the [COVID-19 package](https://covid19datahub.io/articles/api/r.html) to plot the confirmed COVID-19 cases for the states of Ohio and Kentucky. You should create two plots: (a) plot containing both of the states as two separate lines in a line plot, and (b) a paneled plot similar to the output depicted in Slide 21.
+
+**Hints:**  
+
+  (1) Once you have installed the package inspect the `covid19` function using the command `?covid19()`.  
+  (2) Set the country argument to the US.   
+  (3) Use an apporpriate value for the level argument based on `?covid19()`.  
+  (4) Set the starting date to '2020-03-01'
+  (5) Filter the obtained data to only include data for the two states.
+
+
+### Why do we Forecast? -- A Conceptual Framework (PIVASE)\footnotemark
+
+- **Purpose:** What do we hope to achieve by generating the forecast? That is, what plans are dependent upon the results of the forecasting exercise? How far ahead do we wish to forecast? We refer to this period as the forecasting horizon.  
+
+- **Information:** What do we know that may help us in forecasting. And when will we know it? Detailed data is only useful if it is available in timely fashion.   
+
+- **Value:** How valuable is the forecast? What would you pay for perfect knowledge?   
+
+- **Analysis:** From analyzing the data can we develop a model that captures its characteristics? And how does it perform on new (hold-out sample) data?   
+
+- **System:** What models and software are needed to meet the needs of the organization?  
+
+- **Evaluation:** How do we know whether a particular forecasting exercise was effective and what the potential is for improvement?
+
+\footnotetext{From: Ord, K., Fildes, R., \& Kourentzes, N. (2017). Principles of Business Forecasting (2nd ed., p. 3-6).}
+
+
+### Why do Businesses Forecast?
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.65\textwidth]{Figures/businessForecasts.png}
+  \caption{Some of the typical forecasting needs of many organizations.\footnotemark}
+\end{figure}
+
+\footnotetext{From: Ord, K., Fildes, R., \& Kourentzes, N. (2017). Principles of Business Forecasting (2nd ed., p. 7).}
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+	\begin{itemize}
+			\item \textbf{Describe course objectives \& structure.}
+			\item \textbf{Describe what do we mean by \textcolor{miamired}{forecasting} and explain the \textcolor{miamired}{PIVASE} framework.}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - Thoroughly read Sections 1.1 and 1.2 of our reference book, which can be downloaded from the \href{https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i}{Publisher}.  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered. 
+ 
+ - Complete the graded assignment (refer to our next slide or Canvas) for more details.
+ 
+
+### Graded Assignment: Evaluating your Retention/Focus
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449722}{Canvas (click here)} and answer the four questions. **Due January 26, 2022 [8:30 AM].** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered in Class 01. In order to prepare for this, you should have attended class and asked any clarification questions. In addition, you should have read [Sections 1.1 and 1.2 from our  reference textbook](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is not a timed assignment.  
+  - The assignment contains four questions.  
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have access to R and RStudio. 
+
+
+---
+
+\maketitle

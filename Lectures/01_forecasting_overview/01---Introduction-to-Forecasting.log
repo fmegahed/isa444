@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.12.10) (preloaded format=xelatex 2022.1.16)  19 JAN 2022 07:43
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.12.10) (preloaded format=xelatex 2022.1.16)  23 JAN 2022 23:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1765,7 +1765,7 @@ LaTeX Font Warning: Size substitutions with differences
 Here is how much of TeX's memory you used:
  50989 strings out of 411044
  1119532 string characters out of 2829677
- 1535094 words of memory out of 3000000
+ 1535095 words of memory out of 3000000
  70823 multiletter control sequences out of 15000+600000
  414647 words of font info for 120 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

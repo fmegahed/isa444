@@ -316,7 +316,7 @@ cat(paste0('The percent changes (from January 2, 2020) in the AMZN, FB, GOOG and
     round(combinedFANG[4,4],1), '%, respectively.'))
 ```
 
-\footnotetext{The printed numbers from my computations had a starting date of `r format(max_date, format = '%B %d, %Y')` and a current date of `r format(max_date, format = '%B %d, %Y')`. Thus, the numbers will change (slightly) unless we use the same ending date for our calculations.}
+\footnotetext{The printed numbers from my computations had a starting date of `r format(min_date, format = '%B %d, %Y')` and a current date of `r format(max_date, format = '%B %d, %Y')`. Thus, the numbers will change (slightly) unless we use the same ending date for our calculations.}
 
 
 ### In-Class Activity
@@ -327,7 +327,7 @@ Based on the previous exercise, use the [COVID-19 package](https://covid19datahu
 
   (1) Once you have installed the package inspect the `covid19` function using the command `?covid19()`.  
   (2) Set the country argument to the US.   
-  (3) Use an apporpriate value for the level argument based on `?covid19()`.  
+  (3) Use an appropriate value for the level argument based on `?covid19()`.  
   (4) Set the starting date to '2020-03-01'
   (5) Filter the obtained data to only include data for the two states.
 

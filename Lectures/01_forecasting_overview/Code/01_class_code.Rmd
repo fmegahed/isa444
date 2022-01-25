@@ -43,6 +43,8 @@ pacman::p_load(tidyverse, tidyquant)
 # Grammar of Graphics
 The grammar of graphics is a **framework** which follows a **layered approach** to describe and construct visualizations or graphics in a **structured manner**. It was introduced by [Leland Wilkinson](https://link.springer.com/book/10.1007/0-387-28695-0) and has inspired the development of the [ggplot2 package](https://ggplot2.tidyverse.org/) in R. In this course, we will often use the `ggplot2::ggplot()` to create graphs. 
 
+
+
 > ''ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details''
 
 ## Getting Data
@@ -60,7 +62,17 @@ glimpse(stocks) # from dplyr which we loaded with tidyverse
 
 
 ## Visualizing the Data
-Add some helpful hints here
+
+We will follow the grammar of graphics approach, which the package [ggplot2](https://ggplot2.tidyverse.org/) is built on. 
+
+### Basic Idea of Layering
+
+To construct a graph in [ggplot2](https://ggplot2.tidyverse.org/), you will need to be able to visualize the layering idea below. We use the `+` sign to add layers in a graph. You should also reference [this cheatsheet if you need quick hints](https://github.com/rstudio/cheatsheets/raw/main/data-visualization-2.1.pdf).
+
+![](https://miro.medium.com/max/1400/1*4rPyILOvL7XvS_0B8lmBLA.png)
+
+
+### Plotting the Stocks Data
 
 ```{r viz}
 stocks %>%  # takes stocks and places it as the first argument in ggplot

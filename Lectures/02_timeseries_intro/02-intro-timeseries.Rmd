@@ -1,0 +1,371 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "02 - Introduction to Time Series Analysis"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, xtable)
+url_seasonal = 'https://cdnx.numxl.com/storage/originals/f0/50/7593920758_1a84d6f191_z.jpg'
+```
+
+# Preface
+
+### Quick Refresher based on Last Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe course objectives \& structure.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe what do we mean by \textcolor{miamired}{forecasting}} \\
+			$\quad$ \textcolor{miamired}{\large $\boxtimes$} \textbf{Explain the \textcolor{miamired}{PIVASE} framework} \\
+\end{block}
+
+
+### Self-Assessed Skills from Last Class's Mentimeter Poll
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height=0.77\textheight, keepaspectratio, frame]{Figures/mentimeterClass01a.jpg}
+  \caption{Results from Last Class's Mentimeter Poll for Question A}
+\end{figure}
+
+
+### Self-Described Goals for Taking the Class
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth, height=0.45\textheight, keepaspectratio, trim = {0in 5.5in 0 2in}, clip, frame]{Figures/mentimeterClass01b.jpg}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth, height=0.45\textheight, keepaspectratio, trim = {0in 5.5in 0 2in}, clip, frame]{Figures/mentimeterClass01c.jpg}
+\end{figure}
+
+
+### Learning Objectives for Today's Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+    \item \textbf{Explain the differences between cross sectional, time series, and panel datasets.} \\
+			\item \textbf{Identify and describe the basic components of a time series including trends, seasonal components, and cycles.}
+	\end{itemize}
+\end{block}
+
+
+# Types of Data Over Time
+
+### Cross Sectional Data [1]
+
+
+**Cross Sectional Data:** Measurements on multiple units, recorded in a single time period.
+
+\textbf{\textcolor{miamired}{Example 1: H1B 2020-2022 Data for Senior Data Scientists at Netflix}}\footnotemark
+
+```{r netflixSalaries, results='asis', echo=FALSE}
+if(require(pacman)==FALSE) install.packages(pacman)
+pacman::p_load(lubridate, rvest, xtable, magrittr)
+read_html("https://h1bdata.info/index.php?em=Netflix+Inc&job=Senior+Data+Scientist&city=LOS+GATOS&year=All+Years") %>%
+  html_node("#myTable") %>% html_table() -> netflixSalaries
+
+netflixSalaries = netflixSalaries %>% select(1:6)
+netflixSalaries$`START DATE` = mdy(netflixSalaries$`START DATE`)
+netflixSalaries %<>% na.omit() 
+
+netflixSalaries2021 = netflixSalaries %>%  filter(`START DATE` >= '2020-01-01') %>% 
+  select(`START DATE`, `JOB TITLE`, `BASE SALARY`, LOCATION)
+netflixSalaries2021$`START DATE` = as.character(netflixSalaries2021$`START DATE`)
+
+print(xtable(head(netflixSalaries2021, 10), align = c(rep('c', 5)) ), comment = FALSE, size = '\\scriptsize', 
+      include.rownames=FALSE)
+```
+
+\footnotetext{Data scraped from \url{https://h1bdata.info/index.php?em=Netflix+Inc&job=Senior+Data+Scientist&city=LOS+GATOS&year=All+Years} on January 25, 2022 using the \href{https://cran.r-project.org/web/packages/rvest/rvest.pdf}{rvest} package in R. The printing was limited to those individuals who started on/after January 01, 2020, with the filters specified in the URL.}
+
+
+### Cross Sectional Data [2]
+
+
+**Cross Sectional Data:** Measurements on multiple units, recorded in a single time period.
+
+\textbf{\textcolor{miamired}{Example 2: Heart Disease Dataset}}\footnotemark
+
+```{r heart, results='asis', echo=FALSE}
+set.seed(444)
+heart = read.delim("https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/heart/heart.dat",
+                  header = FALSE, sep = " ") %>% select(c(1,2,4,8,14)) %>% sample_n(., 10) 
+colnames(heart) = c('age', 'sex', 'restingBP', 'maxHR', 'label')
+print(xtable(heart, align = c(rep('c', 6)) ), comment = FALSE, size = '\\scriptsize', 
+      include.rownames=FALSE)
+```
+
+\footnotetext{Data sampled from \href{https://archive.ics.uci.edu/ml/datasets/statlog+(heart)}{this UCI Machine Learning Repository}.}
+
+
+### Cross Sectional Data [3]
+
+
+**Cross Sectional Data:** Measurements on multiple units, recorded in a single time period.
+
+\textbf{\textcolor{miamired}{Example 3: NBA 2021-2022 Leaders - Top 10 in PTS/Game}}\footnotemark
+
+```{r nba, echo = FALSE, results='asis'}
+nbaPerGame = read_html("https://www.basketball-reference.com/leagues/NBA_2022_per_game.html") %>% 
+  html_node("#per_game_stats") %>% html_table() %>% filter(!PTS %in% "PTS")
+nbaPerGame$PTS = as.numeric(nbaPerGame$PTS)
+nbaPerGame %>% arrange(desc(PTS)) %>% select(Player, Pos, Age, Tm, G, FG, `FG%`, `eFG%`, PTS) %>% 
+  head(n = 10) -> nbaPerGame
+print(xtable(nbaPerGame, align = c('l', 'l', rep('c', 8)) ), comment = FALSE, size = '\\scriptsize', 
+      include.rownames=FALSE)
+```
+
+\footnotetext{Data scraped from \href{https://www.basketball-reference.com/leagues/NBA_2022_per_game.html}{Basketball-Reference} on January 25, 2022 using the \href{https://cran.r-project.org/web/packages/rvest/rvest.pdf}{rvest} package in R. The printing was limited to the top 10 players and the selected variables.}
+
+
+
+### Time Series Data [1]
+
+**Time Series Data:** Comparable measurements recorded on a single (or a few) variables over time (usually a long period of time).
+
+\textbf{\textcolor{miamired}{Example 1: Net Power Generation in the U.S.}}
+
+\begin{figure}
+  \centering
+  \href{https://www.eia.gov/electricity/data/browser/}{\includegraphics[width=\textwidth, height=0.5\textheight, keepaspectratio, frame]{eiaChart.png}}
+  \caption{Net monthly electricity generation in the U.S. from the \href{https://www.eia.gov/electricity/data/browser/}{U.S. Energy Information Adminstration}.}
+\end{figure}
+
+
+### Time Series Data [2]
+
+\textbf{\textcolor{miamired}{Example 2: Stock prices of U.S. Airlines}}
+
+\vspace{-0.5\baselineskip} 
+
+```{r timeseries2, echo=FALSE, fig.fullwidth = FALSE}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyquant, tidyverse, scales)
+airlines = tq_get(c('DAL', 'UAL', 'AAL', 'LUV'),
+              from = "2020-01-01")
+airlines %>% ggplot(aes(x = date, y = adjusted, group = symbol)) +
+  geom_line() + 
+  labs(y = "Adjusted Closing Price", x = "Date") +
+  facet_wrap(~ symbol, ncol = 2, scale = "free_y") +
+  scale_x_date(breaks = pretty_breaks(n=4)) +
+  theme_bw()
+```
+
+\vspace{-1.25\baselineskip} 
+
+\centering{\textcolor{miamired}{As of January 25, 2022: COVID-19 had a substantial impact on these airline stocks.}}
+
+
+
+### Panel Data
+
+
+**Panel Data:** Cross sectional measurements (usually many variables) repeated over time (usually over a few time periods).
+
+\textbf{\textcolor{miamired}{Example: World Bank's Data}}\footnotemark
+
+```{r wb, results='asis', echo=FALSE}
+pacman::p_load(wbstats)
+macroData = wb_data(country = c('CN','EG','US'),
+               indicator = c('NY.GDP.MKTP.KD.ZG', 'SP.DYN.LE00.IN', 'SH.DYN.NMRT', 'SH.HIV.INCD.ZS',
+                             'SH.MED.BEDS.ZS', 'SH.MED.PHYS.ZS', 'SH.PRV.SMOK', 'SH.STA.TRAF.P5'),
+               mrv = 3, return_wide = TRUE, gapfill = TRUE) %>% 
+  select(-c(iso2c, country))
+print(xtable(macroData, align = c(rep('c', 11)) ), comment = FALSE, size = '\\tiny', 
+      include.rownames=FALSE)
+```
+
+\footnotetext{Data queried from the \href{https://datacatalog.worldbank.org/}{World Bank Data Catalog} using the \href{https://cran.r-project.org/web/packages/wbstats/wbstats.pdf}{wbstats} package in R. The printed results show a snapshot of 7 variables (out of a much larger panel dataset). You can think of panel data as a cross-sectional dataset with a longitudinal/time component.}
+
+
+
+
+# Components of a Time Series
+
+### Trend [1]
+
+A **trend** is an increasing or decreasing pattern over time.
+
+```{r trendUP, echo=FALSE}
+pacman::p_load(tidyquant, tidyverse)
+netflix = tq_get(c('NFLX'), from = "2020-04-01", to = "2021-08-25")
+netflix %>% ggplot(aes(x = date, y = adjusted)) +
+  geom_line() + 
+  labs(y = "Adjusted Closing Price", x = "2020--2021", 
+       title = "Increasing Trend", 
+       subtitle = "The meteoric rise of $NFLX from 2020-04-01 to 2021-08-25") +
+  theme_bw()
+```
+
+\footnote{As of January 25 2022, NFLX stock lost a large amount of this momentum.}
+
+
+### Trend [2]
+
+A **trend** is an increasing or decreasing pattern over time.
+
+```{r trendDown, echo=FALSE}
+pacman::p_load(tidyquant, tidyverse)
+delta = tq_get(c('DAL'), from = "2020-02-03", to = "2020-04-30")
+delta %>% ggplot(aes(x = date, y = adjusted)) +
+  geom_line() + 
+  labs(y = "Adjusted Closing Price", x = "2020", 
+       title = "Decreasing Trend", 
+       subtitle = "The decline in $DAL from 2020-02-03 to 2020-04-30") +
+  theme_bw()
+```
+
+
+
+### Seasonality [1]
+
+**Seasonality** refers to the property of a time series that displays REGULAR patterns that repeat at a constant frequency (*m*).
+
+\begin{figure}
+  \centering 
+  \includegraphics[width=\textwidth, height = 0.55\textheight, keepaspectratio]{Figures/seasonal.jpg}
+  \caption{A time series with a monthly seasonal pattern.\footnotemark}
+\end{figure}
+
+\footnotetext{Figure is from \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+
+### Seasonality [2]
+
+**Seasonality** refers to the property of a time series that displays REGULAR patterns that repeat at a constant frequency (*m*).
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height=0.55\textheight, keepaspectratio, frame]{Figures/seasonalAdditive.jpg}
+  \caption{Seasonality with an Additive Trend\footnotemark.}
+\end{figure}
+
+\footnotetext{Figure is from \href{https://support.numxl.com/hc/en-us/articles/115000149703-Patterns-Unplugged}{Patterns Unplugged - Help Center} published online on December 28, 2016.}
+
+
+### Seasonality [3]
+
+```{r airpassengers, echo=FALSE}
+pacman::p_load(ggfortify)
+data("AirPassengers")
+autoplot(AirPassengers) + 
+  labs(x=NULL, title = "Seasonality with a Multiplicative Trend", 
+       subtitle = "Non-linear trend & seasonal component grows over time",
+       caption = 'AirPassengers R Dataset -- Source: Box, G. E. P., Jenkins, G. M. and \n Reinsel, G. C. (1976) Time Series Analysis, Forecasting and Control.') +
+  theme_bw()
+```
+
+
+### Cycle [1]
+**Cyclical fluctuations** are somewhat irregular (unknown duration).
+
+\vspace{-0.5\baselineskip}
+
+```{r autoSales, echo=FALSE}
+pacman::p_load(lubridate)
+autoSales = read.csv("https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23e1e9f0&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1168&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=TOTALSA&scale=left&cosd=1976-01-01&coed=2021-11-01&line_color=%234572a7&link_values=false&line_style=solid&mark_type=none&mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Monthly&fam=avg&fgst=lin&fgsnd=2020-02-01&line_index=1&transformation=lin&vintage_date=2022-01-25&revision_date=2022-01-25&nd=1976-01-01")
+autoSales %>% ggplot(aes(x = ymd(DATE), y = TOTALSA)) +
+  geom_line() + 
+  labs(x=NULL,
+       title = "The cyclical nature of auto sales",
+       caption = 'U.S. Bureau of Economic Analysis, Total Vehicle Sales [TOTALSA], retrieved from FRED, Federal Reserve Bank of St. Louis \n https://fred.stlouisfed.org/series/TOTALSA, January 25, 2022.') +
+  theme_bw()
+```
+
+
+### Cycle [2]
+**Cyclical fluctuations** are somewhat irregular (unknown duration).
+
+\vspace{-0.5\baselineskip}
+
+\begin{figure}
+  \includegraphics[width=0.7\textwidth, height = 0.7\textheight, keepaspectratio]{Figures/Step1.jpg}
+  \caption{A gait "cycle" from an IMU attached to the ankle. Joint work with the University at Buffalo.}
+\end{figure}
+
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+	\begin{itemize}
+	    \item \textbf{Explain the \textcolor{miamired}{PIVASE} framework}
+			\item \textbf{Explain the differences between cross sectional, time series, and panel datasets.}
+			\item \textbf{Identify and describe the basic components of a time series including trends, seasonal components, and cycles.}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - Thoroughly read Chapter 1 of our reference book, which can be downloaded from the \href{https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i}{Publisher}.  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ - **Optional, but highly recommended,** go through the [self-paced interactive review for Week 01](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week01/).
+ 
+ - **Required:** Complete the graded assignment.
+ 
+
+### Self-Paced Interactive Review for Week 01
+
+To help you brush your \texttt{R} skills and assess your understanding of the material covered in Week 01, I have created a self-paced interactive review. The review can be accessed at <http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week01/>. 
+
+
+This review is optional, but if you plan on completing it, you are advised to do the following prior to going through the self-paced review.  
+
+  1. Read Chapter 01 from our textbook.   
+  2. Have completed the in-class examples in the lecture notes for Week 01.  
+  3. Be able to dedicate about 20-40 minutes to go through this entire tutorial.
+
+
+### Graded Assignment 02: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449735?module_item_id=3626018}{Canvas (click here)} and answer the four questions. **Due August 31, 2021 [08:30 AM].** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the End of Class 02. Furthermore, you should have thoroughly read [Chapter 01 of the book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment. If the concepts we covered are well-understood, this should take 10-15 minutes.  
+  - Proctorio is NOT required for this assignment.  
+  - You should have access to RStudio.
+
+
+---
+
+\maketitle

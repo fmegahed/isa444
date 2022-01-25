@@ -54,3 +54,11 @@ rsconnect/
 # Google Sheets and Form
 *.gsheet
 *.gform
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# R markdown files
+*_files/
+/files/

@@ -60,11 +60,35 @@ stocks <- tq_get(x = c('GOOG', 'FB', 'AAPL', 'NFLX'),
 glimpse(stocks) # from dplyr which we loaded with tidyverse
 
 # Visualizing the stocks data
-stocks %>%  # takes stocks and places it as the first argument in ggplot
-  ggplot(aes(x = date, y = adjusted, color = symbol)) +
+ggplot(stocks, aes(x = date, y = adjusted, color = symbol)) +
   geom_line() +
   labs(x = 'Date', y = 'Adjusted Closing Price') + # optional
-  facet_wrap(~symbol, scales = 'free') # for creating panels
+  facet_wrap(~symbol, scales = 'free') + # for creating panels
+  scale_x_date(breaks = pretty_breaks(n = 6)) +
+  theme_bw() + # makes the background white
+  theme(legend.position = "bottom") # moves legend to bottom instead of right
+
+max_date = stocks %>% 
+  group_by(symbol) %>% 
+  filter(date == max(date)) %>% 
+  select(symbol, date, adjusted)
+colnames(max_date)[3] = "adjusted_new"
+
+min_date = stocks %>% 
+  group_by(symbol) %>% 
+  filter(date == min(date)) %>% 
+  select(symbol, date, adjusted)
+colnames(min_date)[3] = "adjusted_original"
+
+
+chg = left_join(x = min_date, y = max_date,
+                by = 'symbol') # comes from dplyr 
+
+chg = chg %>% 
+  # respects the grouping 
+  mutate(pct_chg = 100*(adjusted_new - adjusted_original)/adjusted_original ) # fn creates a new column (often inv a calculation) and its from dplyr
+
+chg # printing it in the console
 ```
 
 ---
@@ -82,6 +106,19 @@ Based on the previous exercise, use the [COVID-19 package](https://covid19datahu
   (5) Filter the obtained data to only include data for the two states.
 
 ```{r COVID}
+us_data = covid19(country = "US",
+                  level = 2,
+                  start = "2020-03-01")
+
+us_data %>% 
+  filter(administrative_area_level_2 %in% c('Ohio', 'Kentucky', "Alabama", "New York")) %>% # dplyr package which we loaded with tidyverse
+  ggplot(aes(x = date, y = confirmed, color = administrative_area_level_2)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2) +
+  facet_wrap(~ administrative_area_level_2, ncol =2, nrow = 2, scales = "free_y") + # hash this out - you get chart 1
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::comma)
 
 ```
 

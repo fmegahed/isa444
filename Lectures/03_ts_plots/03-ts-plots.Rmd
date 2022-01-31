@@ -1,0 +1,445 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "03 - Time Series Plots"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, xtable, GGally, webshot, htmlwidgets)
+```
+
+# Preface
+
+### What we Covered Last Week
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe course objectives \& structure.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe what do we mean by \textcolor{miamired}{forecasting} and Explain the \textcolor{miamired}{PIVASE} framework} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel}\textbf{Explain the differences between cross sectional, time series, and panel datasets.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Identify and describe the basic components of a time series including trends, seasonal components, and cycles.} \\
+\end{block}
+
+
+### General Comments Pertaining to the Assignments
+
+  (1) **I use the Quiz functionality in Canvas to capitalize on the auto-grading; however, these are assignments and not quizzes and hence, you can ask me questions.**  
+    
+  (2) For every assignment, the correct answers (with code and/or references) are made available to you. So please check them to learn from any potential mistakes made. Note that any code that I provide captures **ONE** approach to solving the problem at hand, and there are typically **a large number of ways** that you can approach the problem.  
+  
+  (3) The assignments are an indispensable learning component of this course. Some of them will challenge you, and that is okay. **You are here to be challenged, develop new skills, and learn new methods.**
+  
+
+### A Quick Walk Through of the Assignments
+
+**We will quickly go over the solutions for both assignments.**
+
+
+### Learning Objectives for Today's Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+    \item \textbf{Explain different goals for visualizing time series data}
+    \item \textbf{Identify an appropriate chart for a specific time series data visualization goal}
+    \item \textbf{Use software to construct charts of interest}
+	\end{itemize}
+\end{block}
+
+
+# The Goals Behind Visualizing (Time Series) Data
+
+### Exploratory vs Confirmatory Visualization Goals
+
+ > Visualizations can be used to explore data, to confirm a hypothesis, or to manipulate a viewer. . . In **exploratory visualization the user does not necessarily know what he is looking for**. This creates a dynamic scenario in which interaction is critical. . . In a **confirmatory visualization, the user has a hypothesis that needs to be tested**. This scenario is more stable and predictable. System parameters are often predetermined. --- [@grinstein2001introduction, page 22]
+
+
+### A Structured Approach for Time Series Visualization
+
+\vspace{-0.5\baselineskip}
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\Large{\textbf{Time Series Visualization}}
+				[\textcolor{miamired}{\textbf{\large Singular Time Series}}
+				[\textbf{Plot the Entire Series}
+				[Look for
+				[\textit{Trends}]
+				[\textit{Seasonality}]
+				[\textit{Cycles}]
+				[\textit{Motifs}
+				[High Freq. TS]]]]]
+				[\textcolor{miamired}{\textbf{\large Multiple Time Series}}
+				[\textbf{Few Series}
+				[Scatterplots]
+				[Paneled Line Plots
+				[Look for
+				[\textit{Trends}]
+				[\textit{Seasonality}]
+				[\textit{Cycles}]]]]
+				[\textbf{Many Series}
+				[\textcolor{miamired}{Sample} 
+				[Panel/Combined Plots]]
+				[\textcolor{miamired}{All TS}
+				[Cluster
+				[Summary Plot]
+				[Spaghetti Plot]]]]]]
+		\end{forest}}
+		\caption{A Potential Framework for Time Series Visualization.\footnotemark}
+	\end{figure}
+
+\vspace{-0.25\baselineskip}
+
+\footnotetext{This is my best attempt to improve on the general advice provided in the previous slide. Many of the suggestions, presented in this flow chart, stem from my past and current research/consulting collaborations. They are by no means a comprehensive list of everything that you can do.}
+
+
+## A Singular Time Series
+
+### Plot the Entire Time Series [1]
+
+```{r tsSingularPlot, echo=FALSE, fig.height=2}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, lubridate, magrittr, scales)
+retailSales = read.csv('https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23e1e9f0&chart_type=line&drp=0&fo=open%20sans&graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&txtcolor=%23444444&ts=12&tts=12&width=1168&nt=0&thu=0&trc=0&show_legend=yes&show_axis_titles=yes&show_tooltip=yes&id=RSCCASN&scale=left&cosd=1992-01-01&coed=2021-12-01&line_color=%234572a7&link_values=false&line_style=solid&mark_type=none&mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Monthly&fam=avg&fgst=lin&fgsnd=2020-02-01&line_index=1&transformation=lin&vintage_date=2022-01-30&revision_date=2022-01-30&nd=1992-01-01') 
+
+retailSales$DATE %<>% ymd()
+
+retailSales %>% ggplot(aes(x = DATE, y = RSCCASN)) +
+  geom_line() + 
+  scale_x_date(breaks = pretty_breaks(n=22)) +
+  scale_y_continuous(breaks = pretty_breaks(n=8), labels = comma, limits = c(0, 35000)) +
+  labs(x = "Date", y = "Retail Sales", 
+       title = "Monthly Retail Sales (RSCCASN) in the U.S.") + theme_bw() +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2001-03-01")), color = 'Recession 1')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2001-11-01")), color = 'Recession 1')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2007-12-01")), color = 'Recession 2')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2009-06-01")), color = 'Recession 2')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2020-03-01")), color = 'Recession 3')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2021-10-01")), color = 'Recession 3')) +
+  scale_color_manual(name = 'Recessions', 
+                     values = c(`Recession 1` = 'darkorange',
+                                `Recession 2` = 'deepskyblue',
+                                `Recession 3` = 'darkolivegreen')) +
+  theme(legend.position = "top")
+```
+
+\textbf{Question 1:} Ignoring the economic downturns in \textcolor{red}{between each pair of colored lines,} how would you characterize this time series? Please provide your answer at \url{www.menti.com}.
+
+
+### Plot the Entire Time Series [2]
+
+**Question 2:** Compared with the visual in the last side, please:  
+
+- Highlight 1-2 reasons why the visual provided by [FRED](https://fred.stlouisfed.org/series/RSCCASN) is superior. The FRED chart can be accessed at <https://fred.stlouisfed.org/series/RSCCASN>.  
+
+- Please provide your response at \url{www.menti.com}.
+
+
+### Interactive Time Series Plots in R
+
+Using the Markdown template, let us create an interactive plot for the [retailSales](https://fred.stlouisfed.org/series/RSCCASN) data. The chart below represents a static version of one of two charts, which we will create in our knitted HTML document. 
+
+```{r dyGraph, echo=FALSE, out.height='65%', fig.align="center"}
+pacman::p_load(tidyverse, dygraphs, lubridate, webshot)
+
+retailSales_timeSeries = ts(retailSales$RSCCASN, frequency = 12, start = c(1992,01))
+
+# Alternatively, you could have used the xts function from the xts package as follows
+# retailSales_timeSeries = xts(x = retailSales$RSCCASN, order.by = retailSales$DATE, frequency = 12)
+
+dy = dygraph(retailSales_timeSeries) %>% dyRangeSelector()
+
+# So it prints nicely in the pdf
+htmlwidgets::saveWidget(widget = dy, file = "Figures/dy.html")
+webshot(url = "Figures/dy.html", file = "Figures/dy.png")
+```
+
+
+### Looking for Trends
+```{r trendChart, echo=FALSE, fig.align="center"}
+retailSales %>% ggplot(aes(x = DATE, y = RSCCASN)) +
+  geom_line() + 
+  scale_x_date(breaks = pretty_breaks(n=22)) +
+  scale_y_continuous(breaks = pretty_breaks(n=8), labels = comma, limits = c(0, 35000)) +
+  labs(x = "Date", y = "Retail Sales", 
+       title = "Monthly Retail Sales (RSCCASN) in the U.S.") + theme_bw() +
+  geom_smooth(method = "lm") +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2001-03-01")), color = 'Recession 1')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2001-11-01")), color = 'Recession 1')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2007-12-01")), color = 'Recession 2')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2009-06-01")), color = 'Recession 2')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2020-03-01")), color = 'Recession 3')) +
+  geom_vline(aes(xintercept = as.numeric(as.Date("2022-01-31")), color = 'Recession 3')) +
+  scale_color_manual(name = 'Recessions', 
+                     values = c(`Recession 1` = 'darkorange',
+                                `Recession 2` = 'deepskyblue',
+                                `Recession 3` = 'darkolivegreen')) +
+  theme(legend.position = "top")
+```
+
+
+
+### Looking for Seasonality [1]
+
+In [Section 2.2.1 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i), the authors presented two approaches for considering seasonality. We can replicate them for our data. For simplicity, let us use the data from 2015-2019 (post housing crisis but before COVID impacting the retailSales).
+
+```{r seasonalPlot1, echo=FALSE, fig.height=2}
+retailSales %<>% filter(DATE >= '2015-01-01' & DATE <= '2019-12-31') 
+
+retailSales$MONTH = month(retailSales$DATE, label = T)
+retailSales$YEAR = year(retailSales$DATE) %>% as.character()
+
+retailSales %>% ggplot(aes(x = MONTH, y = RSCCASN, color = YEAR, group = YEAR)) +
+  geom_line() +
+  scale_y_continuous(breaks = pretty_breaks(n=8), labels = comma, limits = c(0, 35000)) +
+  labs(x = 'Month', y = 'Retail Sales' ) +
+  theme_bw(base_size = 6) + theme(legend.position = 'bottom')
+
+```
+
+### Looking for Seasonality [2]
+
+In [Section 2.2.1 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i), the authors presented two approaches for considering seasonality. We can replicate them for our data. For simplicity, let us use the data from 2015-2019 (post housing crisis but before COVID impacting the retailSales).
+
+```{r seasonalPlot2, echo=FALSE, fig.height=2}
+retailSales %<>% filter(DATE >= '2015-01-01' & DATE <= '2019-12-31') 
+
+retailSales %>% ggplot(aes(x = DATE, y = RSCCASN, color = YEAR)) +
+  geom_line() + geom_point() +
+  scale_x_date(breaks = pretty_breaks(15)) +
+  scale_y_continuous(breaks = pretty_breaks(n=8), labels = comma, limits = c(0, 35000)) +
+  labs(x = 'Time', y = 'Retail Sales' ) +
+  theme_bw(base_size = 6) + theme(legend.position = 'bottom')
+
+```
+
+
+### A Statistical Decomposition of the Entire Time Series
+
+```{r decompose, echo=FALSE, fig.keep='last', out.height='80%'}
+pacman::p_load(fpp2, timetk)
+decomposed = ts(retailSales_timeSeries, frequency = 12) %>% decompose()
+
+# Option 1: Time in Years (but generic)
+plot(decomposed)
+
+
+# Option 2: More Control Over the Output
+# Based on https://stackoverflow.com/a/43197233
+n = tk_index(retailSales_timeSeries) %>% length()
+df1 = data.frame(date = tk_index(retailSales_timeSeries), name = rep("random", n), 
+                 data = as.numeric(decomposed$random))
+df2 = data.frame(date = tk_index(retailSales_timeSeries), name = rep("seasonal", n),
+                 data = as.numeric(decomposed$seasonal))
+df3 = data.frame(date = tk_index(retailSales_timeSeries), name = rep("trend", n),
+                 data = as.numeric(decomposed$trend))
+df4 = data.frame(date = tk_index(retailSales_timeSeries), name = rep("observed", n),
+                 data = as.numeric(decomposed$x))
+df = rbind(df1, df2, df3, df4)
+
+ggplot(df, aes(x = date, y = data)) + 
+  geom_line() + 
+  facet_wrap(~name, ncol = 1, scales = "free") +
+  scale_x_continuous(breaks = pretty_breaks(n=10)) +
+  labs(x = 'Time in Years', y = 'The Decomposed RSCCASN Dataset' ) +
+  theme_bw(base_size = 6)
+
+# Option 3: The one that I will teach in class
+decompose(retailSales_timeSeries) %>% autoplot() + 
+  labs(x = 'Time in Years', y = 'The Decomposed RSCCASN Dataset' ) +
+  theme_bw(base_size = 6)
+```
+
+
+### Looking for Motifs: Definitions
+
+**What do we mean by motif discovery?**
+
+Motifs allow us to cluster subsequences of a time series. It is a popular (unsupervised) learning approach, where patterns are automatically detected in time series. 
+
+\textbf{To illustrate the idea, let us start with a text example.}\footnotemark If you have parallel texts, then over time you can learn a dictionary with high accuracy. 
+
+\begin{scriptsize}
+… \textcolor{darkgreen}{And} \textcolor{orange}{God} said, “Let there be \textcolor{cyan}{light}”; \textcolor{darkgreen}{and} there was \textcolor{cyan}{light}. \textcolor{darkgreen}{And} \textcolor{orange}{God} saw the \textcolor{cyan}{light}, that it was good. \textcolor{darkgreen}{And} \textcolor{orange}{God} …
+
+ … \textcolor{darkgreen}{Y} dijo \textcolor{orange}{Dios}: Sea la \textcolor{cyan}{luz}; \textcolor{darkgreen}{Y} fue la \textcolor{cyan}{luz}. \textcolor{darkgreen}{y} vio \textcolor{orange}{Dios} que la \textcolor{cyan}{luz} era buena . \textcolor{darkgreen}{Y} llamó \textcolor{orange}{Dios} a …
+ 
+ \textcolor{gray}{Note the mapping is non-linear, the learning algorithms in this domain are non-trivial.}
+\end{scriptsize}
+
+
+Suppose however that the unknown ``language'' is not discrete, but real-valued time series? \textbf{In this case, repeated pattern discovery can help.}
+
+\footnotetext{Mueen and Keogh (2015). ``Finding Repeated
+Structure in Time Series: Algorithms and Applications''. \url{http://www.cs.unm.edu/~mueen/Tutorial/SDM2015T
+utorial2.pdf}.}
+
+
+### Looking for Motifs based on Wearable Sensors Data
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio]{Figures/ladder.png}
+  \caption{Three dominant motifs discovered in an electrical utility application.\footnotemark}
+\end{figure}
+
+\footnotetext{Joint Work with GE Research and the University at Buffalo.}
+
+
+## Multiple Time Series
+
+### Scatterplots [1]
+
+- **Scatterplots** are frequently used to visualize the correlation between two continuous variables. 
+
+- In this Example, we will be using the [German_Forecast Data](https://www.wessexlearning.org/pobf2e/index.html). The file can be downloaded to your working directory, using the `download.file()` from base R.  
+
+- Note that the data is an xlsx file, which would require us to use the `read_excel()` from the [readxl package](https://readxl.tidyverse.org/). 
+
+- We will remake the plot of GDP vs Govsurp (Figure 2.4 in our reference book) using R. As noted in the chapter, the figure was created using Minitab for the book.  
+
+- The plot using the `ggplot()` is shown in the next slide. We will recreate it in class.
+
+
+### Scatterplots [2]
+
+```{r germanForecastScatter, echo=FALSE}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, lubridate, readxl)
+download.file("https://www.wessexlearning.org/pobf2e/dsa/German_forecasts.xlsx",
+              destfile = "Data/German_forecasts.xlsx", mode = "wb")
+dfGerman = read_excel("Data/German_forecasts.xlsx")
+dfGerman %>% ggplot(aes(x = Govsurp, y = GDP)) +
+  geom_point() + 
+  labs(title = "Scatterplot of GDP vs. Government Spending",
+       caption = "Data from Muller-Droge et al. (2016)") + theme_bw()
+```
+
+### Scatterplot Matrix / Generalized Pairs Plots [1]
+
+- Extending scatterplots for when we have more than two variables.\footnotemark  
+
+- Can be easily created in R using the ``ggpairs()`` from the [GGally package](https://ggobi.github.io/ggally/articles/ggpairs.html). 
+
+
+\footnotetext{John W Emerson, Walton A Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, Hadley Wickham.
+The Generalized Pairs Plot.
+Journal of Computational and Graphical Statistics, vol. 22, no. 1, pp. 79–91, 2012. \href{http://vita.had.co.nz/papers/gpp.pdf}{Click here to access paper}.}
+
+
+### Scatterplot Matrix / Generalized Pairs Plots [2]
+
+```{r scpMatrix, echo = FALSE}
+pacman::p_load(tidyverse)
+dfGerman %>% # object created from the example in the previous slide
+  ggpairs(columns = c('GDP', 'GFCF', 'Govsurp', 'Unemp')) + 
+  labs(title = "Matrix Plot of GDP, GFCF, Govsurp & Unemp",
+       caption = "Data from Muller-Droge et al. (2016)") + theme_bw(base_size = 8)
+```
+
+### Panel Plots
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio]{Figures/motivationPlot.png}
+  \caption{New COVID-19 Cases in the United States.\footnotemark}
+\end{figure}
+
+\footnotetext{Joint Work with Saint Louis University.}
+
+
+### Clustering of COVID-19 New Cases: Spaghetti Plot
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio, trim = {0 0.5in 0 0.5in}, clip]{Figures/spaghetti-1.png}
+  \caption{Spaghetti Plot of the 3 Major Clusters of COVID-19 Time-Series Profile Shapes.\footnotemark}
+\end{figure}
+
+\footnotetext{Joint Work with Saint Louis University.}
+
+### Clustering of COVID-19 New Cases: Summary Plot
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio, trim = {0 0.5in 0 0.5in}, clip]{Figures/summaryPlot-1.png}
+  \caption{Summary Plot of the 3 Major Clusters of COVID-19 Time-Series Profile Shapes.\footnotemark}
+\end{figure}
+
+\footnotetext{Joint Work with Saint Louis University.}
+
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+    \item \textbf{Explain different goals for visualizing time series data}
+    \item \textbf{Identify an appropriate chart for a specific time series data visualization goal}
+    \item \textbf{Use software to construct charts of interest}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - **Recommended:** Thoroughly read [Chapter 2.1-2.3 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ 
+ - **Required:** Complete the [graded assignment](https://miamioh.instructure.com/courses/156145/quizzes/418966/).
+ 
+
+### Graded Assignment 03: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449744}{Canvas (click here)} and answer the four questions. **Due February 02, 2021 [8:30 AM].** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 03. To reinforce your understanding of the covered material, I also suggest [reading up to and including Chapter 2.3 of the reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+
+
+### References
+
+::: {#refs}
+::: 
+
+
+---
+
+\maketitle

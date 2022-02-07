@@ -1,0 +1,422 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "05 - Summarizing Time Series Data"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, xtable, GGally, webshot, htmlwidgets)
+```
+
+# Preface
+
+### Learning Objectives for Today's Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Use numerical summaries to describe a time series.} \\
+			\item \textbf{Apply transformations to a time series.}
+	\end{itemize}
+\end{block}
+
+# Summarizing Time Series Data
+
+### Measures of Average
+**Mean:** Given a set of $n$ values $Y_1, \, Y_2, \, \dots, \, Y_n$, the arithmetic mean can be computed as:
+
+\begin{equation}
+\bar{Y} = \frac{Y_1 + Y_2 + \dots + Y_n}{n} = \frac{1}{n}\sum_{i=1}^{i=n}Y_i.
+\end{equation}
+
+**Order Statistics:**
+Given a set of $n$ values $Y_1, \, Y_2, \, \dots, \, Y_n$, we place them in an ascending order to define the order statistics, written as $Y_{(1)}, \, Y_{(2)}, \, \dots, \, Y_{(n)}.$
+
+**Median:**  
+
+  - If $n$ is odd, $n = 2m + 1$ and the median is $Y_{(m+1)}$.   
+  - If $n$ is even, $n = 2m$ and the median is the average of the two middle numbers, i.e.,  $\frac{1}{2}[Y_{(m)} + Y_{(m+1)}]$.
+
+
+### Measures of Variation
+
+The **range** denotes the difference between the largest and smallest value in a sample:  
+\begin{equation}
+\text{Range} = Y_{(n)} - Y_{(1)}.
+\end{equation}
+
+The **deviation** is defined as the difference between a given observation $Y_i$ and the mean $\bar{Y}$.
+
+The **mean absolute deviation (MAD)** is the average deviations about the mean, irrespective of their sign:
+\begin{equation}
+\text{MAD} = \frac{\sum_{i=1}^{i=n}|d_i|}{n}.
+\end{equation}
+
+The **variance** is the average of the squared deviations around the mean:  
+\begin{equation}
+S^2 = \frac{\sum_{i=1}^{i=n}d_i^2}{n-1}.
+\end{equation}
+
+
+### A Comment on the `mad()` Function in R
+
+- The `mad()` in R is used for computing the median absolute deviation and **Not** the mean absolute deviation. This can be easily checked using `?mad()` in your R console.  
+
+- Thus, we will have to create our custom R function, `MAD()`, which we will define as follows: 
+```{r MAD}
+MAD = function(x){
+  return( mean( abs(x-mean(x)) ) )
+  }
+```
+
+- Now, let us make sure that this formula works as expected by testing it on the vector `x = c(1, 2, 3)` and comparing it with manually computing the MAD.
+
+
+### Applications of Measures of Average/Variance: $GME
+- Let us examine the stock prices for [GameStop](https://finance.yahoo.com/quote/GME/) from September 01, 2020 up to January 31, 2021. 
+
+- Let us compute the aforementioned measures, on the adjusted closing price, using the following two approaches: (a) averages **across** all months, and (b) averages **by/within** month. The printout for those two methods are shown in the tables below.
+
+```{r gme, echo= FALSE, results='asis'}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyquant, lubridate, magrittr)
+gamestop = tq_get("GME", from = "2020-09-01", to = "2021-01-31") %>% 
+  select(symbol, date, adjusted)
+gamestop$month = month(gamestop$date, label = TRUE) %>% 
+  factor(levels = c('Sep', 'Oct', 'Nov', 'Dec', 'Jan'),
+         labels = c('Sep 2020', 'Oct 2020', 'Nov 2020', 'Dec 2020', 'Jan 2021'))
+gamestop %>% summarise(meanACP = mean(adjusted),
+                            medianACP = median(adjusted),
+                            madACP = MAD(adjusted),
+                            varACP = var(adjusted),
+                            sdACP = sd(adjusted) ) -> gmeSummary
+
+print(xtable(gmeSummary, align = c(rep('c', 6))), comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+
+gamestop %>% group_by(month) %>% summarise(meanACP = mean(adjusted),
+                            medianACP = median(adjusted),
+                            madACP = MAD(adjusted),
+                            varACP = var(adjusted),
+                            sdACP = sd(adjusted) ) -> gmeSummary
+
+print(xtable(gmeSummary, align = c(rep('c', 7))), comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+```
+
+
+# Correlation
+
+### The Pearson Correlation Coefficient
+
+- **Correlation:** measures the strength of the **linear relationship** between two
+quantitative variables.
+
+- It can be computed using the `cor()` from base R. Mathematically speaking, the pearson correlation coefficient, $r$, can be computed as
+
+\begin{equation}
+  r = \frac{\sum_{i=1}^{n} (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum_{i=1}^{n}(X_i - \bar{X})^2 \sum_{i=1}^{n}(Y_i - \bar{Y})^2}}
+\end{equation}
+
+
+- Do **not** use the Pearson Correlation coefficient if both variables are not quantitative. Instead, refer to the `mixed.cor()` from the [psch package](https://personality-project.org/r/psych/help/mixed.cor.html) to compute the correlations for mixtures of continuous, polytomous, and/or dichotomous variables.
+
+- You should supplement any descriptive summaries with visualizations to ensure that you are able to interpret the computations correctly.
+
+
+### A Synthetic Example: The Anscombe Dataset [1]
+
+**In a seminal paper, Anscombe stated:**\footnotemark  \textit{Few of us escape being indoctrinated with these notions} 
+
+- *numerical calculations are exact, but graphs are rough;*  
+- *for any particular kind of statistical data there is just one set of calculations constituting a correct statistical analysis;*  
+- *performing intricate calculations is virtuous, whereas actually looking at the data is cheating.*
+
+**He proceeded by stating that** *a computer should make both calculations and graphs. Both sorts of output should be studied; each will contribute to understanding.*  
+
+**Now, let us consider his four datasets, each consisting of eleven (x,y) pairs.**
+
+\footnotetext{Anscombe, Francis J. 1973. ``Graphs in Statistical Analysis." \textit{The American Statistician} 27 (1): 17–21. (\href{https://www.sjsu.edu/faculty/gerstman/StatPrimer/anscombe1973.pdf}{Click here to access the full paper}).}
+
+### A Synthetic Example: The Anscombe Dataset [2]
+```{r anscombe2, echo=FALSE, results="asis"}
+print(xtable(anscombe, align = c(rep('r', 9))), comment = FALSE, size = '\\normalsize', include.rownames=FALSE)
+```
+
+### A Synthetic Example: The Anscombe Dataset [3]
+```{r anscombe3, echo = FALSE, results='asis'}
+pacman::p_load(Tmisc) # same data but in 3 columns
+df = quartet %>% group_by(set) %>% 
+  summarise(x.mean = mean(x), x.sd = sd(x),
+            y.mean = mean(y), y.sd = sd(y),
+            corr = cor(x, y))
+print(xtable(df, align = c(rep('c', 7))), comment = FALSE, size = '\\normalsize', include.rownames=FALSE)
+```
+
+
+### A Synthetic Example: The Anscombe Dataset [4]
+```{r anscombe4, results='asis', echo=FALSE}
+ggplot(quartet, aes(x, y)) + geom_point() + 
+  geom_smooth(method = lm, se = FALSE) + facet_wrap(~set) + theme_bw()
+```
+
+
+### Anscombe-Like Mistakes in Research and Practice
+In my estimation, Figure 8c represents an example where regression should not have been performed\footnotemark. 
+
+\vspace{-\baselineskip}
+
+\centering \href{https://www.jneurosci.org/content/32/11/3791/tab-figures-data}{\includegraphics[width=\textwidth, height=0.6\textheight, keepaspectratio,frame]{Figures/F8Large.jpg}}
+
+\footnotetext{Cai, Xinying, and Camillo Padoa-Schioppa. 2012. ``Neuronal Encoding of Subjective Value in Dorsal and Ventral Anterior Cingulate Cortex.'' \textit{Journal of Neuroscience} 32(11):3791–3808.}
+
+
+# Transformations
+
+### Guidelines for Transforming Time-Series Data
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\Large{\textbf{Transformation Methods for Time Series}}
+				[\textbf{Stabilize the Mean}
+				[\textcolor{miamired}{\textbf{Differencing}}
+				[Eliminate/Reduce
+				[Seasonality]
+				[Trend]]
+				[Compute New Cases\footnotemark]]]
+				[\textbf{Stabilize the Variance}
+				[\textcolor{miamired}{\textbf{Power Transformations}}
+				[Log]
+				[Square Root]]] % stabilize the variance
+				[\textbf{$\sim$Stabilize both}
+				[\textcolor{miamired}{\textbf{Growth Rates}}]
+				[\textcolor{miamired}{\textbf{First diff of Log\footnotemark}}
+				[Exponential Growth TS
+				[$\ln$ to get a TS with a linear trend]
+				[Then diff to get a stationary series]
+				]]]
+				[\textbf{Rescale}
+				[\textcolor{miamired}{\textbf{($0-1$) Scaling\footnotemark}}]
+				[\textcolor{miamired}{\textbf{$z-$transform\footnotemark}}]
+				]
+				]
+		\end{forest}}
+		\caption{A classification of common transformation approaches for time series data.\footnotemark}
+	\end{figure}
+
+\vspace{-0.25\baselineskip}
+
+\addtocounter{footnote}{-5}
+
+\stepcounter{footnote}\footnotetext{The \href{https://covid19datahub.io/}{COVID19 package} returns cumulative cases, i.e. a first difference $\longrightarrow$ new confirmed cases.}
+
+\stepcounter{footnote}\footnotetext{First difference of LOG $\approxeq$ percentage change. This is almost exact if the percentage change is small, but for larger percentage changes, it may differ greatly (see \href{https://faculty.fuqua.duke.edu/~rnau/Decision411_2007/411log.htm}{here for more details}).}
+
+\stepcounter{footnote}\footnotetext{Rescaling of the data from the original range so that all values are within the range of 0 and 1. Mathematically, speaking this can be achieved by calculating $y_t = \frac{x_t - \min}{\max - \min}$.}
+
+\stepcounter{footnote}\footnotetext{One can normalize a time-series by $z_t = \frac{x_t - \mu}{\sigma}$.}
+
+\stepcounter{footnote}\footnotetext{My (incomplete) attempt to provide you with a taxonomy for time series data transformations.}
+
+### Differencing
+
+The change in the time series from one period to the next is known as the (first) difference. It can be computed as follows:
+\begin{equation}
+\begin{split}
+  DY_t &= Y_t - Y_{t-1} \\
+  &\xrightarrow{\text{in \textbf{R}}} \text{\textit{variableName}} - \text{lag}(\text{\textit{variableName}}, \, x = 1)
+\end{split}
+\end{equation}
+
+```{r cardano, echo=FALSE}
+cardano = tq_get("ADA-USD", from = "2021-02-02", to = "2021-02-06") %>% 
+  select(symbol, date, adjusted)
+```
+
+Differences can be computed by capitalizing on `mutate()` and `lag()`.
+
+```{r cardanoDiff, echo=FALSE, results='asis'}
+cardano = tq_get("ADA-USD", from = "2021-02-02", to = "2021-02-06") %>% 
+  select(symbol, date, adjusted)
+cardano %<>% mutate(`DYt` = adjusted - lag(adjusted)) 
+cardano$date = as.character(cardano$date)
+print(xtable(cardano, align = c(rep('c', 5))), comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+```
+
+
+### Differencing for Seasonal Data
+If your data exhibits a seasonal pattern, as illustrated in Slides 15-17 in [03-Time-Series-Plots.pdf](https://miamioh.instructure.com/courses/142177/files/18964031?module_item_id=2902123), you should employ a **seasonal differencing approach**, you should subtract the difference between an observation and the previous observation from the same season. Let $m$ denote the number of seasons, e.g. $m=4$ for quarterly data. In such a case, the seasonal difference is computed as follows:
+\begin{equation}
+\begin{split}
+  DY_{t-m} &= Y_t - Y_{t-m} \\
+  &\xrightarrow{\text{in \textbf{R}}} \text{\textit{variableName}} - \text{lag}(\text{\textit{variableName}}, \, x = m)
+\end{split}
+\end{equation}
+
+
+
+### Growth Rates: The Formulation
+
+In the absence of seasonality, the growth rate for a time series is given by
+\begin{equation}
+  GY_t = 100 \frac{Y_t - Y_{t-1}}{Y_{t-1}}
+\end{equation}
+
+In the presence of seasonality (with period $= m$), the growth rate for a time series is given by
+\begin{equation}
+  GY_t = 100 \frac{Y_t - Y_{t-m}}{Y_{t-m}}
+\end{equation}
+
+
+### Growth Rates in Practice -- a Non-Graded Class Activity
+
+- **Question 1:** Let us say that an investor purchased 10 stocks of \$GME, on 2021-01-29, at \$325/stock. The next trading day, 2021-02-01, the \$GME stock closed at \$225. Compute the growth rate in their portfolio worth (assuming it only has the GME stock) over this time period. 
+
+- **Question 2:** Let us say that the growth rate, $GY_t = -g$. Now let us assume that the \$GME stock went up by $g$ (i.e., if it went down 10\%, it increased by 10\% over the next trading day).  What is the value of the investor's portfolio by stock market closing on 2021-02-02?
+
+- Provide the answer to both computational questions on [Canvas](https://miamioh.instructure.com/courses/167327/quizzes/449731).
+
+
+### The Log Transform [1]
+
+The log transformation can be computed as follows:
+\begin{equation}
+  L_t = \ln{(Y_t)}
+\end{equation}
+Note that the `log()` in R takes the natural logarithm as its default base, i.e., would transform a variable/statistic based on the above equation.
+
+The reverse transformation using the exponential function is:
+\begin{equation}
+  e^{L_t} = e^{\ln{(Y_t})} = Y_t
+\end{equation}
+
+The first difference in logarithms represents the logarithm of the ratio:
+\begin{equation}
+  L_t = \ln{(\frac{Y_t}{Y_{t-1}})} = \ln{(Y_t)} - \ln{(Y_{t-1})}
+\end{equation}
+
+
+### The Log Transform [2]
+
+- The primary purpose of the log transform is to **convert exponential growth into linear growth.**
+
+- The transform often has the **secondary purpose of balancing the variance.**  
+
+- Difference in logs and growth rate transformations produce similar results and interpretations.
+
+
+### A Walk through Statistical Transformations Using R {.allowframebreaks}
+
+In this live coding session, we will capitalize on the `mutate()` from [tidyverse](https://www.tidyverse.org/) to create transformations for multiple time series. Specifically, we will use the `tq_get()` from [tidyquant](https://business-science.github.io/tidyquant/) to extract data about the following cryptocurrencies (a) [Cardano](https://cardano.org/) (\$ADA), (b) [Chainlink](https://chain.link/) (\$LINK), and (c) [Zilliqa](https://www.zilliqa.com/) (\$ZIL). We will compute:  
+
+  - Growth Rates  
+  - Natural log
+  - Log Differences  
+  - $[0-1]$ Scaling  
+  
+Obviously, we will have to ensure that these transformations are computed for each coin separately. For the purpose of this activity, let us extract the data from 2020-11-01 to 2021-02-06.  
+
+```{r transformations, echo=FALSE, out.height='2in'}
+coins = tq_get(c('ADA-USD', 'LINK-USD', 'ZIL-USD'), from = '2020-11-01', to ='2021-02-06')
+coins %<>% group_by(symbol) %>% arrange(symbol, date)
+
+coins %<>% mutate(growthRate = 100*(adjusted - lag(adjusted))/lag(adjusted),
+                  naturalLog = log(adjusted),
+                  logDiffs = naturalLog - lag(naturalLog),
+                  minAdjusted = min(adjusted),
+                  maxAdjusted = max(adjusted),
+                  scaledAdjusted = (adjusted - minAdjusted)/(maxAdjusted - minAdjusted) )
+
+coins %>% ggplot(aes(x = date, y = scaledAdjusted, group = symbol, color = symbol)) +
+  geom_line() +
+  scale_x_date(breaks = scales::pretty_breaks(n=10)) +
+  labs(x = 'Time', y = 'Scaled adjusted price') +
+  theme_bw(base_size = 8) + theme(legend.position = 'top')
+```
+
+**Question:** What insights can you get from this chart?
+
+```{r transformations2, echo=FALSE, out.height='2in'}
+coins %>% ggplot(aes(x = date, y = growthRate, group = symbol, color = symbol)) +
+  geom_line() +
+  scale_x_date(breaks = scales::pretty_breaks(n=10)) +
+  labs(x = 'Time', y = 'Day-Over-Day % Growth') +
+  theme_bw(base_size = 8) + theme(legend.position = 'top')
+
+```
+
+**Question:** What insights can you get from this chart?
+
+
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Use numerical summaries to describe a time series.}
+			\item \textbf{Apply transformations to a time series.}
+	\end{itemize}
+\end{block}
+
+
+
+### Things to Do
+
+ - **Recommended:** Thoroughly read [Chapter 2.1-2.5 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ 
+ - **Highly Recommended:** Go through the [Week 02 Self-Paced Study Guide](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week02/).  
+ 
+ - **Required:** Complete [Assignment 04](https://miamioh.instructure.com/courses/167327/quizzes/449740). 
+ 
+
+### Graded Assignment 04: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449740}{Canvas (click here)} and answer the four questions. **Due February 09, 2022 [8:30 AM].** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 05. To reinforce your understanding of the covered material, I also suggest reading [up to and including Chapter 2.5 of the reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.
+
+
+
+
+---
+
+\maketitle

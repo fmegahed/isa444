@@ -348,7 +348,7 @@ coins %<>% group_by(symbol) %>% arrange(symbol, date)
 
 coins %<>% mutate(growthRate = 100*(adjusted - lag(adjusted))/lag(adjusted),
                   naturalLog = log(adjusted),
-                  logDiffs = naturalLog - lag(naturalLog),
+                  logDiffs = naturalLog - log(lag(adjusted)),
                   minAdjusted = min(adjusted),
                   maxAdjusted = max(adjusted),
                   scaledAdjusted = (adjusted - minAdjusted)/(maxAdjusted - minAdjusted) )

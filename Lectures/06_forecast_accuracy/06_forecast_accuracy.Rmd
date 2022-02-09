@@ -403,7 +403,7 @@ dfNaive %>% ggplot(aes(x= date, y = naiveFC)) + geom_line() +
 
 ### Graded Assignment 05: Evaluating your Understanding
 
-Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449739}{Canvas (click here)} and answer the five questions. **Due September 14, 2021 [8:30 AM].** 
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449739}{Canvas (click here)} and answer the five questions. **Due February 14, 2022 [8:30 AM].** 
 
 **What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 06. To reinforce your understanding of the covered material, I also suggest reading [all of Chapter 2 of the reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
 

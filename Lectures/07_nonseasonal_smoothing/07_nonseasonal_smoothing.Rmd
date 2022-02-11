@@ -1,0 +1,567 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "07 - Nonseasonal Smoothing"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, xtable, tidyverse, magrittr)
+```
+
+# Preface
+
+### What we Covered Last Week
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Apply transformations to a time series.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Apply and interpret measures of forecast accuracy.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Interpret prediction intervals for a simple forecast.}
+\end{block}
+
+
+### Recap: Guidelines for Transforming Time-Series Data
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\Large{\textbf{Transformation Methods for Time Series}}
+				[\textbf{Stabilize the Mean}
+				[\textcolor{miamired}{\textbf{Differencing}}
+				[Eliminate/Reduce
+				[Seasonality]
+				[Trend]]
+				[Compute New Cases\footnotemark]]]
+				[\textbf{Stabilize the Variance}
+				[\textcolor{miamired}{\textbf{Power Transformations}}
+				[Log]
+				[Square Root]]] % stabilize the variance
+				[\textbf{$\sim$Stabilize both}
+				[\textcolor{miamired}{\textbf{Growth Rates}}]
+				[\textcolor{miamired}{\textbf{First diff of Log\footnotemark}}
+				[Exponential Growth TS
+				[$\ln$ to get a TS with a linear trend]
+				[Then diff to get a stationary series]
+				]]]
+				[\textbf{Rescale}
+				[\textcolor{miamired}{\textbf{($0-1$) Scaling\footnotemark}}]
+				[\textcolor{miamired}{\textbf{$z-$transform\footnotemark}}]
+				]
+				]
+		\end{forest}}
+		\caption{A classification of common transformation approaches for time series data.\footnotemark}
+	\end{figure}
+
+\vspace{-\baselineskip}
+
+\addtocounter{footnote}{-5}
+
+\stepcounter{footnote}\footnotetext{The \href{https://covid19datahub.io/}{COVID19 package} returns cumulative cases, i.e. a first difference $\longrightarrow$ new confirmed cases.}
+
+\stepcounter{footnote}\footnotetext{First difference of LOG $\approxeq$ percentage change. This is almost exact if the percentage change is small, but for larger percentage changes, it may differ greatly (see \href{https://faculty.fuqua.duke.edu/~rnau/Decision411_2007/411log.htm}{here for more details}).}
+
+\stepcounter{footnote}\footnotetext{Rescaling of the data from the original range so that all values are within the range of 0 and 1. Mathematically, speaking this can be achieved by calculating $y_t = \frac{x_t - \min}{\max - \min}$.}
+
+\stepcounter{footnote}\footnotetext{One can normalize a time-series by $z_t = \frac{x_t - \mu}{\sigma}$.}
+
+\stepcounter{footnote}\footnotetext{My (incomplete) attempt to provide you with a taxonomy for time series data transformations.}
+
+
+
+### Recap: Interpreting Measures of Forecast Accuracy
+
+In class, we have categorized measures of forecast accuracy into measures reflecting:   
+
+  (a) "average" forecast performance (e.g., mean error and mean percent error);  
+  (b) "variability" in forecast performance (e.g., AE, SE, MAE, and RMSE); and  
+  (c) "relative" forecast error (e.g., MAPE).  
+  
+```{r forecastAccuracy1, echo=FALSE, results='asis'}
+pacman::p_load(tidyquant, magrittr, fpp2, xtable, lubridate, scales)
+
+cardano = tq_get("ADA-USD", from = '2021-02-01', to = '2021-02-08') %>% 
+  select(symbol, date, adjusted)
+cardano %<>% mutate( date = as.character(date), naiveFC = lag(adjusted))
+
+print(xtable(cardano, align = c(rep('c', 5)), digits = c(0, 0, 0, 3, 3)), 
+      comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+
+```
+
+Based on the naive forecast, we can compute: \textcolor{miamired}{(note the results are concerning!! Why?)}
+
+```{r forecastAccuracy2, echo=FALSE, results='asis'}
+predTable = accuracy(object = cardano$naiveFC, # forecast object is the first argument
+         cardano$adjusted)
+
+print(xtable(predTable, align = c(rep('c', 6)), digits = c(0, 4, 4, 4, 2, 2)),
+      comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+```
+
+
+### Recap: Prediction Intervals {.allowframebreaks}
+- **Point Forecasts:** future observations for which we report a single forecast observation.  
+
+- **Interval Forecast:** a range of values that are reported to forecast an outcome.
+
+
+If we assume the forecast errors follow a Normal Distribution, an approximate $100(1-\alpha)$ prediction interval can be computed as follows: $\hat{F}_t \pm Z*RMSE$, where:  
+
+- $\hat{F}_t$ forecast at time $t$.  
+- The RMSE can be used as an estimate of the standard deviation of the forecast errors.  
+- $Z$ is the quantile corresponding to $100(1-\frac{\alpha}{2})$ (see [our interactive guide](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/class06/) for more details)
+
+```{r predIntervals, echo=FALSE, fig.height=2}
+cardanoTS = ts(cardano$adjusted, start = c(2021, yday(cardano$date[1])), frequency = 365)
+cardanoForecast = naive(cardanoTS, level = c(95), h =5)
+
+cardanoDF = data.frame(date = ymd(cardano$date), price = cardano$adjusted, low = NA, high = NA)
+cardanoPred = data.frame(date = cardanoForecast$mean %>% index() %>% date_decimal() %>%
+                           as_date() + 1,
+                         price = as.numeric(cardanoForecast$mean), 
+                         low = as.numeric(cardanoForecast$lower), 
+                         high = as.numeric(cardanoForecast$upper))
+
+cardanoDF = rbind(cardanoDF, cardanoPred) %>% data.frame()
+
+cardanoDF %>% ggplot(aes(x = date, y = price)) + geom_point() + geom_line() +
+  scale_x_date(breaks = pretty_breaks(15)) +
+  geom_ribbon(aes(ymin = low, ymax = high), alpha = 0.2) +
+  labs(x = paste('Dates in', year(cardanoDF$date[1])), 
+       y = 'Adjusted/Close Price', 
+       title = 'Naive Forecast for ADA-USD', 
+       caption = paste('Data Source: Yahoo Finance | Data from', cardano$date[1], 'to',
+                       cardano$date[nrow(cardano)])) +
+  theme_bw(base_size = 8)
+
+```
+\textcolor{miamired}{There are two important observations to be made: (a) future predictions do not change, and (b) prediction interval is more advanced than the approach detailed last class/slide (\textbf{Why? Why is that better?})} \textbf{You will NOT be required to compute this PI by hand.}
+
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Describe the benefits and drawbacks of judgmental and quantitative forecasing methods.}
+			\item \textbf{Explain the difference between causal and extrapolative forecasting.}
+			\item \textbf{Describe and apply smoothing/forecasting with a cumulative average.}
+			\item \textbf{Describe and apply forecasting with a moving average.}
+	\end{itemize}
+\end{block}
+
+
+# Forecasting Terminology
+
+### Key Terms
+
+\textbf{Smoothing} \textit{is usually done to help us better see patterns/trends, e.g., in time series.}\footnotemark   
+\begin{itemize}
+  \item \textit{Generally smooth out the irregular roughness to see a clearer signal.}   
+  \item \textit{For seasonal data, we can smooth out the seasonality so that we can identify the trend.}   
+  \item \textit{Smoothing \textcolor{miamired}{does not provide us with a model}, but it can be a good first step in describing various components of the series.}
+\end{itemize}
+
+A \textbf{filter} is sometimes used to describe a smoothing procedure. For example, \href{https://fmegahed.github.io/fatigue_case_jqt.html}{we have applied a median filter of window size 21 to smooth wearable sensors' data.}  
+
+\textbf{Forecast} \textit{is a prediction or estimate of an actual outcome expected in a future time period
+or for another situation.}\footnotemark
+
+\addtocounter{footnote}{-2}
+
+\stepcounter{footnote} \footnotetext{Definition and bullets are based on \href{https://online.stat.psu.edu/stat510/lesson/5/5.2}{STAT 510: Applied Time Series Analysis | Penn State}.}
+
+\stepcounter{footnote} \footnotetext{From: Ord, K., Fildes, R., \& Kourentzes, N. (2017). Principles of Business Forecasting (2nd ed., p. 3).}
+
+
+### A 10,000 Foot View of Forecasting Methods
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\large{\textbf{Forecasting}}
+				[\textbf{Judgemental}
+				[Sales Composite]
+				[Customer Survey]
+				[Delphi Method]]
+				[\textbf{Quantitative}
+				[\textcolor{miamired}{\textbf{Extrapolative}}
+				[\textbf{Naive}]
+				[\textbf{Smoothing-based}
+				[\textcolor{darkgreen}{\textbf{$\approx$Stationary}}
+				[Average]
+				[MA]
+				[SES]]
+				[\textcolor{darkgreen}{\textbf{Trend}}
+				[Holt's]]
+				[\textcolor{darkgreen}{\textbf{Both?}}
+				[Holt-Winters]
+				]]
+				[\textbf{``Advanced''}
+				[(S)ARIMA]
+				[GARCH]]]
+				[\textcolor{miamired}{\textbf{Causal}}
+				[\textbf{Statistical}
+				[(S)ARIMA with vars]]
+				[\textbf{ML-Based}
+				[\textcolor{darkgreen}{\textbf{Feature Eng.}}
+				[e.g. AutoML]]]
+				]
+				]
+				]
+		\end{forest}}
+		\caption{A 10,000 foot view of forecasting techniques\footnotemark}
+\end{figure}
+
+\footnotetext{An (incomplete) classification of forecasting techniques. Note that these focus on univariate time-series. Hence, they exclude popular approaches used in multivariate time series forecasting.}
+
+### Definitions
+
+**Judgmental Forecasting:** The process of producing forecasts based on purely subjective information. The integration of subjective information may be made informally or through a structured process. The forecasts may also be obtained by aggregating the subjective forecasts of a number of individuals. 
+
+
+**Quantitative Forecasting:** Forecasting based on the application of an explicit analysis of numerical data. This kind of forecasting may be extrapolative, causal, or a blend of both.\footnotemark  
+
+  - *Causal Forecast:* a dependent variable is forecast using explanatory variables. 
+  - *Extrapolative:* a dependent variable is forecast using only the past values of the dependent variables. The future is “extrapolated” from the past.
+
+
+\footnotetext{Definitions are based on \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+
+### Some Potential Drawbacks for Judgmental Forecasts
+
+When using judgmental forecasts, forecasters may succumb to:    
+
+  - An **availability bias**, when the forecaster relies too heavily on easily available and memorable information.  
+  - The **representativeness heuristic**, when the forecaster matches a situation to a similar earlier event without taking into account its frequency of occurrence.    
+  - The **anchoring** and **adjustment heuristic**, when the forecaster uses (anchors onto) an initial value such as the last observation and then adjusts the value to give a revised forecast.  
+  - Over-optimism or **motivational bias** when the forecaster is motivated to bias the forecast towards a preferred state.
+
+
+\textit{These biases can lead to invalid forecasts; they may lead to poor decision making, particularly when combined with overconfidence in their beliefs as to the accuracy of their forecasts.}\footnotemark
+
+\footnotetext{Slide adapted from \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+
+### Big Picture for Our Course
+
+The remainder of this course focuses on Quantitative Forecasting
+
+  - Chapters 3, 4, 6 focus on Extrapolative Forecasting techniques.
+  
+  - Chapter 7-8 Focus on Causal (regression-based) Forecasting techniques.
+  
+  - At the end of the semester we will briefly learn how to blend Extrapolative and Causal Forecasting techniques.
+
+
+# Causal vs Explarotive Forecasts 
+
+### Causal Models
+
+- Causal methods use data from **sources other than the series being predicted**.
+
+- If $Y$ is the phenomenon to forecast and $X_1, \, X_2, \, \dots, \, X_n$ are the $n$ variables we believe to be related to $Y$, then a causal model is one in which the forecast for $Y$ is some function of these variables:  $Y = f(X_1, \, X_2, \, \dots, \, X_n)$.  
+
+- Econometric models are causal models in which the relationship between $Y$ and $X_1, \, X_2, \, \dots, \, X_n$ is linear.  That is:
+\begin{equation}
+    Y = a_o + a_1X_1 + a_2X_2 + \dots +  a_nX_n
+\end{equation}
+$\text{for some constants } a_1, \, a_2, \, \dots, \, a_n$
+
+
+### Causal Models: Does Racism Affect Voting?
+
+\begin{columns}
+  \begin{column}{0.48\textwidth}
+    \begin{figure}
+      \centering
+      \href{https://ed.ted.com/on/HTDYPiuQ}{\includegraphics[width=\linewidth, height = 0.6\textheight, keepaspectratio]{nateSilver}}
+    \end{figure}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{itemize}
+      \item Go to \url{https://ed.ted.com/on/HTDYPiuQ}
+      \item \href{https://ed.ted.com/on/HTDYPiuQ\#watch}{Watch} the 9 minute video
+      \item Answer the five multiple choice questions under the \href{https://ed.ted.com/on/HTDYPiuQ/review}{think tab}
+    \end{itemize}
+  \end{column}
+\end{columns}
+
+\begin{center}
+  \textbf{Does racism affect how you vote? -- Nate Silver's TED Talk}
+\end{center}
+
+### Extrapolative Methods: A General Framework
+
+Some **forecasting methods** we will discuss use the values of the series to extrapolate into the future. These **extrapolative methods** often work well for short term forecasts.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth, height = 0.7\textheight, keepaspectratio]{forecast1.png}
+  \caption{General Framework for Forecasting with a Single Series}
+\end{figure}
+
+
+
+### Extrapolative Methods: Rolling Origin
+
+**Rolling Origin Forecasts:** The closer you are to the forecast horizon, the better the forecast. Often, as you gain more information, you update the forecast.
+
+**Example:** 
+
+- On Sunday, you might forecast the weather for the entire week ahead: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday. 
+
+- Monday is pretty accurate, but by the time you get to Saturday’s forecast, it is not so accurate. 
+
+- Once Monday comes, you update the forecast, now forecasting Tuesday-Sunday. 
+
+- When Tuesday comes, you will update, and forecast Wednesday-Monday. 
+
+- This is a rolling origin forecast.
+
+
+# Smoothing and/or Forecasting with Means
+
+### Key Point: "Weak" Stationarity
+
+Today, you are being introduced to methodologies where the time series exhibits **NO** trends and no seasonal patterns.\footnotemark  
+  
+  - *A stationary time series is one whose properties do not depend on the time at which the series is observed*.
+  
+  - *Some cases can be confusing — a time series with cyclic behavior (but with no trend or seasonality) is stationary. This is because the cycles are not of a fixed length, so before we observe the series we cannot be sure where the peaks and troughs of the cycles will be*.  
+  
+  - *In general, a stationary time series will have no predictable patterns in the long-term. Time plots will show the series to be roughly horizontal (although some cyclic behavior is possible), with constant variance*.
+
+\footnotetext{The text presented here is from Hyndman, R.J., \& Athanasopoulos, G. (2018) \textit{Forecasting: Principles and Practice}, 2nd Edition, \href{https://otexts.com/fpp2/stationarity.html}{OTexts.com/fpp2.}}
+
+
+### Weak Stationarity: A Visual
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth, height = 0.7\textheight, keepaspectratio]{stationarity}
+  \caption{Constancy in mean and variance\footnotemark}
+\end{figure}
+
+\footnotetext{Image Source: Palachy, S. (2019). Stationarity in time series analysis. \href{https://towardsdatascience.com/stationarity-in-time-series-analysis-90c94f27322}{towardsdatascience.com}.}
+
+### Weak Stationarity: Which asset(s) is somewhat stationary?
+
+\vspace{-0.5\baselineskip}
+
+```{r TSplots, echo=FALSE, fig.height=2.8, fig.width=6}
+pacman::p_load(tidyverse, tidyquant, timetk, fpp2)
+
+assets = tq_get(c('BTC-USD', 'LINK-USD', 'KO', 'MCD', 'USDEGP=X', 'USDT-USD'), from = Sys.Date() - 90, to = Sys.Date() - 1) %>% 
+  select(symbol, date, adjusted)
+
+plot_time_series(assets, .date_var = date, .value = adjusted, .smooth = FALSE, 
+                 .facet_vars = symbol, 
+                 .facet_ncol = 3, .title = NULL, .interactive = FALSE) + theme_bw(base_size = 8)
+```
+
+### Overall Average {.allowframebreaks}
+If you have a series that stays pretty constant over time, you could just use the overall average for smoothing/forecasting. In R, we can use the `meanf()` from [fpp2](https://cran.r-project.org/web/packages/fpp2/index.html) to smooth and forecast using the overall mean.
+
+```{r usdtPlot, fig.height=1.7, echo=FALSE}
+assets %>% filter(symbol == 'USDT-USD') %>% 
+  plot_time_series(.date_var = date, .value = adjusted, .smooth = FALSE, 
+                   .title = NULL, .y_lab = 'USDT-USD', .x_lab = 'Time',
+                   .interactive = FALSE) + theme_bw(base_size = 8)
+```
+
+```{r usdtPred, echo=FALSE, fig.width=5.5}
+pacman::p_load(tidyverse, tidyquant, timetk, fpp2, lubridate)
+
+usdt = tq_get('USDT-USD', from = Sys.Date()-90, to = Sys.Date() - 1) %>% 
+  select(date, adjusted) 
+
+usdt_ts = ts(usdt$adjusted, start = c(2021, yday(min(usdt$date))), frequency = 365) 
+
+fit = meanf(usdt_ts, h = 10, level = 95) # fit model
+
+properDates = function(x) {format(lubridate::date_decimal(x), "%b %d")}
+autoplot(fit) + autolayer(fitted(fit), series = 'fitted') + theme_bw(base_size = 8) + 
+  theme(legend.position = 'none') +
+  scale_x_continuous(labels = properDates) +
+  labs(x = 'Date', y = 'Closing Price')
+```
+
+### Cumulative Average {.allowframebreaks}
+**If you have a series that stays pretty constant over time, you could just constantly update the mean as you gain more information.** This can be computed using the `cummean()` from [tidyverse](https://dplyr.tidyverse.org/).
+
+```{r cumulativeMean, results='asis', echo=FALSE}
+pacman::p_load(tidyquant, tidyverse, magrittr, xtable, fpp2, lubridate, timetk, scales)
+
+usdt = tq_get('USDT-USD', from = Sys.Date()-30, to = Sys.Date() - 1) %>% 
+  select(date, adjusted)
+
+usdt_ts = ts(usdt, start = c(2021, yday(min(usdt$date))), frequency = 365)
+
+usdt_SMOOTH = usdt %>%  mutate(cuMean = cummean(adjusted),
+                               lower = NA,
+                               upper = NA)
+
+RMSE = accuracy(object = usdt_SMOOTH$cuMean,
+                x = usdt_SMOOTH$adjusted) %>% .[1, 'RMSE']
+
+futureData = data.frame(date = seq.Date(from = ymd(max(usdt$date) + 1), by=1, length.out = 10),
+                        adjusted = usdt_SMOOTH$cuMean[nrow(usdt)],
+                        cuMean = usdt_SMOOTH$cuMean[nrow(usdt)],
+                        lower = usdt_SMOOTH$cuMean[nrow(usdt_SMOOTH)] - (qnorm(0.975)*RMSE),
+                        upper = usdt_SMOOTH$cuMean[nrow(usdt_SMOOTH)] + (qnorm(0.975)*RMSE) )
+
+usdt_SMOOTH = rbind(usdt_SMOOTH, futureData)
+
+df = usdt_SMOOTH
+df$date %<>%  as.character()
+print(xtable(df[1:15, c('date', 'adjusted', 'cuMean')], align = c(rep('c', 4)), digits = c(0, 0, 4, 4) ), 
+      comment = FALSE, size = '\\scriptsize', 
+      include.rownames=FALSE)
+
+
+usdt_SMOOTH %>% ggplot(aes(x = date, y = adjusted)) + geom_point() + geom_line() +
+  scale_x_date(breaks = pretty_breaks(10)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2) +
+  labs(x = paste('Dates in', year(usdt_SMOOTH$date[1])), 
+       y = 'Adjusted/Close Price', 
+       title = 'Smoothing using Cumulative Mean', 
+       caption = paste('Data Source: Yahoo Finance | Data from', usdt$date[1], 'to',
+                       usdt$date[nrow(usdt)])) +
+  theme_bw(base_size = 8)
+```
+
+### Moving Average {.allowframebreaks}
+
+In this live coding demo, we will smooth the USDT series using: (a) the overall/global average, (b) cumulative mean, (c) 3-day moving average, and (d) 7-day moving average for USDT. Then, we will plot the data (similar to next slide).
+
+```{r usdtMAs, echo=FALSE, results='asis'}
+pacman::p_load(virdis)
+usdt_comp = usdt %>%  
+  mutate(globalAVG = mean(adjusted),
+         cumMean = cummean(adjusted),
+         ma3 = rollmean(adjusted, 3, align = 'right', fill = NA),
+         ma7 = rollmean(adjusted, 7, align = 'right', fill = NA))
+
+df = usdt_comp
+df$date %<>%  as.character()
+print(xtable(df[1:12,], align = c(rep('c', 7)),
+             digits = c(0, 0, 4, 4, 4, 4, 4) ), comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+
+df = usdt_comp %>%  pivot_longer(cols = c(2,3,4,5,6)) 
+
+df %>% ggplot(aes(x = date, y = value, group = name, color = name)) +
+  geom_point() + geom_line() + 
+  scale_x_date(breaks = pretty_breaks(10)) +
+  scale_color_viridis_d() +
+  labs(x = 'Date', y = 'USDT Close Price') + theme_bw(base_size = 8) + theme(legend.position = 'top')
+```
+
+
+
+### Difference between a Smoothing and Forecasting Problem
+
+**So how do you differentiate between smoothing and forecasting if we were performing the calculations manually?**
+
+```{r forecasting, echo=FALSE, results='asis'}
+pacman::p_load(viridis)
+usdt_comp = usdt %>%  
+  mutate(globalAVG = mean(adjusted),
+         cumMean = cummean(adjusted),
+         ma3 = rollmean(adjusted, 3, align = 'right', fill = NA),
+         ma7 = rollmean(adjusted, 7, align = 'right', fill = NA),
+         fAVG = lag(globalAVG),
+         fCM = lag(cumMean),
+         fma3 = lag(ma3),
+         fma7 = lag(ma7))
+
+df = usdt_comp
+df$date %<>%  as.character()
+print(xtable(df[1:10,], align = c(rep('c', 11)),
+             digits = c(0, 0, rep(3, times = 9)) ), comment = FALSE, size = '\\scriptsize', include.rownames=FALSE)
+
+results = rbind(accuracy(usdt_comp$fAVG, usdt_comp$adjusted),
+                accuracy(usdt_comp$fCM, usdt_comp$adjusted),
+                accuracy(usdt_comp$fma3, usdt_comp$adjusted),
+                accuracy(usdt_comp$fma7, usdt_comp$adjusted))
+row.names(results) = c('Overall Mean', 'Cumulative Mean', 'MA3', 'MA7')
+
+print(xtable(results, align = c('l', rep( 'r', 5)),
+             digits = c(0, rep(4, times = 5)) ), comment = FALSE, size = '\\scriptsize')
+```
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Describe the benefits and drawbacks of judgmental and quantitative forecasing methods.}
+			\item \textbf{Explain the difference between causal and extrapolative forecasting.}
+			\item \textbf{Describe and apply smoothing/forecasting with a cumulative average.}
+			\item \textbf{Describe and apply forecasting with a moving average.}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - **Recommended:** Thoroughly read [Chapter 3.1-3.2 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.
+ 
+ - If you are interested in additional practice problems, please consider the following problems from your textbook. To access these datasets, please click [here](https://www.wessexlearning.org/pobf2e/index.html).
+   - **Practice Problem:** Exercise 3.1 (RMSE is 2.54 and 2.28 for the MA 3 and MA7, respectively). 
+   
+- **Highly Recommended:** Go through the [Week 04 Self-Paced Study Guide](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week04/).
+
+- **Required:** Complete the graded assignment (see details in next slide).
+ 
+
+### Graded Assignment 06: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449747?module_item_id=3648835}{Canvas (click here)} and answer the questions. **Due February 16, 2022 [8:30 AM]** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 07. To reinforce your understanding of the covered material, I also suggest reading [Chapter 3.1-3.2 of the reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+
+
+---
+
+\maketitle

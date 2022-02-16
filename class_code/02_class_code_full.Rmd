@@ -1,0 +1,124 @@
+---
+title: "Class 02 - Intro to Time-Series Analysis"
+author: "Fadel Megahed"
+date: "format(Sys.Date(), format = '%B %d, %Y')"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    number_sections: TRUE
+    paged_df: TRUE
+    code_folding: "show"
+    code_download: TRUE
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      out.width = "100%")
+```
+
+
+# Loading the Packages
+
+In the code chunk below, we are loading the packages. [Google](www.gooogle.com) is your friend.
+
+```{r packages}
+if(require(pacman) == FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, tidyquant, COVID19, scales)
+
+```
+
+
+---
+
+# Refresher on our Plot from Last Class
+
+We will follow the grammar of graphics approach, which the package [ggplot2](https://ggplot2.tidyverse.org/) is built on. 
+
+## Basic Idea of Layering
+
+To construct a graph in [ggplot2](https://ggplot2.tidyverse.org/), you will need to be able to visualize the layering idea below. We use the `+` sign to add layers in a graph. You should also reference [this cheatsheet if you need quick hints](https://github.com/rstudio/cheatsheets/raw/main/data-visualization-2.1.pdf).
+
+![](https://miro.medium.com/max/1400/1*4rPyILOvL7XvS_0B8lmBLA.png)
+
+
+## FAANG Stocks
+
+
+```{r stocks_viz}
+# Getting stock data (tq_get() is from tidyquant pkg)
+stocks <- tq_get(x = c('GOOG', 'FB', 'AAPL', 'NFLX'),
+                 from = '2020-01-01',
+                 to = '2022-01-24') 
+
+# printing a summary of the data structure, variable names/classes, etc
+glimpse(stocks) # from dplyr which we loaded with tidyverse
+
+# Visualizing the stocks data
+ggplot(stocks, aes(x = date, y = adjusted, color = symbol)) +
+  geom_line() +
+  labs(x = 'Date', y = 'Adjusted Closing Price') + # optional
+  facet_wrap(~symbol, scales = 'free') + # for creating panels
+  scale_x_date(breaks = pretty_breaks(n = 6)) +
+  theme_bw() + # makes the background white
+  theme(legend.position = "bottom") # moves legend to bottom instead of right
+
+max_date = stocks %>% 
+  group_by(symbol) %>% 
+  filter(date == max(date)) %>% 
+  select(symbol, date, adjusted)
+colnames(max_date)[3] = "adjusted_new"
+
+min_date = stocks %>% 
+  group_by(symbol) %>% 
+  filter(date == min(date)) %>% 
+  select(symbol, date, adjusted)
+colnames(min_date)[3] = "adjusted_original"
+
+
+chg = left_join(x = min_date, y = max_date,
+                by = 'symbol') # comes from dplyr 
+
+chg = chg %>% 
+  # respects the grouping 
+  mutate(pct_chg = 100*(adjusted_new - adjusted_original)/adjusted_original ) # fn creates a new column (often inv a calculation) and its from dplyr
+
+chg # printing it in the console
+```
+
+---
+
+# Class Activity: Getting and Plotting the COVID19
+
+Based on the previous exercise, use the [COVID-19 package](https://covid19datahub.io/articles/api/r.html) to plot the confirmed COVID-19 cases for the states of Ohio and Kentucky. You should create two plots: (a) plot containing both of the states as two separate lines in a line plot, and (b) a paneled plot similar to the output depicted in Slide 21 of Lecture 01.
+
+**Hints:**  
+
+  (1) Once you have installed the package inspect the `covid19` function using the command `?covid19()`.  
+  (2) Set the country argument to the US.   
+  (3) Use an appropriate value for the level argument based on `?covid19()`.  
+  (4) Set the starting date to '2020-03-01'
+  (5) Filter the obtained data to only include data for the two states.
+
+```{r COVID}
+us_data = covid19(country = "US",
+                  level = 2,
+                  start = "2020-03-01")
+
+us_data %>% 
+  filter(administrative_area_level_2 %in% c('Ohio', 'Kentucky', "Alabama", "New York")) %>% # dplyr package which we loaded with tidyverse
+  ggplot(aes(x = date, y = confirmed, color = administrative_area_level_2)) +
+  geom_line(size = 0.5) +
+  geom_point(size = 2) +
+  facet_wrap(~ administrative_area_level_2, ncol =2, nrow = 2, scales = "free_y") + # hash this out - you get chart 1
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_y_continuous(labels = scales::comma)
+
+```
+

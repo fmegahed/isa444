@@ -1,0 +1,172 @@
+---
+title: "Class 11 - Simple Exponential Smoothing"
+author: "Fadel Megahed"
+date: "r format(Sys.Date(), format = '%B %d, %Y')"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    number_sections: TRUE
+    paged_df: TRUE
+    code_folding: "show"
+    code_download: TRUE
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE,
+                      out.width = "100%")
+```
+
+
+# Loading the Packages
+
+In the code chunk below, we are loading some of the packages that we will be using in today's class
+
+```{r packages}
+if(require(pacman) == FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, tidyquant, fpp2, magrittr, scales)
+
+```
+
+
+---
+
+# The Sales Example from P.72 in Your Reference Book
+
+## The SES Forecasts
+
+For this dataset, let us utilize the `ses()` from the [forecast package](https://cran.r-project.org/web/packages/forecast/forecast.pdf), which we load via the `pacman::p_load(fpp2)` command. To mimic the computations from your [reference textbook (see p. 72)](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i), let use the arguments of `initial = simple` and `alpha = 0.3` in our computations.
+
+```{r example1_data}
+df = data.frame(time = 1:12, 
+                sales = c(5, 6, 7, 8, 7, 6, 5, 6, 7, 8, 7, 6) )
+
+df %>% ggplot(aes(x = time, y = sales)) +
+  geom_line() + geom_point(size = 1.5)
+
+seS_fit = ses(y = df$sales, level = 95, 
+              initial = 'simple', # in the ses case, our first obs
+              alpha = 0.3)
+summary(seS_fit)
+ses_fitted_values = seS_fit$fitted
+ses_forecasts = seS_fit$mean # return 10 values since I did not change h (default h =10)
+
+accuracy(object = ses_fitted_values, x = df$sales)
+accuracy(object = seS_fit)
+
+df$ses_fit = ses_fitted_values # adding the fitted values as a column
+df$ses_fit[1] = NA
+
+accuracy(object = df$ses_fit, x = df$sales)
+
+```
+
+
+## Charting the SES Forecast
+
+```{r example1_autoplot}
+autoplot(seS_fit) + # the model
+  autolayer(object = fitted(seS_fit), series = 'ses_fitted_values') +
+  theme(legend.position = 'bottom')
+```
+
+
+## Comparisons with the Naive and Overall Average
+
+```{r example1_comparisons_and_plot}
+naiveFC = naive(y = df$sales, h = 10, level = 95)
+overall_avg = meanf(y = df$sales, h = 10, level = 95)
+
+autoplot(seS_fit) + # the model
+  autolayer(object = fitted(seS_fit), series = 'ses_fitted_values') +
+  autolayer(object = fitted(naiveFC), series = 'naive_fitted_values') +
+  autolayer(object = ts(fitted(overall_avg)), series = 'meanf_fitted_values') +
+  theme(legend.position = 'bottom')
+```
+
+
+---
+
+# Training and Validation Samples
+
+## The Basic Idea
+
+**Often you determine your smoothing parameter based on a training or baseline sample of observations, not the entire series. Then you apply the model using the smoothing parameter to the new observations and evaluate the fit on the out-of-sample observations.**
+
+```{r training_and_validation_plot, fig.align='center'}
+usdt = tidyquant::tq_get('USDT-USD', from = Sys.Date()-90, to = Sys.Date()) %>% 
+  dplyr::select(date, adjusted)
+
+usdt %>% ggplot(aes(x = date, y = adjusted)) +
+  geom_line() + geom_point() +
+  theme_bw(base_size = 7) +
+  scale_x_date(breaks = pretty_breaks(10)) + # beautifying the x-axis
+  geom_rect(xmin = usdt$date[1], xmax = usdt$date[70], 
+            ymin = min(usdt$adjusted) - 0.0005,
+            ymax = max(usdt$adjusted) + 0.0005, alpha = 0.01, fill = 'gray') +
+  geom_rect(xmin = usdt$date[71], xmax = usdt$date[91], 
+            ymin = min(usdt$adjusted) - 0.0005,
+            ymax = max(usdt$adjusted) + 0.0005, alpha = 0.01, fill = 'red') +
+  annotate("text", x = usdt$date[40], y = max(usdt$adjusted) + 0.0001,
+             color = 'black', label = "Training Region", size = 3, fontface = 'bold') + 
+  annotate("text", x = usdt$date[81], y = max(usdt$adjusted) + 0.0001,
+             color = 'black', label = "Validation Region", size = 3, fontface = 'bold') + 
+  labs(x = 'Date', y = 'Closing Price', 
+  caption = paste('Data from', min(usdt$date), 'to', max(usdt$date)),
+       title = 'Depicting Training (~77%) and Validation (~23%) Regions for the USDT-USD Data')
+
+```
+
+## The Five-Step Process
+
+  (1) Determine the size of the training, or baseline sample.
+      (a) Training sample size is usually 70-80% of the total available data.  
+      (b) Training sample should maintain time order. With time series, the training sample usually consists of observations at the beginning of the sample, while validation sample consists of observations at the end of the available data.  
+      
+  (2) Select the smoothing parameter based on the observations in the training sample only.  
+  
+  (3) Evaluate the “in-sample” performance of the forecast using RMSE and graphs using the training sample.  
+  
+  (4) Apply the model chosen in #2 to the validation sample.  
+  
+  (5) Evaluate the “out-of-sample” performance of the forecast using RMSE and graphs.
+  
+  
+### Optimizing the Smoothing Parameter: WFJ Sales Series
+To illustrate the aforementioned concepts, let us examine the data for the [WFJ Sales Example](https://github.com/fmegahed/businessForecasting/blob/master/assignments/WFJ_sales.xlsx?raw=true) (i.e., Example 3.2 in our reference book). Per the reference book example, we will use the first the **26 observations** as the training sample.
+
+```{r wfjSales}
+pacman::p_load(readxl)
+download.file(url = 'https://github.com/fmegahed/businessForecasting/blob/master/assignments/WFJ_sales.xlsx?raw=true', destfile = 'WFJ_sales.xlsx', mode = 'wb')
+WFJ = read_excel("WFJ_sales.xlsx") %>% select(c(1,2))
+
+WFJ %>% ggplot(aes(x = Obs, y = `WFJ Sales`)) +
+  geom_line() + geom_point(size = 2)
+
+# The goal here is to figure out an optimal alpha based on a training sample
+# of 26 observations
+
+train_data = WFJ[1:26, 1:2]
+
+ses_fit_opt = ses(y = train_data$`WFJ Sales`, level = 95, initial = 'optimal')
+summary(ses_fit_opt) # I can extract my alpha (from the printout 0.727)
+alpha_opt = ses_fit_opt$model$par['alpha']
+
+# to use it for the validation data
+## our approach would be to first use the alpha with 'simple' for the entire data
+## and then we will cut the data for the validation sample (reduce the impact
+## of your initial values on your test data)
+
+WFJ %<>% mutate(fitted = ses(y = `WFJ Sales`, h = 10, level = 95,
+                             initial = 'simple', alpha = alpha_opt) %>% 
+                  .[['fitted']] ) 
+
+
+```
+
+

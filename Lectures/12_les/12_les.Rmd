@@ -1,0 +1,328 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "12 - Linear Exponential Smoothing (Holt's Method)"
+author: Fadel M. Megahed
+date: 'Fall 2021'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, xtable, tidyverse, magrittr, tidyquant, fpp2, ggpubr, scales)
+```
+
+# Preface
+
+### What we Covered Last Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Recognize time series that are appropriate for simple exponential smoothing (SES).} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use SES to smooth past observations of a time series.}  \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Recognize time series that are appropriate for simple exponential smoothing (SES).}  \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use SES to smooth past observations of a time series.}  \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use SES to forecast future observations of a time series.}  \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Compare the forecasting performance of SES to other suitable techniques (i.e., methods that require similar assumptions).}
+\end{block}
+
+### Recap: A 10,000 Foot View of Forecasting Methods
+
+\vspace{\baselineskip}
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\large{\textbf{Forecasting}}
+				[\textbf{Judgemental}
+				[Sales Composite]
+				[Customer Survey]
+				[Delphi Method]]
+				[\textbf{Quantitative}
+				[\textcolor{miamired}{\textbf{Extrapolative}}
+				[\textcolor{darkgreen}{\textbf{Naive}}]
+				[\textbf{Smoothing-based}
+				[\textcolor{darkgreen}{\textbf{$\approx$Stationary}}
+				[Average]
+				[MA]
+				[\textcolor{orange}{SES}]]
+				[\textcolor{darkgreen}{\textbf{Trend}}
+				[\textcolor{orange}{Holt's}]]
+				[\textcolor{darkgreen}{\textbf{Both?}}
+				[Holt-Winters]
+				]]
+				[\textbf{``Advanced''}
+				[(S)ARIMA]
+				[GARCH]]]
+				[\textcolor{miamired}{\textbf{Causal}}
+				[\textbf{Statistical}
+				[(S)ARIMAX]]
+				[\textbf{ML-Based}
+				[\textcolor{darkgreen}{\textbf{Feature Eng.}}
+				[e.g. AutoML]]]
+				]
+				]
+				]
+		\end{forest}}
+		\caption{A 10,000 foot view of forecasting techniques\footnotemark}
+\end{figure}
+
+\footnotetext{An (incomplete) classification of forecasting techniques. Note that these focus on univariate time-series. Hence, they exclude popular approaches used in multivariate time series forecasting.}
+
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Recognize time series that are appropriate for linear exponential smoothing (LES).}
+			\item \textbf{Use LES to forecast future observations of a time series.}
+	\end{itemize}
+\end{block}
+
+
+# Linear Exponential Smoothing (LES)
+
+### Definition and Basic Principles {.allowframebreaks}
+
+Linear Exponential Smoothing (LES) is a method used for one-step-ahead forecasting of a time series when there \textcolor{miamired}{is a local trend, but no} seasonal pattern.
+
+A “global” trend occurs when a trend is increasing or decreasing at a nearly constant rate as in a simple linear regression model:
+$$
+y_t = \beta_0 + \beta_1t + \epsilon_t
+$$
+
+**A “local” trend occurs when a linear trend is increasing or decreasing at a nonconstant rate.** LES, also referred to as Holt’s Method or double exponential smoothing, is appropriate when the level ($\beta_0$) of the series is slowly changing as with SES, and the trend is also changing over time.
+
+To compute the **forecast** we will use two smoothing constants, $\alpha$, to smooth the level, and $\beta$, the smoothing constant to smooth the trend.
+
+The estimate of the **level** is: 
+\begin{equation}
+l_t = \alpha y_t + (1-\alpha)[l_{t-1} + b_{t-1}]
+\end{equation}
+
+The estimate of the **trend** is:
+\begin{equation}
+b_t = \beta [l_t - l_{t-1}] + (1-\beta) b_{t-1}
+\end{equation}
+
+To estimate the **point forecast** for time $t+h$ time periods ahead made in time $t$:
+\begin{equation}
+\hat{y}_{t+h}(t) = l_t + (h\times b_t)
+\end{equation}
+
+
+### What needs to be Determined/Optimized for? [1]
+
+- Starting value for the level, $L_0$  and the starting value of the trend, $B_0$:  
+
+  - When fitting “by hand” you can use a training sample and fit a simple linear trend regression, $\hat{y}_t = b_0 + b_1 t$, to obtain initial estimates of $L_0$ and $B_0$.  
+  
+  - $L_0 = b_0$, the intercept from a simple regression equation.  
+  
+  - $B_0 = b_1$, the slope from a simple regression equation.  
+  
+
+### What needs to be Determined/Optimized for? [2]
+
+- The value of the smoothing constant for the level, $\alpha$, and the smoothing constant for the trend, $\beta$.\footnotemark  
+
+  - $0 < \alpha < 1$, and $0 < \beta < 1$;  
+  
+  - The values for $\alpha$ and $\beta$ may be chosen to be the same or different, depending on the nature of the time series.  
+  
+  - Often the choices of the smoothing constants are arbitrary.  
+  
+  - $\alpha$ and $\beta$ can also be chosen by minimizing the mean squared one-step ahead forecast error (MSE) or equivalently, the square root of the mean squared one-step ahead forecast error (RMSE).
+
+\footnotetext{The past four slides are adapted from \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's Handouts} for ISA 444, Spring 2020.}
+
+### Example 1: Weekly Thermometer Sales (Chart)
+
+Below is a simple line plot based on ``Weekly_Therm_Sales.xlsx''. 
+
+```{r thermSales, echo=FALSE, results='asis', fig.height=2.5}
+thermSales = readxl::read_excel("Data/Weekly_Therm_Sales.xlsx")
+
+thermSales %>% ggplot(aes(x = Time, y = WeeklyThermSales)) + 
+  geom_line() + geom_point() + theme_bw()
+```
+
+
+### Example 1: Weekly Thermomemter Sales (By "Hand") [1]
+
+Let us use the first 26 points in the dataset to estimate both $L_0$ and $B_0$.
+```{r thermSalesReg, results='asis'}
+Time = thermSales$Time[1:26]
+WeeklySales = thermSales$WeeklyThermSales[1:26]
+regModel = lm(WeeklySales ~ Time)
+print(xtable(summary(regModel)$coefficients, align = c(rep('c', 5)), 
+             digits = c(0, rep(3, 4)) ), comment = FALSE)
+```
+
+
+### Example 1: Weekly Thermomemter Sales (By "Hand") [2]
+Based on the information in the previous slide, please fill the table below. For the purpose of our example, please use $\alpha = 0.2$ and $\beta = 0.1$. Please create and fill this table in the Excel file.
+```{r thermSalesTable, echo=FALSE, results='asis'}
+thermSales[53, 1:2] = list(0, NA)
+thermSales %<>% arrange(Time)
+thermSales$Level = "..."
+thermSales$Trend = "..."
+thermSales$`1-step ahead Forecast` = "..."
+print(xtable(thermSales[1:9, ], align = c(rep('c', 6))), comment = FALSE, row.names = FALSE)
+```
+
+
+### Example 1: Using R to Compute the Forecast [1]
+
+**This is a live class demo, where we will use R to obtain the results shown in the next 3 slides.**
+
+```{r holtTherm1, echo=FALSE, fig.height=2.35}
+thermSales = readxl::read_excel("Data/Weekly_Therm_Sales.xlsx")
+weeklySales = thermSales$WeeklyThermSales
+les = holt(weeklySales, alpha = 0.2, beta = 0.1, h=10)
+autoplot(les) + theme_bw()
+```
+
+### Example 1: Using R to Compute the Forecast [2]
+
+```{r holtTherm2, echo=FALSE, results="asis"}
+thermSales$Forecast = les$fitted
+print(xtable(thermSales[1:9, ], align = c(rep('c', 4))), comment = FALSE, row.names = FALSE)
+```
+
+### Example 1: Using R to Compute the Forecast [3]
+```{r holtTherm3, echo=FALSE, results="asis"}
+print(xtable(accuracy(les), align = c(rep('c', 8)), digits = c(0, rep(3,7)) ), comment = FALSE)
+```
+
+### Optimizing the Smoothing Parameter: WFJ Sales Series
+To illustrate the aforementioned concepts, let us examine the data for the [WFJ Sales Example](https://github.com/fmegahed/businessForecasting/raw/master/lectures/09%20-%20Forecasting%20Non-Seasonal%20Series/Data/WFJ_sales.xlsx) (i.e., Example 3.2 in our textbook). Per the textbook example, we will use the first the 26 observations as the estimation sample. **Note that we will now apply LES instead of the SES approach we examined last class (and today).**
+
+```{r wfjSalesLES}
+pacman::p_load(readxl)
+download.file("https://github.com/fmegahed/businessForecasting/blob/master/assignments/WFJ_sales.xlsx?raw=true", destfile = "Data/WFJ_sales.xlsx", mode = "wb")
+WFJ = read_excel("Data/WFJ_sales.xlsx") %>% select(c(1,2))
+```
+
+**This example will be coded live in class to obtain the results below.**
+
+
+```{r wfjSalesCompleteLES, echo=FALSE, results='asis'}
+trainData = WFJ[1:26,] # using the first 26 observations for training
+ntrain = nrow(trainData) # getting the sample size
+
+les = holt(trainData$`WFJ Sales`, h = 36)
+metrics = accuracy(les)
+cat(paste0('The optimal alpha and beta obtained using R are equal to ', 
+           round(les$model$par['alpha'], 3), ', and ', round(les$model$par['beta'], 3), ', respectively.'), '\n')
+print(xtable(metrics, align = c(rep('c', 8)), digits = c(0, rep(3, 7)) ), comment = FALSE)
+```
+
+### The Validation Results: The Basics
+**A continuation of the live coding session, where we: (a) examine the validation results; and (b) print the combined training and validation results in one table.**
+
+```{r wfjSalesCompleteLES2, echo=FALSE, results='asis'}
+lesValid =holt(WFJ$`WFJ Sales`, h =10, alpha = les$model$par['alpha'], beta = les$model$par['beta'])
+WFJ$lesOpt = lesValid %>% .[['fitted']]
+validationData = WFJ[27:62,]
+validationMetrics = accuracy(x = validationData$`WFJ Sales`, validationData$lesOpt)
+
+combinedMetrics = rbind(metrics[1, -c(6,7)], validationMetrics)
+row.names(combinedMetrics) = c('Training Set', 'Validation Set')
+print(xtable(combinedMetrics, align = c(rep('c', 6)), digits = c(0, rep(3, 5)) ), comment = FALSE)
+```
+
+
+### The Validation Results: Visually
+
+```{r wfjSalesCompleteLES3, echo=FALSE}
+autoplot(lesValid) + autolayer(fitted(lesValid), series = 'LES (optimal)') +
+  theme_bw() + theme(legend.position = 'bottom') + 
+  labs(x = 'Obs. Number', y = 'Weekly Sales')
+```
+
+
+### The Validation Results: With No Updating (Based on Training Model)
+
+```{r wfjSalesCompleteLES4, echo=FALSE, fig.height=2.4}
+autoplot(les) + 
+  autolayer(fitted(les), series = 'LES (optimal)') +
+  theme_bw() + theme(legend.position = 'bottom') + 
+  labs(x = 'Obs. Number', y = 'Weekly Sales')
+```
+
+# Rolling Origins
+
+### Demo
+
+Please refer to our inclass demo for more details.
+
+# Forecasting Many Time-Series
+
+### Demo
+
+Please refer to our inclass demo for more details.
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Recognize time series that are appropriate for linear exponential smoothing (LES).}
+			\item \textbf{Use LES to forecast future observations of a time series.}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - **Recommended:** Thoroughly read [Chapter 3.1-3.4 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+
+- **Required:** Complete the graded assignment (see details in next slide).
+ 
+
+### Graded Assignment 08: Evaluating your Understanding
+
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449746}{Canvas (click here)} and answer the questions. **Due March 7, 2022 [8:30 AM, Ohio local time]** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 12. To reinforce your understanding of the covered material, I also suggest [reading Chapter 3.1-3.3 of the book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+
+---
+
+\maketitle

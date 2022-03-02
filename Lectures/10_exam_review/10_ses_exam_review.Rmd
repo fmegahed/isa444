@@ -1,0 +1,392 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "10 - Nonseasonal Smoothing (Cont.)"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, xtable, tidyverse, magrittr, tidyquant, scales, fpp2)
+```
+
+# Preface
+
+### What we Covered Last Class
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe and apply smoothing/forecasting with a cumulative average.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Describe and apply forecasting with a moving average.}
+\end{block}
+
+
+### Recap: A 10,000 Foot View of Forecasting Methods
+
+\vspace{\baselineskip}
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\large{\textbf{Forecasting}}
+				[\textbf{Judgemental}
+				[Sales Composite]
+				[Customer Survey]
+				[Delphi Method]]
+				[\textbf{Quantitative}
+				[\textcolor{miamired}{\textbf{Extrapolative}}
+				[\textcolor{darkgreen}{\textbf{Naive}}]
+				[\textbf{Smoothing-based}
+				[\textcolor{darkgreen}{\textbf{$\approx$Stationary}}
+				[Average]
+				[MA]
+				[\textcolor{orange}{SES}]]
+				[\textcolor{darkgreen}{\textbf{Trend}}
+				[Holt's]]
+				[\textcolor{darkgreen}{\textbf{Both?}}
+				[Holt-Winters]
+				]]
+				[\textbf{``Advanced''}
+				[(S)ARIMA]
+				[GARCH]]]
+				[\textcolor{miamired}{\textbf{Causal}}
+				[\textbf{Statistical}
+				[(S)ARIMAX]]
+				[\textbf{ML-Based}
+				[\textcolor{darkgreen}{\textbf{Feature Eng.}}
+				[e.g. AutoML]]]
+				]
+				]
+				]
+		\end{forest}}
+		\caption{A 10,000 foot view of forecasting techniques\footnotemark}
+\end{figure}
+
+\footnotetext{An (incomplete) classification of forecasting techniques. Note that these focus on univariate time-series. Hence, they exclude popular approaches used in multivariate time series forecasting.}
+
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Review and understand the concepts covered in Exam 01.} 
+			\item \textbf{Recognize time series that are appropriate for simple exponential smoothing (SES).}
+			\item \textbf{Use SES to smooth past observations of a time series.}
+			\item \textbf{Use SES to forecast future observations of a time series.}
+			\item \textbf{Compare the forecasting performance of SES to other suitable techniques (i.e., methods that require similar assumptions).}
+	\end{itemize}
+\end{block}
+
+
+# Exam 01 Review and Discussion
+
+### A Walk Through of Every Question on Exam 01
+
+We will go through every question on Exam 01. **Please do not hesitate to ask me questions as we are going through this.**
+
+
+# Simple Exponential Smoothing (SES)
+
+### Definition and Basic Principles
+
+Simple Exponential Smoothing (SES) is a method used for one-step-ahead forecasting of a time series when there is no trend or seasonal pattern, but the mean may drift slowly over time. The mean is said to have a "local level".
+
+Similar to the idea behind a moving average, SES averages the values of the times series, but applies weights of decreasing importance to values that are farther away from the forecast. The weights of the observations "exponentially decay" as we move away from them in time.
+
+The SES one-step-ahead forecast is given by:
+\begin{equation}
+  {l}_{t+1} = l_t + \alpha(y_t - l_t ) = \alpha y_t + (1 - \alpha)l_t,
+\end{equation}
+where $0 < \alpha < 1$ is the smoothing parameter, and $l_t$ is the  level of the series at time $t$. Note that $l_{1+1}$ is often denoted as $f_{t+1}$ since it represents our one step-ahead forecast for $t+1$.
+
+
+### Impact of the Smoothing Parameter: The Math
+
+Let us examine what goes into the computations for $l_4$:
+
+\begin{equation}
+  \begin{split}
+  \setbeamercovered{transparent}
+    l_4 &= \alpha y_3 + (1 - \alpha) l_3 \\
+        \onslide<2->{&= \alpha y_3 + (1 - \alpha) \color<2>{miamired}{[\alpha y_2 + (1 - \alpha)l_2]}} \\
+        \onslide<2->{&= \alpha y_3 + \color<2>{miamired}{\alpha(1 - \alpha)y_2 + (1 - \alpha)^2 l_2}} \\
+        \onslide<3->{&= \alpha y_3 + \alpha(1 - \alpha)y_2 + (1 - \alpha)^2 \color<3>{miamired}{[\alpha y_1 + (1 - \alpha)l_1]}} \\
+        \onslide<3->{&= \alpha y_3 + \alpha(1 - \alpha)y_2 + \color<3>{miamired}{\alpha(1 - \alpha)^2 y_1} + \color<3>{miamired}{(1 - \alpha)^3l_1}} \\
+        \onslide<4->{&= \alpha y_3 + \alpha(1 - \alpha)y_2 + \alpha(1 - \alpha)^2 y_1 + (1-\alpha)^3 \color<4>{miamired}{l_0}}
+  \end{split}
+\end{equation}
+
+\only<5>{\textbf{\textcolor{miamired}{Note that SES needs two parameters: (a) the smoothing paramater $\alpha$, and (b) the initial value for the level (i.e., $l_0$).} Note that we will use $l_0 = l_1 = y_1$. } }
+
+### Impact of the Smoothing Parameter: The Math (Cont.)
+
+For $l_{10}$, the weights of the observed values at $t$ are distributed as follows:
+
+```{r tableWeights, results='asis', echo=FALSE}
+
+df = data.frame(t= seq(9, 0, -1), `alpha = 0.2` = rep(NA, 10), `alpha = 0.5` = rep(NA, 10), `alpha = 0.8` = rep(NA, 10))
+
+for (i in 1:nrow(df) ) {
+  df$alpha...0.2[i] = 0.2*(1-0.2)^(i-1)
+  df$alpha...0.5[i] = 0.5*(1-0.5)^(i-1)
+  df$alpha...0.8[i] = 0.8*(1-0.8)^(i-1)
+}
+
+print(xtable(df, align = c(rep('c', 5)), digits = c(0, 0, 5, 5, 5) ), comment = FALSE,  
+      include.rownames=FALSE)
+```
+
+
+### Impact of the Smoothing Parameter: Visually
+
+```{r plotWeight, echo=FALSE}
+df = data.frame(t= seq(9, 0, -1), `alpha = 0.2` = rep(NA, 10), `alpha = 0.5` = rep(NA, 10), `alpha = 0.8` = rep(NA, 10))
+
+for (i in 1:nrow(df) ) {
+  df$alpha...0.2[i] = 0.2*(1-0.2)^(i-1)
+  df$alpha...0.5[i] = 0.5*(1-0.5)^(i-1)
+  df$alpha...0.8[i] = 0.8*(1-0.8)^(i-1)
+}
+
+df$lag = rev(df$t) + 1 
+
+df %<>% pivot_longer(c(2,3,4))
+
+df %>% ggplot(aes(x = as.integer(lag), y = value, group = name, color = name)) +
+  geom_line() + geom_point() + theme_bw() +
+  labs(x = 'Lag', y = 'Weight', title = 'Weights on Different Lags in SES', color = 'Smoothing Parameter') +
+  theme(legend.position = 'bottom') +
+  scale_x_continuous(breaks = scales::pretty_breaks()) +
+  scale_color_brewer(type = "qual", palette = 'Dark2')
+
+```
+
+### Example 1: Problem Definition
+
+In this example, we are using R to forecast sales mimicking Table 3.3 in our reference book. See P. 72. \textcolor{miamired}{Note the difference between the generated output here and that in the Table. If you wanted to exactly replicate that result, what minor edit to the R forecast is needed?}
+
+```{r table3-3, eval=FALSE}
+if(require(pacman)==FALSE) install.packages("pacman") # install pacman if not installed
+pacman::p_load(magrittr, tidyverse, fpp2, scales) # load (and install if needed) the required packages
+
+df = data.frame(time = 1:12, 
+                sales = c(5, 6, 7, 8, 7, 6, 5, 6, 7, 8, 7, 6))
+
+df %>% 
+  ggplot(aes(x= time, y = sales)) + # setting the canvas
+  geom_line() + geom_point() + # lines with dots highlighted
+  scale_x_continuous(breaks = pretty_breaks(12)) + # making x_axis pretty (from scales)
+  theme_bw() # using our typical black and white theme
+```
+
+### Example 1: Charting the Original Data
+
+```{r table3-3Cont1, echo=FALSE}
+if(require(pacman)==FALSE) install.packages("pacman") # install pacman if not installed
+pacman::p_load(magrittr, tidyverse, fpp2, scales) # load (and install if needed) the required packages
+
+df = data.frame(time = 1:12, 
+                sales = c(5, 6, 7, 8, 7, 6, 5, 6, 7, 8, 7, 6))
+
+df %>% 
+  ggplot(aes(x= time, y = sales)) + # setting canvas
+  geom_line() + geom_point() + # lines with dots highlighted
+  scale_x_continuous(breaks = pretty_breaks(12)) + # making x_axis pretty (from scales)
+  theme_bw() # using our typical black and white theme
+```
+
+### Example 1: Using R to Compute the SES
+```{r table3-3Cont2, out.height=1.8}
+sales_ts = ts(df$sales, start = 1, frequency = 1)
+sesRes = ses(sales_ts, initial = "simple", alpha = 0.3, h =3, level = 95)
+summary(sesRes)
+```
+
+
+### Example 1: Using R to Chart the Data, SES \& Forecast
+
+```{r autoplotExample2, echo=FALSE}
+autoplot(sesRes) + 
+  autolayer(fitted(sesRes), series = 'Simple Exponential Smoothing') +
+  theme_bw(base_size = 8) + scale_x_continuous(breaks = pretty_breaks(20)) +
+  labs(y = 'Sales', title = 'Forecasts from Simple Exponential Smoothing') +
+  theme(legend.position = 'bottom') +
+  guides(color=guide_legend(title="Series"))
+```
+
+
+### Example 1: Comparing SES with Other Smoothing Methods
+
+```{r autoplotExample2Comp, echo=FALSE}
+naiveFC = naive(sales_ts, h =3, level = 95)
+cAVG = meanf(sales_ts, h = 3, level = 95)
+
+autoplot(sesRes) + 
+  autolayer(fitted(sesRes), series = 'SES[0.3]') +
+  autolayer(fitted(cAVG), series = 'Overall Average') +
+    autolayer(fitted(naiveFC), series = 'Naive') +
+  theme_bw(base_size = 8) + scale_x_continuous(breaks = pretty_breaks(20)) +
+  labs(y = 'Sales', title = 'Comparison of Three Smoothing Techniques',
+       caption = 'The blue ribbon/region captures the 95% PI based on the SES Forecast') + 
+  theme(legend.position = 'bottom') +
+  guides(color=guide_legend(title="Series"),
+        fill=guide_legend(title="95% PI for SES"))
+```
+
+
+### Discussion Question
+
+**If you had to make a subjective choice for the value of the smoothing constant, what value would you choose for:**   
+
+  (a) **a product with long-term steady sales and**  
+  
+  (b) **a stock/cryptocurrency (e.g., AAPL, AMZN, BTC-USD, ADA-USD)?**
+
+
+### Training and Validation Samples {.allowframebreaks}
+
+**Often you determine your smoothing parameter based on a training or baseline sample of observations, not the entire series. Then you apply the model using the smoothing parameter to the new observations and evaluate the fit on the out-of-sample observations.**
+
+```{r rollingOrigin, fig.align='center', echo=FALSE, fig.height=1.7}
+usdt = tidyquant::tq_get('USDT-USD', from = Sys.Date()-90, to = Sys.Date()) %>% 
+  dplyr::select(date, adjusted)
+
+usdt %>% ggplot(aes(x = date, y = adjusted)) +
+  geom_line() + geom_point() +
+  theme_bw(base_size = 7) +
+  scale_x_date(breaks = pretty_breaks(10)) + # beautifying the x-axis
+  geom_rect(xmin = usdt$date[1], xmax = usdt$date[70], 
+            ymin = min(usdt$adjusted) - 0.0005,
+            ymax = max(usdt$adjusted) + 0.0005, alpha = 0.01, fill = 'gray') +
+  geom_rect(xmin = usdt$date[71], xmax = usdt$date[91], 
+            ymin = min(usdt$adjusted) - 0.0005,
+            ymax = max(usdt$adjusted) + 0.0005, alpha = 0.01, fill = 'red') +
+  annotate("text", x = usdt$date[40], y = max(usdt$adjusted) + 0.0001,
+             color = 'black', label = "Training Region", size = 3, fontface = 'bold') + 
+  annotate("text", x = usdt$date[81], y = max(usdt$adjusted) + 0.0001,
+             color = 'black', label = "Validation Region", size = 3, fontface = 'bold') + 
+  labs(x = 'Date', y = 'Closing Price', 
+  caption = paste('Data from', min(usdt$date), 'to', max(usdt$date)),
+       title = 'Depicting Training (~77%) and Validation (~23%) Regions for the USDT-USD Data')
+
+```
+
+  (1) Determine the size of the training, or baseline sample.\footnotemark  
+      (a) Training sample size is usually 70-80% of the total available data.  
+      (b) Training sample should maintain time order. With time series, the training sample usually consists of observations at the beginning of the sample, while validation sample consists of observations at the end of the available data.  
+      
+  (2) Select the smoothing parameter based on the observations in the training sample only.  
+  
+  (3) Evaluate the “in-sample” performance of the forecast using RMSE and graphs using the training sample.  
+  
+  (4) Apply the model chosen in #2 to the validation sample.  
+  
+  (5) Evaluate the “out-of-sample” performance of the forecast using RMSE and graphs.
+
+
+\footnotetext{Slide is based on \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's Handouts} for ISA 444, Spring 2020.}
+
+
+
+### Optimizing the Smoothing Parameter: WFJ Sales Series
+To illustrate the aforementioned concepts, let us examine the data for the [WFJ Sales Example](https://github.com/fmegahed/businessForecasting/blob/master/assignments/WFJ_sales.xlsx?raw=true) (i.e., Example 3.2 in our reference book). Per the reference book example, we will use the first the 26 observations as the estimation sample.
+
+```{r wfjSales}
+pacman::p_load(readxl)
+WFJ = read_excel("Data/WFJ_sales.xlsx") %>% select(c(1,2))
+```
+
+**This example will be coded live in class to obtain the results below.**
+
+
+```{r wfjSalesComplete, echo=FALSE, results='asis'}
+trainData = WFJ[1:26,] # using the first 26 observations for training
+ntrain = nrow(trainData) # getting the sample size
+
+sesResults = ses(trainData$`WFJ Sales`, h = 1)
+metrics = accuracy(sesResults)
+cat(paste0('The optimal alpha obtained using R is equal to ', round(sesResults$model$par['alpha'], 3), '.'), '\n')
+print(xtable(metrics, align = c(rep('c', 8)), digits = c(0, rep(3, 7)) ), comment = FALSE)
+```
+
+### The Validation Results
+**A continuation of the live coding session, where we: (a) examine the validation results; and (b) print the combined training and validation results in one table.**
+
+```{r wfjSalesComplete2, echo=FALSE, results='asis'}
+WFJ$sesOpt = ses(WFJ$`WFJ Sales`, h =1, initial = 'simple', alpha = 0.727) %>% .[['fitted']]
+validationData = WFJ[27:62,]
+validationMetrics = accuracy(object = validationData$sesOpt, x = validationData$`WFJ Sales`)
+
+combinedMetrics = rbind(metrics[1, -c(6,7)], validationMetrics)
+row.names(combinedMetrics) = c('Training Set', 'Validation Set')
+print(xtable(combinedMetrics, align = c(rep('c', 6)), digits = c(0, rep(3, 5)) ), comment = FALSE)
+```
+
+
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Recognize time series that are appropriate for simple exponential smoothing (SES).}
+			\item \textbf{Use SES to smooth past observations of a time series.}
+			\item \textbf{Use SES to forecast future observations of a time series.}
+			\item \textbf{Compare the forecasting performance of SES to other suitable techniques (i.e., methods that require similar assumptions).}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do
+
+ - **Recommended:** Thoroughly read Chapter [3.1-3.3 of our reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).  
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+
+- **Required:** Complete the graded assignment (see details in next slide).
+ 
+
+### Graded Assignment 07: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449732}{Canvas (click here)} and answer the questions. **Due February 28, 2022 [8:30 AM]** 
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of the material covered up to the end of Class 10. To reinforce your understanding of the covered material, I also suggest reading Chapter [3.1-3.3 of the reference book](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+
+
+---
+
+\maketitle

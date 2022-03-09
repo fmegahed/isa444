@@ -345,7 +345,7 @@ To compute the FORECAST, we will use three smoothing constants, $\alpha$ , to sm
 
 The estimate of the **level** is: 
 \begin{equation}
-l_t = \alpha (y_t \mathcolor{miamired}{/ sn_{t-L}}) + (1-\alpha)[l_{t-1} + b_{t-1}]
+l_t = \alpha (y_t \mathcolor{miamired}{/ sn_{t-m}}) + (1-\alpha)[l_{t-1} + b_{t-1}]
 \end{equation}
 
 The estimate of the **trend** is:
@@ -355,15 +355,15 @@ b_t = \beta [l_t - l_{t-1}] + (1-\beta) b_{t-1}
 
 The estimate of the **seasonal pattern** is:
 \begin{equation}
-\mathcolor{miamired}{sn_t = \gamma [y_t / l_{t}] + (1-\gamma) sn_{t-L} }
+\mathcolor{miamired}{sn_t = \gamma [y_t / l_{t}] + (1-\gamma) sn_{t-m} }
 \end{equation}
 
 
 To estimate the **point forecast** for time $t+h$ time periods ahead made in time $t$:
 \begin{equation}
-\hat{y}_{t+h}(t) = (l_t + h \times b_t) \mathcolor{miamired}{\times sn_{t+h-L}}
+\hat{y}_{t+h}(t) = (l_t + h \times b_t) \mathcolor{miamired}{\times sn_{t+h-m}}
 \end{equation}
-where $sn_{t+h-L}$ is the most recent estimate of the seasonal pattern for the season corresponding to the time period $t+h$.
+where $sn_{t+h-m}$ is the most recent estimate of the seasonal pattern for the season corresponding to the time period $t+h$.
 
 
 ### Live Demo: Holt Winters (Multiplicative) on BikeSales

@@ -1,22 +1,23 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 22.1) (preloaded format=xelatex 2022.3.1)  8 MAR 2022 10:05
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 22.1) (preloaded format=xelatex 2022.2.9)  9 MAR 2022 07:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **./14_seasonal_decomposition_hw.tex
 (14_seasonal_decomposition_hw.tex
 LaTeX2e <2021-11-15> patch level 1
-L3 programming layer <2022-02-05> (C:\Program Files\MiKTeX\tex/latex/beamer\bea
-mer.cls
+L3 programming layer <2022-01-21> (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex
+/latex/beamer\beamer.cls
 Document Class: beamer 2021/10/18 v3.64 A class for typesetting presentations
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasemodes.sty (C:\Program Files
-\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasemodes.sty 
+(C:\Program Files\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count181
 )
 \beamer@tempbox=\box50
 \beamer@tempcount=\count182
 \c@beamerpauses=\count183
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasedecode.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasedecode.sty
 \beamer@slideinframe=\count184
 \beamer@minimum=\count185
 \beamer@decode@box=\box51
@@ -26,7 +27,7 @@ Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 ) (C:\Program Files\MiKTeX\tex/generic/iftex\ifpdf.sty
 Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
 (C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty
-Package: iftex 2022/02/03 v1.0f TeX engine tests
+Package: iftex 2020/03/06 v1.0d TeX engine tests
 ))
 \headdp=\dimen138
 \footheight=\dimen139
@@ -71,8 +72,9 @@ Package: iftex 2022/02/03 v1.0f TeX engine tests
 \beamer@sectionadjust=\count270
 \beamer@toclastsection=\count271
 \beamer@tocsectionnumber=\count272
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseoptions.sty (C:\Program Fil
-es\MiKTeX\tex/latex/graphics\keyval.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseoptions.st
+y (C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks16
 ))
@@ -389,7 +391,7 @@ Package hyperref Message: Stopped early.
 Package hyperref Info: Driver (autodetected): hxetex.
 (C:\Program Files\MiKTeX\tex/latex/hyperref\hxetex.def
 File: hxetex.def 2021-06-07 v7.00m Hyperref driver for XeTeX
-(C:\Program Files\MiKTeX\tex/generic/stringenc\stringenc.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/stringenc\stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
@@ -413,10 +415,12 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 86.
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaserequires.sty (C:\Program
- Files\MiKTeX\tex/latex/beamer\beamerbasecompatibility.sty) (C:\Program Files\M
-iKTeX\tex/latex/beamer\beamerbasefont.sty (C:\Program Files\MiKTeX\tex/latex/am
-sfonts\amssymb.sty
+))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaserequires.s
+ty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasecompatibil
+ity.sty) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasef
+ont.sty (C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 (C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
@@ -426,32 +430,44 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (C:\Program Files\MiKTeX\tex/latex/sansmathaccent\sansmathaccent.sty
+))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/sansmathaccent\sansmathacce
+nt.sty
 Package: sansmathaccent 2020/01/31
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlfile.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/koma-script\scrlfile.sty
 Package: scrlfile 2021/11/13 v3.35 KOMA-Script package (file load hooks)
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlfile-hook.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/koma-script\scrlfile-hook.s
+ty
 Package: scrlfile-hook 2021/11/13 v3.35 KOMA-Script package (using LaTeX hooks)
 
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlogo.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/koma-script\scrlogo.sty
 Package: scrlogo 2021/11/13 v3.35 KOMA-Script package (logo)
-))))) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetranslator.sty (C:\Pr
-ogram Files\MiKTeX\tex/latex/translator\translator.sty
+)))))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetranslator
+.sty (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator.
+sty
 Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasemisc.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasetwoscreens.sty) (C:\Program Files\MiKTeX\
-tex/latex/beamer\beamerbaseoverlay.sty
+)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasemisc.st
+y)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetwoscreens
+.sty)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseoverlay.st
+y
 \beamer@argscount=\count301
 \beamer@lastskipcover=\skip50
 \beamer@trivlistdepth=\count302
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetitle.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasesection.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetitle.st
+y)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasesection.st
+y
 \c@lecture=\count303
 \c@part=\count304
 \c@section=\count305
 \c@subsection=\count306
 \c@subsubsection=\count307
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframe.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseframe.st
+y
 \beamer@framebox=\box66
 \beamer@frametitlebox=\box67
 \beamer@zoombox=\box68
@@ -466,24 +482,35 @@ les\MiKTeX\tex/latex/beamer\beamerbasesection.sty
 \beamer@envbody=\toks29
 \framewidth=\dimen262
 \c@framenumber=\count311
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseverbatim.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseverbatim.s
+ty
 \beamer@verbatimfileout=\write4
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframesize.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseframesize.
+sty
 \beamer@splitbox=\box69
 \beamer@autobreakcount=\count312
 \beamer@autobreaklastheight=\dimen263
 \beamer@frametitletoks=\toks30
 \beamer@framesubtitletoks=\toks31
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframecomponents.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseframecompo
+nents.sty
 \beamer@footins=\box70
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasecolor.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasenotes.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasecolor.st
+y) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasenotes.s
+ty
 \beamer@frameboxcopy=\box71
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetoc.sty) (C:\Program File
-s\MiKTeX\tex/latex/beamer\beamerbasetemplates.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetoc.sty)
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetemplates.
+sty
 \beamer@sbttoks=\toks32
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseauxtemplates.sty (C:\Progra
-m Files\MiKTeX\tex/latex/beamer\beamerbaseboxes.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaseauxtemplat
+es.sty (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasebox
+es.sty
 \bmb@box=\box72
 \bmb@colorbox=\box73
 \bmb@boxwidth=\dimen264
@@ -495,8 +522,9 @@ m Files\MiKTeX\tex/latex/beamer\beamerbaseboxes.sty
 \bmb@prevheight=\dimen270
 )
 \beamer@blockheadheight=\dimen271
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaselocalstructure.sty (C:\P
-rogram Files\MiKTeX\tex/latex/tools\enumerate.sty
+))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbaselocalstruc
+ture.sty (C:\Program Files\MiKTeX\tex/latex/tools\enumerate.sty
 Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
 \@enLab=\toks33
 )
@@ -505,10 +533,13 @@ Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
 \c@table=\count314
 \abovecaptionskip=\skip56
 \belowcaptionskip=\skip57
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasenavigation.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasenavigation
+.sty
 \beamer@section@min@dim=\dimen272
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetheorems.sty (C:\Program 
-Files\MiKTeX\tex/latex/amsmath\amsmath.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasetheorems.s
+ty (C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2021/10/15 v2.17l AMS math features
 \@mathmargin=\skip58
 For additional information on amsmath, use the `?' option.
@@ -561,7 +592,7 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
 \mathdisplay@stack=\toks38
 LaTeX Info: Redefining \[ on input line 2938.
 LaTeX Info: Redefining \] on input line 2939.
-) (C:\Program Files\MiKTeX\tex/latex/amscls\amsthm.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/amscls\amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks39
 \thm@bodyfont=\toks40
@@ -574,15 +605,22 @@ Package: amsthm 2020/05/29 v2.20.6
 \dth@everypar=\toks44
 )
 \c@theorem=\count327
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasethemes.sty)) (C:\Program 
-Files\MiKTeX\tex/latex/beamer\beamerthemedefault.sty (C:\Program Files\MiKTeX\t
-ex/latex/beamer\beamerfontthemedefault.sty) (C:\Program Files\MiKTeX\tex/latex/
-beamer\beamercolorthemedefault.sty) (C:\Program Files\MiKTeX\tex/latex/beamer\b
-eamerinnerthemedefault.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerbasethemes.sty
+))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerthemedefault.s
+ty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerfontthemedefau
+lt.sty)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamercolorthemedefa
+ult.sty)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerinnerthemedefa
+ult.sty
 \beamer@dima=\dimen282
 \beamer@dimb=\dimen283
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerouterthemedefault.sty))) (C:\
-Program Files\MiKTeX\tex/latex/pgf/utilities\pgfpages.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerouterthemedefa
+ult.sty))) (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgfpages.sty
 Package: pgfpages 2011/01/05 ver 0.02
 (C:\Program Files\MiKTeX\tex/latex/tools\calc.sty
 Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
@@ -640,11 +678,12 @@ LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
-) (C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math.sty (C:\Program 
-Files\MiKTeX\tex/latex/l3kernel\expl3.sty
-Package: expl3 2022-02-05 L3 programming layer (loader) 
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/unicode-math\unicode-math.s
+ty (C:\Program Files\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2022-01-21 L3 programming layer (loader) 
 (C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-xetex.def
-File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
+File: l3backend-xetex.def 2022-01-12 L3 backend support: XeTeX
 ()
 \c__kernel_sys_dvipdfmx_version_int=\count337
 \l__color_backend_stack_int=\count338
@@ -656,7 +695,9 @@ File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
 \g__pdf_backend_link_int=\count343
 ))
 Package: unicode-math 2020/01/31 v0.8q Unicode maths in XeLaTeX and LuaLaTeX
-(C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math-xetex.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/unicode-math\unicode-math-x
+etex.sty
 Package: unicode-math-xetex 2020/01/31 v0.8q Unicode maths in XeLaTeX and LuaLa
 TeX
 (C:\Program Files\MiKTeX\tex/latex/l3packages/xparse\xparse.sty
@@ -695,48 +736,57 @@ LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
 \g__um_fonts_used_int=\count356
 \l__um_primecount_int=\count357
 \g__um_primekern_muskip=\muskip18
-(C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math-table.tex))) (C:\P
-rogram Files\MiKTeX\tex/latex/upquote\upquote.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/unicode-math\unicode-math-t
+able.tex))) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/upquote\upquote
+.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 (C:\Program Files\MiKTeX\tex/latex/base\textcomp.sty
 Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 )) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype.sty
-Package: microtype 2021/12/02 v3.0a Micro-typographical refinements (RS)
+Package: microtype 2021/10/31 v3.0 Micro-typographical refinements (RS)
 \MT@toks=\toks45
 \MT@count=\count358
 \MT@tempbox=\box78
-LaTeX Info: Redefining \leftprotrusion on input line 1006.
-LaTeX Info: Redefining \rightprotrusion on input line 1014.
-LaTeX Info: Redefining \textls on input line 1182.
-\MT@outer@kern=\dimen291
-LaTeX Info: Redefining \textmicrotypecontext on input line 1768.
+\MT@leftmarginkern=\dimen291
+\MT@rightmarginkern=\dimen292
+LaTeX Info: Redefining \textls on input line 1114.
+\MT@outer@kern=\dimen293
+LaTeX Info: Redefining \textmicrotypecontext on input line 1700.
 \MT@listname@count=\count359
 
 (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype-xetex.d
 ef
-File: microtype-xetex.def 2021/12/02 v3.0a Definitions specific to xetex (RS)
-LaTeX Info: Redefining \lsstyle on input line 234.
+File: microtype-xetex.def 2021/10/31 v3.0 Definitions specific to xetex (RS)
+LaTeX Info: Redefining \lsstyle on input line 250.
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype.cfg
-File: microtype.cfg 2021/12/02 v3.0a microtype main configuration file (RS)
-)) (C:\Program Files\MiKTeX\tex/latex/parskip\parskip.sty
+File: microtype.cfg 2021/10/31 v3.0 microtype main configuration file (RS)
+)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/parskip\parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
-) (C:\Program Files\MiKTeX\tex/latex/xurl\xurl.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/xurl\xurl.sty
 Package: xurl 2020/12/30 v 0.09a modify URL breaks
-) (C:\Program Files\MiKTeX\tex/latex/bookmark\bookmark.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/bookmark\bookmark.sty
 Package: bookmark 2020-11-06 v1.29 PDF bookmarks (HO)
-(C:\Program Files\MiKTeX\tex/latex/bookmark\bkm-dvipdfm.def
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/bookmark\bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2020-11-06 v1.29 bookmark driver for dvipdfm (HO)
 \BKM@id=\count360
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerthemeCambridgeUS.sty (C:\Pro
-gram Files\MiKTeX\tex/latex/beamer\beamerinnerthemerounded.sty) (C:\Program Fil
-es\MiKTeX\tex/latex/beamer\beamerouterthemeinfolines.sty) (C:\Program Files\MiK
-TeX\tex/latex/beamer\beamercolorthemebeaver.sty))
+))
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerthemeCambridge
+US.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerinnerthemeroun
+ded.sty)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerouterthemeinfo
+lines.sty)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamercolorthemebeav
+er.sty))
 Package hyperref Info: Option `colorlinks' set `true' on input line 111.
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerfontthemeserif.sty) (C:\Users\m
-egahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\adjustbox.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/beamer\beamerfontthemeserif
+.sty) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\adjustbox.s
+ty
 Package: adjustbox 2020/08/19 v1.3 Adjusting TeX boxes (trim, clip, ...)
 (C:\Program Files\MiKTeX\tex/latex/xkeyval\xkeyval.sty
 Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
@@ -756,22 +806,22 @@ Package: trimclip 2020/08/19 v1.2 Trim and clip general TeX material
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
 \collectedbox=\box79
 )
-\tc@llx=\dimen292
-\tc@lly=\dimen293
-\tc@urx=\dimen294
-\tc@ury=\dimen295
+\tc@llx=\dimen294
+\tc@lly=\dimen295
+\tc@urx=\dimen296
+\tc@ury=\dimen297
 Package trimclip Info: Using driver 'tc-xetex.def'.
 (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\tc-xetex.def
 File: tc-xetex.def 2019/01/04 v2.2 Clipping driver for xetex
 ))
-\adjbox@Width=\dimen296
-\adjbox@Height=\dimen297
-\adjbox@Depth=\dimen298
-\adjbox@Totalheight=\dimen299
-\adjbox@pwidth=\dimen300
-\adjbox@pheight=\dimen301
-\adjbox@pdepth=\dimen302
-\adjbox@ptotalheight=\dimen303
+\adjbox@Width=\dimen298
+\adjbox@Height=\dimen299
+\adjbox@Depth=\dimen300
+\adjbox@Totalheight=\dimen301
+\adjbox@pwidth=\dimen302
+\adjbox@pheight=\dimen303
+\adjbox@pdepth=\dimen304
+\adjbox@ptotalheight=\dimen305
 (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/ifoddpage\ifoddpage.sty
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
 \c@checkoddpage=\count362
@@ -779,34 +829,34 @@ Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@box=\box80
 \sift@deathcycles=\count363
-\@vwid@loff=\dimen304
-\@vwid@roff=\dimen305
+\@vwid@loff=\dimen306
+\@vwid@roff=\dimen307
 )) (C:\Program Files\MiKTeX\tex/latex/tools\array.sty
 Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen306
+\col@sep=\dimen308
 \ar@mcellbox=\box81
-\extrarowheight=\dimen307
+\extrarowheight=\dimen309
 \NC@list=\toks48
 \extratabsurround=\skip67
 \backup@length=\skip68
 \ar@cellbox=\box82
-) (C:\Program Files\MiKTeX\tex/latex/colortbl\colortbl.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/colortbl\colortbl.sty
 Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
 \everycr=\toks49
 \minrowclearance=\skip69
-) (C:\Program Files\MiKTeX\tex/latex/caption\caption.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/caption\caption.sty
 Package: caption 2020/10/26 v3.5g Customizing captions (AR)
-(C:\Program Files\MiKTeX\tex/latex/caption\caption3.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
-\captionmargin=\dimen308
-\captionmargin@=\dimen309
-\captionwidth=\dimen310
-\caption@tempdima=\dimen311
-\caption@indent=\dimen312
-\caption@parindent=\dimen313
-\caption@hangindent=\dimen314
+\captionmargin=\dimen310
+\captionmargin@=\dimen311
+\captionwidth=\dimen312
+\caption@tempdima=\dimen313
+\caption@indent=\dimen314
+\caption@parindent=\dimen315
+\caption@hangindent=\dimen316
 Package caption Info: beamer document class detected.
-(C:\Program Files\MiKTeX\tex/latex/caption\caption-beamer.sto
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/caption\caption-beamer.sto
 File: caption-beamer.sto 2020/08/22 v2.0 Adaption of the caption package to the
  beamer document classes (AR)
 ))
@@ -815,14 +865,16 @@ File: caption-beamer.sto 2020/08/22 v2.0 Adaption of the caption package to the
 Package caption Info: hyperref package is loaded.
 Package caption Info: Hyperref support is turned off
 (caption)             because hyperref has stopped early.
-) (C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesome.sty
+)
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/fontawesome\fontawesome.sty
 Package: fontawesome 2016/05/15 v4.6.3.1 font awesome icons
 (C:\Program Files\MiKTeX\tex/generic/iftex\ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
 ) (C:\Program Files\MiKTeX\tex/generic/iftex\ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-) (C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-generic.tex
 )
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/fontawesome\fontawesomesymb
+ols-generic.tex)
 
 Package fontspec Info: FontAwesome scale = 1.005834146341463.
 
@@ -852,8 +904,10 @@ Package fontspec Info: Font family 'FontAwesome(0)' created for font
 (fontspec)             <->s*[1.005834146341463]"FontAwesome/OT:language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
-(C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-xeluatex.tex)
-) (C:\Program Files\MiKTeX\tex/latex/forest\forest.sty
+
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/fontawesome\fontawesomesymb
+ols-xeluatex.tex)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/forest\f
+orest.sty
 Package: forest 2017/07/14 v2.1.5 Drawing (linguistic) trees
 (C:\Program Files\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty (C:\Program Files
 \MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
@@ -865,8 +919,8 @@ File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 ) (C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@nodesepstart=\dimen315
-\pgf@nodesepend=\dimen316
+\pgf@nodesepstart=\dimen317
+\pgf@nodesepend=\dimen318
 ) (C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
 )) (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgffor.sty (C:\Program File
@@ -876,8 +930,8 @@ ic/pgf/utilities\pgfkeys.code.tex)) (C:\Program Files\MiKTeX\tex/latex/pgf/math
 C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex
 Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
 (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex)
-\pgffor@iter=\dimen317
-\pgffor@skip=\dimen318
+\pgffor@iter=\dimen319
+\pgffor@skip=\dimen320
 \pgffor@stack=\toks50
 \pgffor@toks=\toks51
 )) (C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
@@ -887,16 +941,16 @@ Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
 tex
 File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 \pgf@plot@mark@count=\count366
-\pgfplotmarksize=\dimen319
+\pgfplotmarksize=\dimen321
 )
-\tikz@lastx=\dimen320
-\tikz@lasty=\dimen321
-\tikz@lastxsaved=\dimen322
-\tikz@lastysaved=\dimen323
-\tikz@lastmovetox=\dimen324
-\tikz@lastmovetoy=\dimen325
-\tikzleveldistance=\dimen326
-\tikzsiblingdistance=\dimen327
+\tikz@lastx=\dimen322
+\tikz@lasty=\dimen323
+\tikz@lastxsaved=\dimen324
+\tikz@lastysaved=\dimen325
+\tikz@lastmovetox=\dimen326
+\tikz@lastmovetoy=\dimen327
+\tikzleveldistance=\dimen328
+\tikzsiblingdistance=\dimen329
 \tikz@figbox=\box84
 \tikz@figbox@bg=\box85
 \tikz@tempbox=\box86
@@ -996,17 +1050,17 @@ File: tikzlibrarycalc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 (C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryintersections.code
 .tex (C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryfpu.code.tex)
 \pgf@intersect@solutions=\count375
-) (C:\Program Files\MiKTeX\tex/latex/pgfopts\pgfopts.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/pgfopts\pgfopts.sty
 Package: pgfopts 2014/07/10 v2.1a LaTeX package options with pgfkeys
 \pgfopts@list@add@a@toks=\toks52
 \pgfopts@list@add@b@toks=\toks53
-) (C:\Program Files\MiKTeX\tex/latex/elocalloc\elocalloc.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/elocalloc\elocalloc.sty
 Package: elocalloc 2016/12/15 v0.03 local allocation for LaTeX 2015+ (DPC)
 ) (C:\Program Files\MiKTeX\tex/latex/environ\environ.sty
 Package: environ 2014/05/04 v0.3 A new way to define environments
 (C:\Program Files\MiKTeX\tex/latex/trimspaces\trimspaces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
-)) (C:\Program Files\MiKTeX\tex/latex/inlinedef\inlinedef.sty
+)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/inlinedef\inlinedef.sty
 Package: inlinedef 2008/07/10 v1.0 Inlined expansions within definitions
 \ID@toks=\toks54
 \ID@count=\count376
@@ -1014,7 +1068,7 @@ Package: inlinedef 2008/07/10 v1.0 Inlined expansions within definitions
 \ID@usercommands=\toks55
 \safeloop@depth=\count377
 \safeRKloop@depth=\count378
-\forest@temp@dimen=\dimen328
+\forest@temp@dimen=\dimen330
 \forest@temp@count=\count379
 \forest@n=\count380
 \forest@temp@global@count=\count381
@@ -1025,7 +1079,7 @@ Package: inlinedef 2008/07/10 v1.0 Inlined expansions within definitions
 \forest@global@temparray@N=\count385
 \forest@isnum@count=\count386
 \forest@isdim@nonintpart=\count387
-\forest@isdim@dimen=\dimen329
+\forest@isdim@dimen=\dimen331
 \forest@sort@m=\count388
 \forest@sort@k=\count389
 \forest@sort@p=\count390
@@ -1045,10 +1099,10 @@ Package: inlinedef 2008/07/10 v1.0 Inlined expansions within definitions
 \forest@nodewalk@shortsteps@resolution=\toks60
 \forest@do@dynamics=\toks61
 \forest@box=\box108
-\forest@xg=\dimen330
-\forest@yg=\dimen331
-\forest@xs=\dimen332
-\forest@ys=\dimen333
+\forest@xg=\dimen332
+\forest@yg=\dimen333
+\forest@xs=\dimen334
+\forest@ys=\dimen335
 \forest@pi@toks=\toks62
 \forest@segment@toks=\toks63
 \forest@PIi@toks=\toks64
@@ -1064,23 +1118,23 @@ Package: inputenc 2021/02/14 v1.3d Input encoding file
 
 Package inputenc Warning: inputenc package ignored with utf8 based engines.
 
-) (C:\Program Files\MiKTeX\tex/latex/media9\media9.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/media9\media9.sty
 Package: media9 2021/10/18 v1.23 acrobat-9/X compatible media
 \g_mix_pkgresizeflag_int=\count403
-(C:\Program Files\MiKTeX\tex/latex/media9\pdfbase.sty
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/media9\pdfbase.sty
 Package: pdfbase 2021/09/12 v0.53 driver independent access to low-level PDF fe
 atures
 \g_pbs_page_int=\count404
 \g_pbs_obj_int=\count405
 \g_pbs_oc_int=\count406
-) (C:\Program Files\MiKTeX\tex/latex/ocgx2\ocgbase.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/ocgx2\ocgbase.sty
 Package: ocgbase 2021/06/11 v0.20 support package for ocgx2.sty
 \g_ocgbase_nd_int=\count407
 )
 \l_mix_poster_box=\box109
-\g_mix_wd_dim=\dimen334
-\g_mix_ht_dim=\dimen335
-\g_mix_dp_dim=\dimen336
+\g_mix_wd_dim=\dimen336
+\g_mix_ht_dim=\dimen337
+\g_mix_dp_dim=\dimen338
 \g_mix_rmcnt_int=\count408
 \l_mix_viewcnt_int=\count409
 \g@mix@page@int=\count410
@@ -1088,20 +1142,20 @@ Package: ocgbase 2021/06/11 v0.20 support package for ocgx2.sty
 \l_mix_lineno_int=\count412
 \l_mix_pbtn_box=\box110
 \g_mix_mbtncnt_int=\count413
-\mix@btn@dim=\dimen337
+\mix@btn@dim=\dimen339
 ) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip70
 \multirow@cntb=\count414
 \multirow@dima=\skip71
-\bigstrutjot=\dimen338
+\bigstrutjot=\dimen340
 )
 (C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
 ryarrows.code.tex
 File: tikzlibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 (C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.code.tex
 File: pgflibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\arrowsize=\dimen339
+\arrowsize=\dimen341
 )) (C:\Program Files\MiKTeX\tex/latex/graphics\rotating.sty
 Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
 (C:\Program Files\MiKTeX\tex/latex/base\ifthen.sty
@@ -1112,7 +1166,7 @@ Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
 \rotFPbot=\skip73
 \rot@float@box=\box111
 \rot@mess@toks=\toks68
-) (C:\Program Files\MiKTeX\tex/latex/wasysym\wasysym.sty
+) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/wasysym\wasysym.sty
 Package: wasysym 2020/01/19 v2.4 Wasy-2 symbol support package
 \symwasy=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
@@ -1190,28 +1244,28 @@ LaTeX Info: Redefining \ref on input line 234.
 LaTeX Info: Redefining \pageref on input line 234.
 LaTeX Info: Redefining \nameref on input line 234.
 
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-basic-dictionary-Engli
-sh.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-basic
+-dictionary-English.dict
 Dictionary: translator-basic-dictionary, Language: English 
 )
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-bibliography-dictionar
-y-English.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-bibli
+ography-dictionary-English.dict
 Dictionary: translator-bibliography-dictionary, Language: English 
 )
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-environment-dictionary
--English.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-envir
+onment-dictionary-English.dict
 Dictionary: translator-environment-dictionary, Language: English 
 )
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-months-dictionary-Engl
-ish.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-month
+s-dictionary-English.dict
 Dictionary: translator-months-dictionary, Language: English 
 )
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-numbers-dictionary-Eng
-lish.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-numbe
+rs-dictionary-English.dict
 Dictionary: translator-numbers-dictionary, Language: English 
 )
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-theorem-dictionary-Eng
-lish.dict
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/translator\translator-theor
+em-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
@@ -1551,7 +1605,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for U+wasy on input line 24
 6.
-(C:\Program Files\MiKTeX\tex/latex/wasysym\uwasy.fd
+(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/wasysym\uwasy.fd
 File: uwasy.fd 2020/01/19 v2.4 Wasy-2 symbol font definitions
 )
 
@@ -1737,10 +1791,10 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 52585 strings out of 410969
- 1147702 string characters out of 2828074
- 1562914 words of memory out of 3000000
- 72501 multiletter control sequences out of 15000+600000
+ 52566 strings out of 410978
+ 1148687 string characters out of 2828277
+ 1563403 words of memory out of 3000000
+ 72473 multiletter control sequences out of 15000+600000
  481436 words of font info for 127 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  145i,16n,133p,1627b,2991s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1749,3 +1803,5 @@ Output written on 14_seasonal_decomposition_hw.pdf (34 pages).
 
 ! xelatex: security risk: running with elevated privileges
 ! miktex-dvipdfmx: security risk: running with elevated privileges
+! miktex-dvipdfmx: major issue: So far, you have not checked for updates as a MiKTeX user.
+! xelatex: major issue: So far, you have not checked for updates as a MiKTeX user.

@@ -1,0 +1,354 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "15 - Autocorrelation"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, xtable, tidyverse, magrittr, tidyquant, fpp2, scales, sweep, timetk)
+```
+
+# Preface
+
+### What we Covered Last Two Weeks
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Recognize time series that are appropriate for linear exponential smoothing (LES).} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use LES to forecast future observations of a time series.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Explain when to use an additive vs. multiplicative model for a time series.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use classic decomposition methods to detrend and deseasonalize a time series.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Recognize time series that are appropriate for triple exponential smoothing (HW).} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use HW to forecast future observations of a time series.} \\
+\end{block}
+
+### Recap: A 10,000 Foot View of Forecasting Methods
+
+\vspace{\baselineskip}
+
+\begin{figure}
+		\centering
+		\adjustbox{max width=\textwidth, frame}{%
+			\begin{forest}
+				[\large{\textbf{Forecasting}}
+				[\textbf{Judgemental}
+				[Sales Composite]
+				[Customer Survey]
+				[Delphi Method]]
+				[\textbf{Quantitative}
+				[\textcolor{miamired}{\textbf{Extrapolative}}
+				[\textcolor{darkgreen}{\textbf{Naive}}]
+				[\textbf{Smoothing-based}
+				[\textcolor{darkgreen}{\textbf{$\approx$Stationary}}
+				[Average]
+				[MA]
+				[SES]]
+				[\textcolor{darkgreen}{\textbf{Trend}}
+				[Holt's]]
+				[\textcolor{darkgreen}{\textbf{Both?}}
+				[Holt-Winters]
+				]]
+				[\textbf{``Advanced''}
+				[(S)ARIMA]
+				[GARCH]]]
+				[\textcolor{miamired}{\textbf{Causal}}
+				[\textbf{Statistical}
+				[(S)ARIMAX]]
+				[\textbf{ML-Based}
+				[\textcolor{darkgreen}{\textbf{Feature Eng.}}
+				[e.g. AutoML]]]
+				]
+				]
+				]
+		\end{forest}}
+		\caption{A 10,000 foot view of forecasting techniques\footnotemark}
+\end{figure}
+
+\footnotetext{An (incomplete) classification of forecasting techniques. Note that these focus on univariate time-series. Hence, they exclude popular approaches used in multivariate time series forecasting.}
+
+
+# Review of Population Mean, Variance, Covariance \& Correlation
+
+### Definition and Notation
+
+A random variable, $Y$, is the outcome of a random experiment. The random nature of $Y$ can occur through a variety of mechanisms including sampling, natural variation, etc . In time series, we write $Y_t$ to represent the random variable at time $t$ , where $t = 1, 2, 3, \dots$. 
+
+Specific observed values of a random variable are written as lower case letters, $y_t$.
+
+
+**Example to demonstrate the notation**
+
+```{r aapl}
+pacman::p_load(tidyquant, timetk)
+aapl = tq_get('AAPL', from = "2022-01-03", to = Sys.Date() -1) %>% 
+  select(date, adjusted)
+aapl_ts = timetk::tk_ts(aapl) # allows for non-equally spaced ts
+```
+$Y_2$ represents the adjusted **but not observed** closing price for the \$AAPL stock on `r tk_index(aapl_ts, timetk_idx = T)[2]`. When we observe a value for this we have, $y_2 =$ `r round(aapl$adjusted[2], 2)`.  
+
+
+### Basic Population Parameter Functions
+
+**Mean Function:** 
+\begin{equation}
+{\mu_Y}_{t} = \mu_t = E(Y_t).
+\end{equation}
+
+
+**Variance Function:**
+\begin{equation}
+\sigma_t^2 = E[(Y_t - \mu_t)^2].
+\end{equation}
+
+
+**Covariance Function:** The covariance of two random variables,$Y$ and $Z$ is given by
+\begin{equation}
+E[(Y - \mu_Y)(Z - \mu_Z)].
+\end{equation}
+The covariance measures the *linear dependence* between two random variables.
+
+
+**The Correlation Coefficient** between two random variables, $Y$ and $Z$ is given by
+$\rho = \frac{E[(Y - \mu_Y)(Z - \mu_Z)]}{\sigma_Y \sigma_z}.$ It measures the scaled linear dependence between two random variables, and is in the interval $[-1, 1]$.
+
+
+
+# Population Autocovariance and Autocorrlation
+
+### Autocovariance Function
+
+In time series applications, often, our best predictor of a future observation is the past values of the series. Thus, we measure the linear dependence of the series over time using the autocovariance (autocorrelation) functions. For the random variable $Y$ observed at two different times, $Y_s$ and $Y_t$ , the autocovariance function is defined as:
+
+\begin{equation}
+  \gamma(s, t) = cov(Y_s, Y_t) = E[(Y_s - \mu_s)(Y_t - \mu_t)].
+\end{equation}
+
+
+**Notes:**  
+
+- $\gamma(s, t) = \gamma(t, s)$.   
+- If $\gamma(s, t) = 0$ , then $Y_s$ and $Y_t$ are **NOT linearly related**.  
+- $\gamma(t, t) = \sigma_t^2$.
+
+
+
+### Autocorrelation Function
+
+In applications, we generally use the Autocorrelation Function (ACF):
+\begin{equation}
+\rho(s, t) = \frac{\gamma(s, t)}{\sqrt{\gamma(s,s)\gamma(t,t)}} = \frac{\gamma(s, t)}{\sqrt{\sigma_s^2\sigma_t^2}}
+\end{equation}
+
+
+**Notes:**  
+
+- The ACF is in the interval $[-1, 1]$.  
+- The ACF measures the linear predictability of the series at time $t$ using only information from time $Y_s$.   
+
+
+
+### An Example
+
+Consider a white noise, centered moving average model, where $w_t$ is distributed $iid$ $N(0,1)$ and $Y_t = \frac{1}{3}(w_{t-1} + w_t + w_{t+1})$.  \textcolor{miamired}{Please use the next 5 minutes to solve this either logically or programatically.}
+
+- Population Mean: $E(Y_t) = \dots$  
+
+- Population Variance: $\sigma^2(Y_t) = \dots$  
+
+- Population Autocovariance between times $t$ and $t+1$: $\gamma(t+1, 1) =  \dots$
+
+- Population Autocorrelation between times $t$ and $t+1$: $\rho(t+1, 1) =  \dots$  
+
+- Population Autocorrelation between times $t$ and $t+2$: $\rho(t+2, 1) =  \dots$  
+
+- Population Autocorrelation between times $t$ and $t+3$: $\rho(t+3, 1) = \dots$  
+
+- Population Autocorrelation between times $t$ and $t+4$: $\rho(t+3, 1) = \dots$  
+
+
+
+# Sample Estimates of the Population Parameters
+
+### Definitions
+
+\small
+
+**Sample mean:** $$\bar{y} = \frac{1}{n} \sum_{t=1}^{n} y_t$$ 
+
+**Sample variance:** $${\hat{\sigma}_y}^2  =  \frac{1}{n-1} \sum_{t=1}^{n} (y_t- \bar{y})^2$$ 
+
+**Standard error of the mean:** $$\hat{\sigma}_{\bar{y}}^2  =  \sqrt{\frac{{\hat{\sigma}_y}^2}{n}} = \frac{{\hat{\sigma}_y}}{\sqrt{n}}$$
+
+**Lag $k$ Sample Autocorrelation:** $$r_k = \frac{\sum_{t = k + 1}^{n} (y_t - \bar{y}) (y_{t-k} - \bar{y})}{\sum_{t=1}^{n}(y_t - \bar{y})^2}$$
+
+\normalsize
+
+
+### Comments on the Sample ACF
+
+- The sample ACF is very useful in helping us to determine the degree of autocorrelation in our time series.  
+
+- However, the sample ACF is subject to random sampling variability. Like the sample mean, the sample ACF has a sampling distribution.
+
+
+
+# The Large Sample Distribution of the ACF
+
+### Properties [1]
+
+- A common heuristic is that at least 50 observations are needed to give a reliable estimate of the population ACF, and that the sample ACF should be computed up to lag $K = \frac{n}{4}$, where $n$ is the length of the series available for training.  
+
+- Under general conditions, for large $n$, and  $k = 1, 2, \dots$,  the ACF follows an approximate normal distribution with zero mean and standard deviation given by $\frac{1}{\sqrt{n}}$.  
+
+- This result can be used to give us a cutoff to determine if there is a statistically significant amount of autocorrelation for a given lag in a series.  
+
+### Properties [2]
+
+- `R` uses a cutoff of $\pm 1.96 \frac{1}{\sqrt{n}}$ to determine statistical significance of the sample ACF.   
+
+  - That is if the sample ACF is **within** $\pm 1.96 \frac{1}{\sqrt{n}}$, it is considered **NOT** significant.  
+  - If the sample ACF is greater than $+ 1.96 \frac{1}{\sqrt{n}}$, then there is significant positive autocorrelation at a particular lag.  
+  - If the sample ACF is less than $- 1.96 \frac{1}{\sqrt{n}}$, then there is significant negative autocorrelation at a particular lag.
+  
+  
+  
+### Example 1: White Noise
+
+In this live coding session, we will generate the following time-series:  
+
+- White Noise  
+
+- Centered Moving Average of the White Noise Data  
+
+We will plot both time-series as well as their corresponding ACFs. We will also comment on the obtained results.
+
+```{r wn1, echo=FALSE, eval=FALSE}
+pacman::p_load(tidyverse, fpp2) # loading req packages
+set.seed(2021) #so you can reproduce results
+wn = rnorm(500,mean=0,sd=1) #generate white noise data
+
+# The Actual TS
+ts(wn) %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() + labs(y = 'White Noise') # beautifying plot
+
+# Its ACF
+acf(wn, lag.max = 12) %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() # beautifying plot
+
+# The Smoothed TS
+cma = rollmean(wn, k = 3, align = 'center', na.pad = TRUE)
+
+ts(cma) %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() + labs(y = 'CMA(3) of White Noise') # beautifying plot
+
+na.omit(cma) %>% acf(lag.max = 12) %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() # beautifying plot
+```
+
+
+### Example 2: The WFJ Sales Data [1]
+In this live-demo example, we will use R to plot the ACF for the [WFJ Sales Data](https://miamioh.instructure.com/courses/167327/modules). Note that this corresponds to Figure 6.2 in your reference book; however `R` uses constant significance limits. 
+
+```{r wfjSales, echo=FALSE, fig.height=2}
+WFJ = readxl::read_excel("Data/WFJ_sales.xlsx") %>% select(2) %>% pull() %>% ts()
+
+# The Actual TS
+WFJ %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() + labs(y = 'WFJ Sales') # beautifying plot
+```
+
+
+### Example 2: The WFJ Sales Data [2]
+
+```{r wfjSales2, echo=FALSE, fig.height=2, fig.keep='last'}
+# ACF
+WFJ %>% acf(lag.max = 16) %>% autoplot() + # autoplot from forecast/fpp2 package
+  theme_bw() # beautifying plot
+```
+
+### Example 2: The WFJ Sales Data [3]
+
+```{r wfjSales3, echo=FALSE, results='asis'}
+WFJ = readxl::read_excel("Data/WFJ_sales.xlsx") %>% select(2)
+
+WFJ$Lag1 = lag(WFJ$`WFJ Sales`, n =1)
+WFJ$Lag2 = lag(WFJ$`WFJ Sales`, n =2)
+WFJ$Lag3 = lag(WFJ$`WFJ Sales`, n =3)
+WFJ$Lag4 = lag(WFJ$`WFJ Sales`, n =4)
+WFJ$Lag5 = lag(WFJ$`WFJ Sales`, n =5)
+
+model = lm(data = WFJ, formula = `WFJ Sales` ~ Lag1 )
+
+stargazer::stargazer(model, header = F, single.row = T, font.size = "scriptsize")
+```
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+			\item \textbf{Define the population mean, and variance of a random variable.}
+			\item \textbf{Define the population covariance, and correlation between two random variables.}
+			\item \textbf{Define the population autocovariance and autocorrelation of a random variable.}
+			\item \textbf{Use sample estimates of the population mean, variance, covariance, and correlation.}
+			\item \textbf{Explain the properties of the large sample distribution of the sample ACF.}
+			\item \textbf{Use the large sample distribution of the sample ACF to identify significant autocorrelation in a time series.}
+	\end{itemize}
+\end{block}
+
+
+
+### Things to Do
+
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ 
+ - Complete the assignment (see details in next slide).  
+ 
+
+### Graded Assignment 09: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449736}{Canvas (click here)} and answer the questions. **The assignment is due March 16, 2022 [8:30 AM].**
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of autocorrelation. 
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+
+
+
+---
+
+\maketitle

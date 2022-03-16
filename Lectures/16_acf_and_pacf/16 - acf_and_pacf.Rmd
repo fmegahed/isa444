@@ -1,0 +1,350 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "16 - Autocorrelation and Partial Autocorrelation"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.95,
+                      fig.height= 2.5,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = FALSE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(table, tidyverse, magrittr, tidyquant, fpp2, scales, sweep, timetk, readxl)
+library(ggplot2); theme_set(theme_bw(base_size = 8))
+```
+
+# Preface
+
+### What we Covered Last Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population mean, and variance of a random variable.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population covariance, and correlation between two random variables.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population autocovariance and autocorrelation of a random variable.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use sample estimates of the population mean, variance, covariance, and correlation.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Explain the properties of the large sample distribution of the sample ACF.} \\
+			$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use the large sample distribution of the sample ACF to identify significant autocorrelation in a time series.} \\
+\end{block}
+
+
+### Recap: ACF Definitions
+We defined **autocorrelation as the correlation between a time-series and its past values.**  
+
+The **ACF was defined as a function that captures the correlations between pairs of values at a certain lag**. For example:  
+
+- Lag-1 autocorrelation captures the correlation between $y_t$ and $y_{t-1}$.  
+- Lag-2 autocorrelation captures the correlation between $y_t$ and $y_{t-2}$. 
+
+### Recap: HW 09 - Autocorrelation
+
+Per your feedback post exam 01, let us discuss the solutions to [HW 09](https://miamioh.instructure.com/courses/167327/quizzes/449736) over the next few minutes.
+
+**As usual**, please do not hesitate to ask me questions.
+
+
+### Recap: The ACF of Advance Retail Sales [RSCCAS]
+
+Build on the example below and plot the ACF for:  
+
+- The [RSCCAS](https://fred.stlouisfed.org/series/RSCCAS) series, which is stored in the `retail` df.  
+
+- The first differences of the [RSCCAS](https://fred.stlouisfed.org/series/RSCCAS) series.  
+
+```{r retailSales}
+pacman::p_load(tidyverse, magrittr, fpp2, tidyquant, scales, ggpubr)
+retail = tq_get('RSCCAS', from = ymd('1992-01-01'), to = Sys.Date(),
+                get = 'economic.data')
+```
+
+\textcolor{miamired}{\textbf{Based on both plots, answer the following two questions:}}
+\begin{itemize}
+  \item \textcolor{miamired}{Are the limits for both ACF plots the same? Why? Why not?}
+  \item \textcolor{miamired}{Comment on how their ACF plots are different.}
+\end{itemize}
+
+```{r retailSales2, echo=F, eval = F}
+retail %<>% mutate(diff = price - lag(price), 
+                   logSales = log(price),
+                   diffLogSales = logSales - lag(logSales))
+p1 = retail %>% ggplot(aes(x = DATE, y= price)) + geom_line()
+p2 = acf(retail$price, plot = F) %>% autoplot()
+p3 = acf(retail$diff, plot = F, na.action = na.pass) %>% autoplot()
+p4 = acf(retail$diffLogSales, plot = F, na.action = na.pass) %>% autoplot()
+
+ggarrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
+```
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Determine if a sample ACF plot “cuts off” or “dies down”.}
+			\item \textbf{Explain how sample partial autocorrelation is calculated.}
+	\end{itemize}
+\end{block}
+
+
+# Explaining Sample ACF Plots
+
+### Some Time Series and their ACF Plots [1]
+
+```{r simMA1, echo=FALSE}
+#Generate MA processes of order 2
+set.seed(20210309)
+ma.sim1 = arima.sim(model=list(ma=c(.4,.9)),n=100)
+p1 = ma.sim1 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ma.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2,
+          labels = c('MA(2)', ''),
+           ncol = 1, nrow = 2)
+```
+
+
+### Some Time Series and their ACF Plots [2]
+```{r simMA2, echo=FALSE}
+set.seed(20210310)
+ma.sim2 = arima.sim(model=list(ma=c(.4,.6,.7)),n=100)
+p1 = ma.sim2 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ma.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2,
+          labels = c('MA(3)', ''),
+           ncol = 1, nrow = 2)
+```
+
+
+### Some Time Series and their ACF Plots [3]
+
+```{r simAR1, echo=FALSE}
+set.seed(20210310)
+ar.sim1 = arima.sim(model=list(ar=c(.9)),n=500)
+p1 = ar.sim1 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ar.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2,
+          labels = c('AR(1): 0.9', ''),
+           ncol = 1, nrow = 2)
+```
+
+
+### Some Time Series and their ACF Plots [4]
+
+```{r simAR1-2, echo=FALSE}
+set.seed(20210310)
+ar.sim2 = arima.sim(model=list(ar=c(-.9)),n=500)
+p1 = ar.sim2 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ar.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2,
+          labels = c('AR(1): -0.9', ''),
+           ncol = 1, nrow = 2)
+```
+
+
+### Some Time Series and their ACF Plots [5]
+
+```{r google, echo=FALSE}
+GOOG = getSymbols('GOOG', from = '2019-01-01', to = '2020-12-31', auto.assign = FALSE)
+GOOG = GOOG$GOOG.Adjusted
+p1 = GOOG %>% autoplot()
+p2 = acf(GOOG, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, nrow = 2)
+```
+
+# Partial Autocorrelation
+
+
+### Definition: General
+
+**Statistical Definition:** Let us say that we have three variables, $X$, $Y$, and $Z$, all correlated, and we want to know how $X$ and $Y$ are correlated after we remove the effects of $Z$ on each.
+
+
+**Computation Approach:**
+
+\begin{center}
+$\hat{X} = a_1 + b_1Z; \qquad \qquad X^* = X - \hat{X}$ 
+
+$\hat{Y} = a_2 + b_2Z; \qquad \qquad Y^* = Y - \hat{Y}$ 
+\end{center}
+
+
+$Corr(X^*, Y^*)$ is the partial correlation between $X$ and $Y$. It is the correlation that remains after we remove the effect of $Z$.
+
+
+### PACF in the Context of Time-Series Analysis
+The Partial Autocorrelation between $Y_t$ and $Y_{t+k}$ is the correlation between $Y_t$ and $Y_{t+k}$ after removing the effects of $Y_{t+1}, \, Y_{t+2}, \, Y_{t+3}, \, \dots, \, Y_{t+k-1}$.  
+
+  - We plot the partial autocorrelation over multiple lags just like the autocorrelation function (ACF).  
+  - We refer to the plotted partial autocorrelations as the PACF.
+
+
+### Some Time Series and their PACF Plots [1]
+```{r maSim1PACF, echo=FALSE}
+p1 = ma.sim1 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ma.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(ma.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, p3,
+          labels = c('MA(2)', '', ''),
+           ncol = 1, nrow = 3)
+```
+
+
+### Some Time Series and their PACF Plots [2]
+```{r maSim2PACF, echo=FALSE}
+p1 = ma.sim2 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ma.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(ma.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, p3,
+          labels = c('MA(3)', '', ''),
+           ncol = 1, nrow = 3)
+```
+
+### Some Time Series and their PACF Plots [3]
+```{r arSim1PACF, echo=FALSE}
+p1 = ar.sim1 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ar.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(ar.sim1, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, p3,
+          labels = c('AR(1): 0.9', '', ''),
+           ncol = 1, nrow = 3)
+```
+
+
+### Some Time Series and their PACF Plots [4]
+```{r arSim2PACF, echo=FALSE}
+p1 = ar.sim2 %>% autoplot() + labs(y = 'Y')
+p2 = acf(ar.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(ar.sim2, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, p3,
+          labels = c('AR(1): -0.9', '', ''),
+           ncol = 1, nrow = 3)
+```
+
+
+### Some Time Series and their PACF Plots [5]
+
+```{r googlePACF, echo=FALSE}
+p1 = GOOG %>% autoplot()
+p2 = acf(GOOG, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(GOOG, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, nrow = 3) 
+```
+
+
+### What we have learned from the GOOG Example [1]
+
+```{r GOOGscatter, echo=FALSE}
+google = data.frame(adjusted = as.vector(GOOG) %>% round(0), 
+                    lag1price = as.vector(GOOG) %>% lag() %>% round(0))
+google %>% ggplot(aes(x = lag1price, y = adjusted)) +
+  geom_point() + theme_bw() 
+```
+
+### What we have learned from the GOOG Example [2]
+```{r googleLM, echo=FALSE, results='asis'}
+model = lm(data = google, adjusted ~ lag1price) 
+stargazer::stargazer(model, font.size = 'scriptsize', header = FALSE)
+```
+
+
+### What we have learned from the GOOG Example [3]
+```{r googleDiff1, echo=FALSE}
+googleDiff = c(NA, diff(google$adjusted))  
+googleDiff = xts(x = googleDiff, order.by = date(GOOG)) %>% na.omit()
+googleDiff %>% autoplot() + theme_bw() 
+```
+
+### What we have learned from the GOOG Example [4]
+```{r googleDiff2, echo=FALSE}
+p2 = acf(googleDiff, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+p3 = pacf(googleDiff, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + labs(title = NULL)
+
+ggarrange(p2, p3, ncol = 1, nrow = 2)
+```
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Determine if a sample ACF plot “cuts off” or “dies down”.}
+			\item \textbf{Explain how sample partial autocorrelation is calculated.}
+	\end{itemize}
+\end{block}
+
+
+
+### Things to Do
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ - Go through the [self-paced tutorial for week 08](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week08/) (which will take you sometime between 5-10 minutes to complete).  
+ 
+ - Complete the assignment (see details in next slide).  
+ 
+
+### Graded Assignment 10: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449730?module_item_id=3678615}{Canvas (click here)} and answer the questions. **The assignment is due March 18, 2022 [8:30 AM].**
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of autocorrelation and PACF. To reinforce your understanding of the covered material, I also suggest going through the [self-paced tutorial for week 08](http://rstudio.fsb.miamioh.edu:3838/megahefm/isa444/week08/) (which will take you sometime between 5-10 minutes to complete).
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+
+
+
+---
+
+\maketitle

@@ -3,6 +3,9 @@ library(tidyquant)
 library(magrittr)
 library(MASS)
 
+
+set.seed(2022)
+
 sim_data = rnorm(100000) %>% tibble()
 colnames(sim_data) = 'w_n'
 
@@ -30,3 +33,4 @@ cov(x = sim_data$cma, sim_data$`w_t+3`, use = 'complete.obs') %>% fractions(max.
 cor(x = sim_data$cma, sim_data$`w_t+1`, use = 'complete.obs') %>% fractions(max.denominator = 10)
 cor(x = sim_data$cma, sim_data$`w_t+2`, use = 'complete.obs') %>% fractions(max.denominator = 10)
 cor(x = sim_data$cma, sim_data$`w_t+3`, use = 'complete.obs') %>% fractions(max.denominator = 10)
+

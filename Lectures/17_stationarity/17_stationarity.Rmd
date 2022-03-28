@@ -1,0 +1,308 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "17 - Stationarity"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.8,
+                      fig.height= 2.9,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, tidyquant, xtable, magrittr, fpp2, ggpubr, tseries)
+library(ggplot2); theme_set(theme_bw(base_size = 8))
+```
+
+# Preface
+
+
+### What we Covered Prior to Spring Break {.allowframebreaks}
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population mean, and variance of a random variable.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population covariance, and correlation between two random variables.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Define the population autocovariance and autocorrelation of a random variable.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use sample estimates of the population mean, variance, covariance, and correlation.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Explain the properties of the large sample distribution of the sample ACF.} \\
+	  $\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use the large sample distribution of the sample ACF to identify significant autocorrelation in a time series.}
+\end{block}
+
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  $\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Determine if a sample ACF plot “cuts off” or “dies down”.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Explain how sample partial autocorrelation is calculated.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Determine if a sample PACF plot “cuts off” or “dies down”.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{Use the sample ACF plot to identify a nonstationary time series.}
+\end{block}
+
+
+### Recap: HW 11 - ACF and PACF
+
+Per your feedback post exam 01, let us discuss the solutions to [HW 10](https://miamioh.instructure.com/courses/167327/quizzes/449730?module_item_id=3678615) over the next few minutes.
+
+**As usual**, please do not hesitate to ask me questions.
+
+
+### Recall: A Formal Definition for Stationarity
+
+**Weak Stationarity:** A weakly stationary time series is a finite variance process such that:  
+
+  1. The mean, $\mu_t$, is constant and does not depend on the time $t$; and   
+  2. The autocovariance function, $\gamma(s, t)$ depends on $s$ and $t$ only through their difference $|s-t|$.  
+  
+We will use the term “stationary” to refer to weak stationarity.  
+
+  - The concept of weak stationarity forms the basis of much of the foundation for time series modeling.  
+  - The fundamental properties (1 & 2) required for weak stationarity are satisfied by many of the models that are widely used.
+
+
+### Recall: A Visual Explanation of Stationarity
+
+```{r Stationary, echo=FALSE}
+ar.sim = arima.sim(model=list(ar=c(.6)),n=500)
+
+p1 = ar.sim %>% autoplot() + theme_bw() + labs(y = 'AR(1): 0.6')
+p2 = acf(ar.sim, plot = FALSE, lag.max = 12) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+
+### Recall: A Visual Explanation of Nonstationarity
+
+```{r nonStationary, echo=FALSE}
+google = tq_get("GOOG", from = Sys.Date() - 731, to = Sys.Date() -1) %>% select(date, adjusted)
+google %>% ggplot(aes(x= date, y = adjusted)) + geom_line() + theme_bw() -> g1
+
+acfGoogle = acf(google$adjusted, plot = F)
+
+acfGoogle %>% autoplot() + theme_bw() -> g2
+
+pacf(google$adjusted, plot = F) -> pacfGoogle
+
+pacfGoogle %>% autoplot() + theme_bw() -> g3
+
+ggarrange(g1, g2, ncol = 1) 
+```
+
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Apply transformations to a nonstationary time series to bring it into stationarity.}
+			\item \textbf{Recognize and explain a random walk model (both with and without a drift).}
+			\item \textbf{Recognize a random walk model from an ACF plot.}
+			\item \textbf{Conduct formal tests for stationarity using the ADF and KPSS tests.}
+	\end{itemize}
+\end{block}
+
+
+
+
+# Stationarity
+
+### What to do when we have a Nonstationary series?
+
+In order to model a time series, it must usually be in a state of stationarity. If the time series is not stationary, you must transform it to achieve stationarity.\footnotemark
+
+Successive **differencing** is typically used to achieve stationarity.
+
+**First Differences:** $y_t^\prime = y_t - y_{t-1}$.
+
+**Second Differences"** $y_t'' = y_t^\prime - y_{t-1}^\prime$.
+
+\footnotetext{Slides are based on \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's Handouts} for ISA 444, Spring 2020.}
+
+
+### A Live Example: Examining the US GNP
+
+```{r gnp, echo=FALSE}
+gnp = tq_get('GNP', get = 'economic.data')
+
+gnp$date %<>% ymd() 
+gnp %<>% mutate(diff1 = c(NA, diff(price)),
+                diff2 = c(NA, NA,  diff(price, differences = 2)))
+
+df =  pivot_longer(data= gnp, cols = c(3,4,5)) 
+
+df %>% ggplot(aes(x= date, y = value, group = name, color = name)) + 
+  geom_line(size = 1) + facet_wrap(~ name, ncol = 1, scales = "free_y") + theme_bw() +
+  theme(legend.position = 'none') + labs(x = 'Date') 
+```
+
+
+### So Why Does Differences Work?
+
+*Because many nonstationary time series have features of a random walk.*
+
+
+
+### Random Walk Model [1]
+
+**Random Walk with Drift:** A random walk is a model such that successive differences (first differences) are independent. 
+
+The classic random walk model: $$Y_t = Y_{t-1} + \epsilon_t$$
+
+A random walk with a drift: $$Y_t = \delta + Y_{t-1} + \epsilon_t$$
+
+**Notes:** When $\delta = 0$, the value of the current observation is just the value of the prior observation plus random noise.
+
+
+### Random Walk Model [2]
+
+```{r rw1, echo = FALSE}
+set.seed(1)
+randomWalk = data.frame(obsNum = 1:500, rawData = rnorm(500)) %>% 
+  mutate(walk = cumsum(rawData), walkWdrift = cumsum(rawData + 0.2))
+
+df = randomWalk %>% select(obsNum, walk, walkWdrift) %>% pivot_longer(c(2,3), names_to = 'TimeSeries')
+
+df %>% ggplot(aes(x = obsNum, y = value, group = TimeSeries, color = TimeSeries)) +
+  geom_line() + geom_smooth(method = 'lm') + theme_bw() + theme(legend.position = 'bottom')
+```
+
+
+
+### Random Walk Model [3]
+
+```{r rw2, echo = FALSE}
+acf(randomWalk$walk, plot = FALSE) %>% autoplot() +
+  theme_bw() + labs(title = 'ACF of the Random Walk (no drift)')
+```
+
+
+### Random Walk Model [4]
+
+```{r rw3, echo = FALSE}
+acf(randomWalk$walkWdrift, plot = FALSE) %>% autoplot() +
+  theme_bw() + labs(title = 'ACF of the Random Walk (With drift)')
+```
+
+
+
+# Formal Tests for Stationarity
+
+### Basic Idea
+
+**Unit Root Test:** One way to objectively determine if differencing is required is to use a unit root test. A unit root is a feature of a stochastic process that indicates a time series is nonstationary.
+
+
+### Augmented Dickey Fuller (ADF) Test [1]
+
+The **Augmented Dickey Fuller (ADF) Test** tests whether or not there is a unit root. The hypotheses are as follows:  
+
+  $\qquad \qquad$ Ho: The series is nonstationary  
+  
+  $\qquad \qquad$ Ha: The series is stationary  
+  
+Thus, if we have a *SMALL p-value*, we reject the null hypothesis and conclude **STATIONARITY**.
+
+
+
+### Augmented Dickey Fuller (ADF) Test [2]
+
+In R, we will use the function `adf.test()` from the package [tseries](https://cran.r-project.org/web/packages/tseries/tseries.pdf). 
+
+```{r adfTest}
+pacman::p_load(tseries)
+adf.test(gnp$price)
+```
+
+\textcolor{miamired}{\textbf{So what do we conclude from the test above?}}
+
+
+### Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test [1]
+
+The **Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test** tests whether or not there is a unit root. The hypotheses are as follows:  
+
+  $\qquad \qquad$ Ho: The series is stationary  
+
+  $\qquad \qquad$ Ha: The series is nonstationary  
+
+Thus, if we have a *SMALL p-value*, we reject the null hypothesis and conclude **NONSTATIONARITY**.
+
+
+
+### Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test [2]
+
+In R, we will use the function `kpss.test()` from the package [tseries](https://cran.r-project.org/web/packages/tseries/tseries.pdf). 
+
+```{r kpssTest}
+pacman::p_load(tseries)
+kpss.test(gnp$price)
+```
+
+\textcolor{miamired}{\textbf{So what do we conclude from the test above?}}
+
+
+
+### Successive Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Tests
+
+As a followup to the case when the `kpss.test()` is rejected (or alternatively when you do not reject the `adf.test()`), you can utilize the `ndiffs()` from the package [forecast](https://cran.r-project.org/web/packages/forecast/forecast.pdf), which uses a series of the KPSS tests in a sequence to determine the appropriate number of first differences required for a nonseasonal time series. 
+
+`ndiffs()` returns the number of first differences needed to achieve stationarity according to the KPSS test.
+
+
+```{r ndiffs}
+pacman::p_load(fpp2) # fpps loads the forecast package as well
+ndiffs(gnp$price)
+```
+
+According to the `ndiffs() function`, **two successive differences are recommended to transform the GNP data into stationarity**.
+
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Apply transformations to a nonstationary time series to bring it into stationarity.}
+			\item \textbf{Recognize and explain a random walk model (both with and without a drift).}
+			\item \textbf{Recognize a random walk model from an ACF plot.}
+			\item \textbf{Conduct formal tests for stationarity using the ADF and KPSS tests.}
+	\end{itemize}
+\end{block}
+
+
+
+### Things to Do to Prepare for the Exam Next Monday
+
+ - Thoroughly read Chapters 1-4 of our reference book.
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered. 
+ 
+ - Go over the interactive tutorials 
+
+
+
+---
+
+\maketitle

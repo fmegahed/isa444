@@ -1,33 +1,29 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 22.1) (preloaded format=xelatex 2022.3.1)  24 MAR 2022 10:00
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2022.2.21)  28 MAR 2022 08:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./17_stationarity.tex
-(17_stationarity.tex
+**17_stationarity.tex
+(./17_stationarity.tex
 LaTeX2e <2021-11-15> patch level 1
-L3 programming layer <2022-02-05> (C:\Program Files\MiKTeX\tex/latex/beamer\bea
-mer.cls
-Document Class: beamer 2021/10/18 v3.64 A class for typesetting presentations
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasemodes.sty (C:\Program Files
-\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+L3 programming layer <2022-02-05> (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamer.cls
+Document Class: beamer 2022/02/08 v3.66 A class for typesetting presentations
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasemodes.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count181
 )
 \beamer@tempbox=\box50
 \beamer@tempcount=\count182
 \c@beamerpauses=\count183
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasedecode.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasedecode.sty
 \beamer@slideinframe=\count184
 \beamer@minimum=\count185
 \beamer@decode@box=\box51
 )
 \beamer@commentbox=\box52
 \beamer@modecount=\count186
-) (C:\Program Files\MiKTeX\tex/generic/iftex\ifpdf.sty
-Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
-(C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
-))
+)
 \headdp=\dimen138
 \footheight=\dimen139
 \sidebarheight=\dimen140
@@ -71,16 +67,15 @@ Package: iftex 2022/02/03 v1.0f TeX engine tests
 \beamer@sectionadjust=\count270
 \beamer@toclastsection=\count271
 \beamer@tocsectionnumber=\count272
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseoptions.sty (C:\Program Fil
-es\MiKTeX\tex/latex/graphics\keyval.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseoptions.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks16
 ))
 \beamer@paperwidth=\skip48
 \beamer@paperheight=\skip49
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
-(C:\Program Files\MiKTeX\tex/generic/iftex\ifvtex.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
 \Gm@cnth=\count273
@@ -95,87 +90,102 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layouthoffset=\dimen160
 \Gm@layoutvoffset=\dimen161
 \Gm@dimlist=\toks17
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.cfg)) (C:
-\Program Files\MiKTeX\tex/latex/base\size11.clo
-File: size11.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
-) (C:\Program Files\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.sty (C:\Program Fil
-es\MiKTeX\tex/latex/graphics\graphicx.sty
-Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
-(C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
-Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
-(C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty
-Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
-) (C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
-File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
-)
-Package graphics Info: Driver file: xetex.def on input line 107.
-(C:\Program Files\MiKTeX\tex/latex/graphics-def\xetex.def
-File: xetex.def 2021/03/18 v5.0k Graphics/color driver for xetex
-))
-\Gin@req@height=\dimen162
-\Gin@req@width=\dimen163
-) (C:\Program Files\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.sty (C:\Program Fil
-es\MiKTeX\tex/latex/pgf/utilities\pgfrcs.sty (C:\Program Files\MiKTeX\tex/gener
-ic/pgf/utilities\pgfutil-common.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/math/pgfmath.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks18
-\pgfutil@tempdima=\dimen164
-\pgfutil@tempdimb=\dimen165
-(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-common-lists.tex)) (
-C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-latex.def
+\pgfutil@tempdima=\dimen162
+\pgfutil@tempdimb=\dimen163
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.tex)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
 \pgfutil@abb=\box59
-) (C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfrcs.code.tex (C:\Progra
-m Files\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/pgf.revision.tex)
 Package: pgfrcs 2021/05/15 v3.1.9a (3.1.9a)
-)) (C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys.code.tex
-Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
 \pgfkeys@pathtoks=\toks19
 \pgfkeys@temptoks=\toks20
-(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeysfiltered.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
 \pgfkeys@tmptoks=\toks21
-))
-\pgf@x=\dimen166
-\pgf@y=\dimen167
-\pgf@xa=\dimen168
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex
+\pgf@x=\dimen164
+\pgf@xa=\dimen165
+\pgf@xb=\dimen166
+\pgf@xc=\dimen167
+\pgf@y=\dimen168
 \pgf@ya=\dimen169
-\pgf@xb=\dimen170
-\pgf@yb=\dimen171
-\pgf@xc=\dimen172
-\pgf@yc=\dimen173
-\pgf@xd=\dimen174
-\pgf@yd=\dimen175
-\w@pgf@writea=\write3
-\r@pgf@reada=\read2
+\pgf@yb=\dimen170
+\pgf@yc=\dimen171
 \c@pgf@counta=\count276
 \c@pgf@countb=\count277
 \c@pgf@countc=\count278
 \c@pgf@countd=\count279
-\t@pgf@toka=\toks22
-\t@pgf@tokb=\toks23
-\t@pgf@tokc=\toks24
-\pgf@sys@id@count=\count280
-(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgf.cfg
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen172
+\pgfmath@count=\count280
+\pgfmath@box=\box60
+\pgfmath@toks=\toks22
+\pgfmath@stack@operand=\toks23
+\pgfmath@stack@operation=\toks24
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count281
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: xetex.def on input line 107.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-def/xetex.def
+File: xetex.def 2021/03/18 v5.0k Graphics/color driver for xetex
+))
+\Gin@req@height=\dimen173
+\Gin@req@width=\dimen174
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2021/05/15 v3.1.9a (3.1.9a)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)
+\pgf@x=\dimen175
+\pgf@y=\dimen176
+\pgf@xa=\dimen177
+\pgf@ya=\dimen178
+\pgf@xb=\dimen179
+\pgf@yb=\dimen180
+\pgf@xc=\dimen181
+\pgf@yc=\dimen182
+\pgf@xd=\dimen183
+\pgf@yd=\dimen184
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count282
+\c@pgf@countb=\count283
+\c@pgf@countc=\count284
+\c@pgf@countd=\count285
+\t@pgf@toka=\toks25
+\t@pgf@tokb=\toks26
+\t@pgf@tokc=\toks27
+\pgf@sys@id@count=\count286
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2021/05/15 v3.1.9a (3.1.9a)
 )
 Driver file for pgf: pgfsys-xetex.def
-(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-xetex.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-xetex.def
 File: pgfsys-xetex.def 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-dvipdfmx.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-dvipdfmx.def
 File: pgfsys-dvipdfmx.def 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-common-pdf.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
 File: pgfsys-common-pdf.def 2021/05/15 v3.1.9a (3.1.9a)
 )
-\pgfsys@objnum=\count281
-))) (C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsyssoftpath.code.te
-x
+\pgfsys@objnum=\count287
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfsyssoftpath@smallbuffer@items=\count282
-\pgfsyssoftpath@bigbuffer@items=\count283
-) (C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsysprotocol.code.tex
+\pgfsyssoftpath@smallbuffer@items=\count288
+\pgfsyssoftpath@bigbuffer@items=\count289
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)) (C:\Program Files\MiKTeX\tex/latex/xcolor\xcolor.sty
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2021/10/31 v2.13 LaTeX color extensions (UK)
-(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: xetex.def on input line 227.
@@ -187,161 +197,121 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcore.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex (C:\Program File
-s\MiKTeX\tex/generic/pgf/math\pgfmathcalc.code.tex (C:\Program Files\MiKTeX\tex
-/generic/pgf/math\pgfmathutil.code.tex) (C:\Program Files\MiKTeX\tex/generic/pg
-f/math\pgfmathparser.code.tex
-\pgfmath@dimen=\dimen176
-\pgfmath@count=\count284
-\pgfmath@box=\box60
-\pgfmath@toks=\toks25
-\pgfmath@stack@operand=\toks26
-\pgfmath@stack@operation=\toks27
-) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.code.tex (C:\P
-rogram Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.basic.code.tex)
-(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.trigonometric.co
-de.tex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.random.c
-ode.tex)
-(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.comparison.code.
-tex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.base.code.t
-ex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.round.code.t
-ex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.misc.code.te
-x)
-(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.integerarithmeti
-cs.code.tex))) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfloat.code.
-tex
-\c@pgfmathroundto@lastzeros=\count285
-)) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfint.code.tex) (C:\Program F
-iles\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepoints.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@picminx=\dimen177
-\pgf@picmaxx=\dimen178
-\pgf@picminy=\dimen179
-\pgf@picmaxy=\dimen180
-\pgf@pathminx=\dimen181
-\pgf@pathmaxx=\dimen182
-\pgf@pathminy=\dimen183
-\pgf@pathmaxy=\dimen184
-\pgf@xx=\dimen185
-\pgf@xy=\dimen186
-\pgf@yx=\dimen187
-\pgf@yy=\dimen188
-\pgf@zx=\dimen189
-\pgf@zy=\dimen190
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathconstruct.code.t
-ex
+\pgf@picminx=\dimen185
+\pgf@picmaxx=\dimen186
+\pgf@picminy=\dimen187
+\pgf@picmaxy=\dimen188
+\pgf@pathminx=\dimen189
+\pgf@pathmaxx=\dimen190
+\pgf@pathminy=\dimen191
+\pgf@pathmaxy=\dimen192
+\pgf@xx=\dimen193
+\pgf@xy=\dimen194
+\pgf@yx=\dimen195
+\pgf@yy=\dimen196
+\pgf@zx=\dimen197
+\pgf@zy=\dimen198
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@path@lastx=\dimen191
-\pgf@path@lasty=\dimen192
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathusage.code.tex
+\pgf@path@lastx=\dimen199
+\pgf@path@lasty=\dimen256
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@shorten@end@additional=\dimen193
-\pgf@shorten@start@additional=\dimen194
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorescopes.code.tex
+\pgf@shorten@end@additional=\dimen257
+\pgf@shorten@start@additional=\dimen258
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 \pgfpic=\box61
 \pgf@hbox=\box62
 \pgf@layerbox@main=\box63
-\pgf@picture@serial@count=\count286
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoregraphicstate.code.te
-x
+\pgf@picture@serial@count=\count290
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgflinewidth=\dimen195
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransformations.code
-.tex
+\pgflinewidth=\dimen259
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@pt@x=\dimen196
-\pgf@pt@y=\dimen197
-\pgf@pt@temp=\dimen198
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorequick.code.tex
+\pgf@pt@x=\dimen260
+\pgf@pt@y=\dimen261
+\pgf@pt@temp=\dimen262
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreobjects.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
 File: pgfcoreobjects.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathprocessing.code.
-tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
 File: pgfcorepathprocessing.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorearrows.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfarrowsep=\dimen199
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreshade.code.tex
+\pgfarrowsep=\dimen263
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@max=\dimen256
-\pgf@sys@shading@range@num=\count287
-\pgf@shadingcount=\count288
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreimage.code.tex
+\pgf@max=\dimen264
+\pgf@sys@shading@range@num=\count291
+\pgf@shadingcount=\count292
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreexternal.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 \pgfexternal@startupbox=\box64
-)) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorelayers.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransparency.code.te
-x
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
 File: pgfcoretransparency.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepatterns.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
 File: pgfcorepatterns.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorerdf.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
 File: pgfcorerdf.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))) (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\xxcolor.sty
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/xxcolor.sty
 Package: xxcolor 2003/10/24 ver 0.1
-\XC@nummixins=\count289
-\XC@countmixins=\count290
-) (C:\Program Files\MiKTeX\tex/latex/base\atbegshi-ltx.sty
+\XC@nummixins=\count293
+\XC@countmixins=\count294
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atbegshi-ltx.sty
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
-) (C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2021-06-07 v7.00m Hypertext links for LaTeX
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
-) (C:\Program Files\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
-)
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/infwarerr\infwarerr.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode not found.
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/kvsetkeys\kvsetkeys.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
-)
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys
-.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/hycolor\hycolor.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-)
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/letltxmacro\letltxmacro.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
 Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/auxhook\auxhook.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
 )
-\@linkdim=\dimen257
-\Hy@linkcounter=\count291
-\Hy@pagecounter=\count292
-(C:\Program Files\MiKTeX\tex/latex/hyperref\pd1enc.def
+\@linkdim=\dimen265
+\Hy@linkcounter=\count295
+\Hy@pagecounter=\count296
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2021-06-07 v7.00m Hyperref: PDFDocEncoding definition (HO)
-) (C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref-langpatches.def
-File: hyperref-langpatches.def 2021-06-07 v7.00m Hyperref: patches for babel la
-nguages
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hyperref-langpatches.def
+File: hyperref-langpatches.def 2021-06-07 v7.00m Hyperref: patches for babel languages
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/etexcmds\etexcmds.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
-\Hy@SavedSpaceFactor=\count293
-(C:\Program Files\MiKTeX\tex/latex/hyperref\puenc.def
+\Hy@SavedSpaceFactor=\count297
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2021-06-07 v7.00m Hyperref: PDF Unicode definition (HO)
 )
 Package hyperref Info: Option `unicode' set `true' on input line 4073.
@@ -355,23 +325,21 @@ Package hyperref Info: Plain pages OFF on input line 4207.
 Package hyperref Info: Backreferencing OFF on input line 4212.
 Package hyperref Info: Implicit mode OFF; no redefinition of LaTeX internals.
 Package hyperref Info: Bookmarks ON on input line 4445.
-\c@Hy@tempcnt=\count294
-(C:\Program Files\MiKTeX\tex/latex/url\url.sty
+\c@Hy@tempcnt=\count298
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip16
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4804.
-\XeTeXLinkMargin=\dimen258
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/bitset\bitset.sty
+\XeTeXLinkMargin=\dimen266
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
-
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
-Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
-)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count295
-\Field@Width=\dimen259
-\Fld@charsize=\dimen260
+\Fld@menulength=\count299
+\Field@Width=\dimen267
+\Fld@charsize=\dimen268
 Package hyperref Info: Hyper figures OFF on input line 6076.
 Package hyperref Info: Link nesting OFF on input line 6081.
 Package hyperref Info: Hyper index ON on input line 6084.
@@ -381,44 +349,34 @@ Package hyperref Info: Link coloring with OCG OFF on input line 6101.
 Package hyperref Info: PDF/A mode OFF on input line 6106.
 LaTeX Info: Redefining \ref on input line 6146.
 LaTeX Info: Redefining \pageref on input line 6150.
-\Hy@abspage=\count296
+\Hy@abspage=\count300
 
 Package hyperref Message: Stopped early.
 
 )
 Package hyperref Info: Driver (autodetected): hxetex.
-(C:\Program Files\MiKTeX\tex/latex/hyperref\hxetex.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/hxetex.def
 File: hxetex.def 2021-06-07 v7.00m Hyperref driver for XeTeX
-(C:\Program Files\MiKTeX\tex/generic/stringenc\stringenc.sty
-Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
-)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
 \pdfm@box=\box65
-\c@Hy@AnnotLevel=\count297
-\HyField@AnnotCount=\count298
-\Fld@listcount=\count299
-\c@bookmark@seq@number=\count300
-
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/rerunfilecheck\rerunfileche
-ck.sty
+\c@Hy@AnnotLevel=\count301
+\HyField@AnnotCount=\count302
+\Fld@listcount=\count303
+\c@bookmark@seq@number=\count304
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
-(C:\Program Files\MiKTeX\tex/latex/base\atveryend-ltx.sty
-Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
-kage
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
 with kernel methods
-)
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/uniquecounter\uniquecount
-er.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
-86.
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaserequires.sty (C:\Program
- Files\MiKTeX\tex/latex/beamer\beamerbasecompatibility.sty) (C:\Program Files\M
-iKTeX\tex/latex/beamer\beamerbasefont.sty (C:\Program Files\MiKTeX\tex/latex/am
-sfonts\amssymb.sty
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 286.
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaserequires.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasecompatibility.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasefont.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-(C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks28
 \symAMSa=\mathgroup4
@@ -426,142 +384,124 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (C:\Program Files\MiKTeX\tex/latex/sansmathaccent\sansmathaccent.sty
-Package: sansmathaccent 2020/01/31
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlfile.sty
-Package: scrlfile 2021/11/13 v3.35 KOMA-Script package (file load hooks)
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlfile-hook.sty
-Package: scrlfile-hook 2021/11/13 v3.35 KOMA-Script package (using LaTeX hooks)
-
-(C:\Program Files\MiKTeX\tex/latex/koma-script\scrlogo.sty
-Package: scrlogo 2021/11/13 v3.35 KOMA-Script package (logo)
-))))) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetranslator.sty (C:\Pr
-ogram Files\MiKTeX\tex/latex/translator\translator.sty
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetranslator.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator.sty
 Package: translator 2021-05-31 v1.12d Easy translation of strings in LaTeX
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasemisc.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasetwoscreens.sty) (C:\Program Files\MiKTeX\
-tex/latex/beamer\beamerbaseoverlay.sty
-\beamer@argscount=\count301
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasemisc.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetwoscreens.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseoverlay.sty
+\beamer@argscount=\count305
 \beamer@lastskipcover=\skip50
-\beamer@trivlistdepth=\count302
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetitle.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasesection.sty
-\c@lecture=\count303
-\c@part=\count304
-\c@section=\count305
-\c@subsection=\count306
-\c@subsubsection=\count307
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframe.sty
+\beamer@trivlistdepth=\count306
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetitle.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasesection.sty
+\c@lecture=\count307
+\c@part=\count308
+\c@section=\count309
+\c@subsection=\count310
+\c@subsubsection=\count311
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseframe.sty
 \beamer@framebox=\box66
 \beamer@frametitlebox=\box67
 \beamer@zoombox=\box68
-\beamer@zoomcount=\count308
-\beamer@zoomframecount=\count309
-\beamer@frametextheight=\dimen261
-\c@subsectionslide=\count310
+\beamer@zoomcount=\count312
+\beamer@zoomframecount=\count313
+\beamer@frametextheight=\dimen269
+\c@subsectionslide=\count314
 \beamer@frametopskip=\skip51
 \beamer@framebottomskip=\skip52
 \beamer@frametopskipautobreak=\skip53
 \beamer@framebottomskipautobreak=\skip54
 \beamer@envbody=\toks29
-\framewidth=\dimen262
-\c@framenumber=\count311
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseverbatim.sty
+\framewidth=\dimen270
+\c@framenumber=\count315
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseverbatim.sty
 \beamer@verbatimfileout=\write4
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframesize.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseframesize.sty
 \beamer@splitbox=\box69
-\beamer@autobreakcount=\count312
-\beamer@autobreaklastheight=\dimen263
+\beamer@autobreakcount=\count316
+\beamer@autobreaklastheight=\dimen271
 \beamer@frametitletoks=\toks30
 \beamer@framesubtitletoks=\toks31
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseframecomponents.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseframecomponents.sty
 \beamer@footins=\box70
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasecolor.sty) (C:\Program Fi
-les\MiKTeX\tex/latex/beamer\beamerbasenotes.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasecolor.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasenotes.sty
 \beamer@frameboxcopy=\box71
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetoc.sty) (C:\Program File
-s\MiKTeX\tex/latex/beamer\beamerbasetemplates.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetoc.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetemplates.sty
 \beamer@sbttoks=\toks32
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaseauxtemplates.sty (C:\Progra
-m Files\MiKTeX\tex/latex/beamer\beamerbaseboxes.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseauxtemplates.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaseboxes.sty
 \bmb@box=\box72
 \bmb@colorbox=\box73
-\bmb@boxwidth=\dimen264
-\bmb@boxheight=\dimen265
-\bmb@prevheight=\dimen266
-\bmb@temp=\dimen267
-\bmb@dima=\dimen268
-\bmb@dimb=\dimen269
-\bmb@prevheight=\dimen270
+\bmb@boxwidth=\dimen272
+\bmb@boxheight=\dimen273
+\bmb@prevheight=\dimen274
+\bmb@temp=\dimen275
+\bmb@dima=\dimen276
+\bmb@dimb=\dimen277
+\bmb@prevheight=\dimen278
 )
-\beamer@blockheadheight=\dimen271
-)) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbaselocalstructure.sty (C:\P
-rogram Files\MiKTeX\tex/latex/tools\enumerate.sty
+\beamer@blockheadheight=\dimen279
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbaselocalstructure.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/enumerate.sty
 Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
 \@enLab=\toks33
 )
 \beamer@bibiconwidth=\skip55
-\c@figure=\count313
-\c@table=\count314
+\c@figure=\count317
+\c@table=\count318
 \abovecaptionskip=\skip56
 \belowcaptionskip=\skip57
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasenavigation.sty
-\beamer@section@min@dim=\dimen272
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasetheorems.sty (C:\Program 
-Files\MiKTeX\tex/latex/amsmath\amsmath.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasenavigation.sty
+\beamer@section@min@dim=\dimen280
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasetheorems.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2021/10/15 v2.17l AMS math features
 \@mathmargin=\skip58
 For additional information on amsmath, use the `?' option.
-(C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2021/08/26 v2.01 AMS text
-(C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks34
-\ex@=\dimen273
-)) (C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty
+\ex@=\dimen281
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen274
-) (C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty
+\pmbraise@=\dimen282
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2021/08/26 v2.02 operator names
 )
-\inf@bad=\count315
+\inf@bad=\count319
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count316
-\leftroot@=\count317
+\uproot@=\count320
+\leftroot@=\count321
 LaTeX Info: Redefining \overline on input line 399.
-\classnum@=\count318
-\DOTSCASE@=\count319
+\classnum@=\count322
+\DOTSCASE@=\count323
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
 \Mathstrutbox@=\box74
 \strutbox@=\box75
-\big@size=\dimen275
+\big@size=\dimen283
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count320
-\c@MaxMatrixCols=\count321
+\macc@depth=\count324
+\c@MaxMatrixCols=\count325
 \dotsspace@=\muskip17
-\c@parentequation=\count322
-\dspbrk@lvl=\count323
+\c@parentequation=\count326
+\dspbrk@lvl=\count327
 \tag@help=\toks35
-\row@=\count324
-\column@=\count325
-\maxfields@=\count326
+\row@=\count328
+\column@=\count329
+\maxfields@=\count330
 \andhelp@=\toks36
-\eqnshift@=\dimen276
-\alignsep@=\dimen277
-\tagshift@=\dimen278
-\tagwidth@=\dimen279
-\totwidth@=\dimen280
-\lineht@=\dimen281
+\eqnshift@=\dimen284
+\alignsep@=\dimen285
+\tagshift@=\dimen286
+\tagwidth@=\dimen287
+\totwidth@=\dimen288
+\lineht@=\dimen289
 \@envbody=\toks37
 \multlinegap=\skip59
 \multlinetaggap=\skip60
 \mathdisplay@stack=\toks38
 LaTeX Info: Redefining \[ on input line 2938.
 LaTeX Info: Redefining \] on input line 2939.
-) (C:\Program Files\MiKTeX\tex/latex/amscls\amsthm.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amscls/amsthm.sty
 Package: amsthm 2020/05/29 v2.20.6
 \thm@style=\toks39
 \thm@bodyfont=\toks40
@@ -573,41 +513,36 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@headsep=\skip63
 \dth@everypar=\toks44
 )
-\c@theorem=\count327
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerbasethemes.sty)) (C:\Program 
-Files\MiKTeX\tex/latex/beamer\beamerthemedefault.sty (C:\Program Files\MiKTeX\t
-ex/latex/beamer\beamerfontthemedefault.sty) (C:\Program Files\MiKTeX\tex/latex/
-beamer\beamercolorthemedefault.sty) (C:\Program Files\MiKTeX\tex/latex/beamer\b
-eamerinnerthemedefault.sty
-\beamer@dima=\dimen282
-\beamer@dimb=\dimen283
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerouterthemedefault.sty))) (C:\
-Program Files\MiKTeX\tex/latex/pgf/utilities\pgfpages.sty
+\c@theorem=\count331
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerbasethemes.sty)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerthemedefault.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerfontthemedefault.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamercolorthemedefault.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerinnerthemedefault.sty
+\beamer@dima=\dimen290
+\beamer@dimb=\dimen291
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerouterthemedefault.sty))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfpages.sty
 Package: pgfpages 2011/01/05 ver 0.02
-(C:\Program Files\MiKTeX\tex/latex/tools\calc.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count328
-\calc@Bcount=\count329
-\calc@Adimen=\dimen284
-\calc@Bdimen=\dimen285
+\calc@Acount=\count332
+\calc@Bcount=\count333
+\calc@Adimen=\dimen292
+\calc@Bdimen=\dimen293
 \calc@Askip=\skip64
 \calc@Bskip=\skip65
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count330
+\calc@Ccount=\count334
 \calc@Cskip=\skip66
 )
-\pgf@logicalpages=\count331
-\pgf@firstshipout=\count332
-\pgf@lastshipout=\count333
-\pgf@currentshipout=\count334
-\pgf@cpn=\count335
-\pgf@shipoutnextto=\count336
-\pgfphysicalheight=\dimen286
-\pgfphysicalwidth=\dimen287
+\pgf@logicalpages=\count335
+\pgf@firstshipout=\count336
+\pgf@lastshipout=\count337
+\pgf@currentshipout=\count338
+\pgf@cpn=\count339
+\pgf@shipoutnextto=\count340
+\pgfphysicalheight=\dimen294
+\pgfphysicalwidth=\dimen295
 \pgfpages@shipoutbox=\box76
-) (C:\Program Files\MiKTeX\tex/latex/lm\lmodern.sty
-Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
 LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
@@ -640,204 +575,149 @@ LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
-) (C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math.sty (C:\Program 
-Files\MiKTeX\tex/latex/l3kernel\expl3.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unicode-math.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
 Package: expl3 2022-02-05 L3 programming layer (loader) 
-(C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-xetex.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
 File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
-()
-\c__kernel_sys_dvipdfmx_version_int=\count337
-\l__color_backend_stack_int=\count338
-\g__color_backend_stack_int=\count339
-\g__graphics_track_int=\count340
+(|extractbb --version)
+\c__kernel_sys_dvipdfmx_version_int=\count341
+\l__color_backend_stack_int=\count342
+\g__color_backend_stack_int=\count343
+\g__graphics_track_int=\count344
 \l__pdf_internal_box=\box77
-\g__pdf_backend_object_int=\count341
-\g__pdf_backend_annotation_int=\count342
-\g__pdf_backend_link_int=\count343
+\g__pdf_backend_object_int=\count345
+\g__pdf_backend_annotation_int=\count346
+\g__pdf_backend_link_int=\count347
 ))
 Package: unicode-math 2020/01/31 v0.8q Unicode maths in XeLaTeX and LuaLaTeX
-(C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math-xetex.sty
-Package: unicode-math-xetex 2020/01/31 v0.8q Unicode maths in XeLaTeX and LuaLa
-TeX
-(C:\Program Files\MiKTeX\tex/latex/l3packages/xparse\xparse.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unicode-math-xetex.sty
+Package: unicode-math-xetex 2020/01/31 v0.8q Unicode maths in XeLaTeX and LuaLaTeX
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
 Package: xparse 2022-01-12 L3 Experimental document command parser
-) (C:\Program Files\MiKTeX\tex/latex/l3packages/l3keys2e\l3keys2e.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
 Package: l3keys2e 2022-01-12 LaTeX2e option processing using LaTeX3 keys
-) (C:\Program Files\MiKTeX\tex/latex/fontspec\fontspec.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.sty
 Package: fontspec 2022/01/15 v2.8a Font selection for XeLaTeX and LuaLaTeX
-(C:\Program Files\MiKTeX\tex/latex/fontspec\fontspec-xetex.sty
-Package: fontspec-xetex 2022/01/15 v2.8a Font selection for XeLaTeX and LuaLaTe
-X
-\l__fontspec_script_int=\count344
-\l__fontspec_language_int=\count345
-\l__fontspec_strnum_int=\count346
-\l__fontspec_tmp_int=\count347
-\l__fontspec_tmpa_int=\count348
-\l__fontspec_tmpb_int=\count349
-\l__fontspec_tmpc_int=\count350
-\l__fontspec_em_int=\count351
-\l__fontspec_emdef_int=\count352
-\l__fontspec_strong_int=\count353
-\l__fontspec_strongdef_int=\count354
-\l__fontspec_tmpa_dim=\dimen288
-\l__fontspec_tmpb_dim=\dimen289
-\l__fontspec_tmpc_dim=\dimen290
-(C:\Program Files\MiKTeX\tex/latex/base\fontenc.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec-xetex.sty
+Package: fontspec-xetex 2022/01/15 v2.8a Font selection for XeLaTeX and LuaLaTeX
+\l__fontspec_script_int=\count348
+\l__fontspec_language_int=\count349
+\l__fontspec_strnum_int=\count350
+\l__fontspec_tmp_int=\count351
+\l__fontspec_tmpa_int=\count352
+\l__fontspec_tmpb_int=\count353
+\l__fontspec_tmpc_int=\count354
+\l__fontspec_em_int=\count355
+\l__fontspec_emdef_int=\count356
+\l__fontspec_strong_int=\count357
+\l__fontspec_strongdef_int=\count358
+\l__fontspec_tmpa_dim=\dimen296
+\l__fontspec_tmpb_dim=\dimen297
+\l__fontspec_tmpc_dim=\dimen298
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
-) (C:\Program Files\MiKTeX\tex/latex/fontspec\fontspec.cfg))) (C:\Program Files
-\MiKTeX\tex/latex/base\fix-cm.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.cfg))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/fix-cm.sty
 Package: fix-cm 2020/11/24 v1.1t fixes to LaTeX
-(C:\Program Files\MiKTeX\tex/latex/base\ts1enc.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding TS1 on input line 47.
 ))
-\g__um_fam_int=\count355
-\g__um_fonts_used_int=\count356
-\l__um_primecount_int=\count357
+\g__um_fam_int=\count359
+\g__um_fonts_used_int=\count360
+\l__um_primecount_int=\count361
 \g__um_primekern_muskip=\muskip18
-(C:\Program Files\MiKTeX\tex/latex/unicode-math\unicode-math-table.tex))) (C:\P
-rogram Files\MiKTeX\tex/latex/upquote\upquote.sty
-Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
-tim
-(C:\Program Files\MiKTeX\tex/latex/base\textcomp.sty
-Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
-)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype.sty
-Package: microtype 2021/12/02 v3.0a Micro-typographical refinements (RS)
-\MT@toks=\toks45
-\MT@count=\count358
-\MT@tempbox=\box78
-LaTeX Info: Redefining \leftprotrusion on input line 1006.
-LaTeX Info: Redefining \rightprotrusion on input line 1014.
-LaTeX Info: Redefining \textls on input line 1182.
-\MT@outer@kern=\dimen291
-LaTeX Info: Redefining \textmicrotypecontext on input line 1768.
-\MT@listname@count=\count359
-
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype-xetex.d
-ef
-File: microtype-xetex.def 2021/12/02 v3.0a Definitions specific to xetex (RS)
-LaTeX Info: Redefining \lsstyle on input line 234.
-)
-Package microtype Info: Loading configuration file microtype.cfg.
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\microtype.cfg
-File: microtype.cfg 2021/12/02 v3.0a microtype main configuration file (RS)
-)) (C:\Program Files\MiKTeX\tex/latex/parskip\parskip.sty
-Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
-) (C:\Program Files\MiKTeX\tex/latex/xurl\xurl.sty
-Package: xurl 2020/12/30 v 0.09a modify URL breaks
-) (C:\Program Files\MiKTeX\tex/latex/bookmark\bookmark.sty
-Package: bookmark 2020-11-06 v1.29 PDF bookmarks (HO)
-(C:\Program Files\MiKTeX\tex/latex/bookmark\bkm-dvipdfm.def
-File: bkm-dvipdfm.def 2020-11-06 v1.29 bookmark driver for dvipdfm (HO)
-\BKM@id=\count360
-)) (C:\Program Files\MiKTeX\tex/latex/fancyvrb\fancyvrb.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unicode-math-table.tex))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2021/12/21 4.1b verbatim text (tvz,hv)
-\FV@CodeLineNo=\count361
+\FV@CodeLineNo=\count362
 \FV@InFile=\read3
-\FV@TabBox=\box79
-\c@FancyVerbLine=\count362
-\FV@StepNumber=\count363
+\FV@TabBox=\box78
+\c@FancyVerbLine=\count363
+\FV@StepNumber=\count364
 \FV@OutFile=\write5
-) (C:\Program Files\MiKTeX\tex/latex/framed\framed.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/framed/framed.sty
 Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \OuterFrameSep=\skip67
-\fb@frw=\dimen292
-\fb@frh=\dimen293
-\FrameRule=\dimen294
-\FrameSep=\dimen295
-) (C:\Program Files\MiKTeX\tex/latex/beamer\beamerthemeCambridgeUS.sty (C:\Prog
-ram Files\MiKTeX\tex/latex/beamer\beamerinnerthemerounded.sty) (C:\Program File
-s\MiKTeX\tex/latex/beamer\beamerouterthemeinfolines.sty) (C:\Program Files\MiKT
-eX\tex/latex/beamer\beamercolorthemebeaver.sty))
-Package hyperref Info: Option `colorlinks' set `true' on input line 146.
-(C:\Program Files\MiKTeX\tex/latex/beamer\beamerfontthemeserif.sty) (C:\Users\m
-egahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\adjustbox.sty
+\fb@frw=\dimen299
+\fb@frh=\dimen300
+\FrameRule=\dimen301
+\FrameSep=\dimen302
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerthemeCambridgeUS.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerinnerthemerounded.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerouterthemeinfolines.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamercolorthemebeaver.sty))
+Package hyperref Info: Option `colorlinks' set `true' on input line 151.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/beamer/beamerfontthemeserif.sty) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/adjustbox/adjustbox.sty
 Package: adjustbox 2020/08/19 v1.3 Adjusting TeX boxes (trim, clip, ...)
-(C:\Program Files\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
 Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
-(C:\Program Files\MiKTeX\tex/generic/xkeyval\xkeyval.tex (C:\Program Files\MiKT
-eX\tex/generic/xkeyval\xkvutils.tex
-\XKV@toks=\toks46
-\XKV@tempa@toks=\toks47
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks45
+\XKV@tempa@toks=\toks46
 )
-\XKV@depth=\count364
+\XKV@depth=\count365
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\adjcalc.sty
-Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back
--ends (calc, etex, pgfmath)
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\trimclip.sty
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/adjustbox/adjcalc.sty
+Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back-ends (calc, etex, pgfmath)
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/adjustbox/trimclip.sty
 Package: trimclip 2020/08/19 v1.2 Trim and clip general TeX material
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/collectbox\collectbox.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/collectbox/collectbox.sty
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
-\collectedbox=\box80
+\collectedbox=\box79
 )
-\tc@llx=\dimen296
-\tc@lly=\dimen297
-\tc@urx=\dimen298
-\tc@ury=\dimen299
+\tc@llx=\dimen303
+\tc@lly=\dimen304
+\tc@urx=\dimen305
+\tc@ury=\dimen306
 Package trimclip Info: Using driver 'tc-xetex.def'.
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/adjustbox\tc-xetex.def
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/adjustbox/tc-xetex.def
 File: tc-xetex.def 2019/01/04 v2.2 Clipping driver for xetex
 ))
-\adjbox@Width=\dimen300
-\adjbox@Height=\dimen301
-\adjbox@Depth=\dimen302
-\adjbox@Totalheight=\dimen303
-\adjbox@pwidth=\dimen304
-\adjbox@pheight=\dimen305
-\adjbox@pdepth=\dimen306
-\adjbox@ptotalheight=\dimen307
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/ifoddpage\ifoddpage.sty
-Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count365
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/varwidth\varwidth.sty
-Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box81
-\sift@deathcycles=\count366
-\@vwid@loff=\dimen308
-\@vwid@roff=\dimen309
-)) (C:\Program Files\MiKTeX\tex/latex/tools\array.sty
+\adjbox@Width=\dimen307
+\adjbox@Height=\dimen308
+\adjbox@Depth=\dimen309
+\adjbox@Totalheight=\dimen310
+\adjbox@pwidth=\dimen311
+\adjbox@pheight=\dimen312
+\adjbox@pdepth=\dimen313
+\adjbox@ptotalheight=\dimen314
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
 Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen310
-\ar@mcellbox=\box82
-\extrarowheight=\dimen311
-\NC@list=\toks48
+\col@sep=\dimen315
+\ar@mcellbox=\box80
+\extrarowheight=\dimen316
+\NC@list=\toks47
 \extratabsurround=\skip68
 \backup@length=\skip69
-\ar@cellbox=\box83
-) (C:\Program Files\MiKTeX\tex/latex/colortbl\colortbl.sty
+\ar@cellbox=\box81
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
-\everycr=\toks49
+\everycr=\toks48
 \minrowclearance=\skip70
-) (C:\Program Files\MiKTeX\tex/latex/caption\caption.sty
-Package: caption 2020/10/26 v3.5g Customizing captions (AR)
-(C:\Program Files\MiKTeX\tex/latex/caption\caption3.sty
-Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
-\captionmargin=\dimen312
-\captionmargin@=\dimen313
-\captionwidth=\dimen314
-\caption@tempdima=\dimen315
-\caption@indent=\dimen316
-\caption@parindent=\dimen317
-\caption@hangindent=\dimen318
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2022/02/20 v3.6 Customizing captions (AR)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2022/01/07 v2.3 caption3 kernel (AR)
+\caption@tempdima=\dimen317
+\captionmargin=\dimen318
+\caption@leftmargin=\dimen319
+\caption@rightmargin=\dimen320
+\caption@width=\dimen321
+\caption@indent=\dimen322
+\caption@parindent=\dimen323
+\caption@hangindent=\dimen324
 Package caption Info: beamer document class detected.
-(C:\Program Files\MiKTeX\tex/latex/caption\caption-beamer.sto
-File: caption-beamer.sto 2020/08/22 v2.0 Adaption of the caption package to the
- beamer document classes (AR)
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/caption/caption-beamer.sto
+File: caption-beamer.sto 2022/01/06 v2.0c Adaption of the caption package to the beamer document classes (AR)
 ))
-\c@caption@flags=\count367
-\c@continuedfloat=\count368
+\c@caption@flags=\count366
+\c@continuedfloat=\count367
 Package caption Info: hyperref package is loaded.
 Package caption Info: Hyperref support is turned off
 (caption)             because hyperref has stopped early.
-) (C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesome.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontawesome/fontawesome.sty
 Package: fontawesome 2016/05/15 v4.6.3.1 font awesome icons
-(C:\Program Files\MiKTeX\tex/generic/iftex\ifxetex.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifxetex.sty
 Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
-) (C:\Program Files\MiKTeX\tex/generic/iftex\ifluatex.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
-) (C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-generic.tex
-)
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontawesome/fontawesomesymbols-generic.tex)
 
 Package fontspec Info: FontAwesome scale = 1.005834146341463.
 
@@ -867,272 +747,227 @@ Package fontspec Info: Font family 'FontAwesome(0)' created for font
 (fontspec)             <->s*[1.005834146341463]"FontAwesome/OT:language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 
-(C:\Program Files\MiKTeX\tex/latex/fontawesome\fontawesomesymbols-xeluatex.tex)
-) (C:\Program Files\MiKTeX\tex/latex/forest\forest.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontawesome/fontawesomesymbols-xeluatex.tex)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/forest/forest.sty
 Package: forest 2017/07/14 v2.1.5 Drawing (linguistic) trees
-(C:\Program Files\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty (C:\Program Files
-\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
 Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleshapes.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfnodeparttextbox=\box84
-) (C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleplot.code.tex
+\pgfnodeparttextbox=\box82
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
 File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@nodesepstart=\dimen319
-\pgf@nodesepend=\dimen320
-) (C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty
+\pgf@nodesepstart=\dimen325
+\pgf@nodesepend=\dimen326
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
-)) (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgffor.sty (C:\Program File
-s\MiKTeX\tex/latex/pgf/utilities\pgfkeys.sty (C:\Program Files\MiKTeX\tex/gener
-ic/pgf/utilities\pgfkeys.code.tex)) (C:\Program Files\MiKTeX\tex/latex/pgf/math
-\pgfmath.sty (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex)) (
-C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex)
-\pgffor@iter=\dimen321
-\pgffor@skip=\dimen322
-\pgffor@stack=\toks50
-\pgffor@toks=\toks51
-)) (C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
+\pgffor@iter=\dimen327
+\pgffor@skip=\dimen328
+\pgffor@stack=\toks49
+\pgffor@toks=\toks50
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryplothandlers.code.
-tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@plot@mark@count=\count369
-\pgfplotmarksize=\dimen323
+\pgf@plot@mark@count=\count368
+\pgfplotmarksize=\dimen329
 )
-\tikz@lastx=\dimen324
-\tikz@lasty=\dimen325
-\tikz@lastxsaved=\dimen326
-\tikz@lastysaved=\dimen327
-\tikz@lastmovetox=\dimen328
-\tikz@lastmovetoy=\dimen329
-\tikzleveldistance=\dimen330
-\tikzsiblingdistance=\dimen331
-\tikz@figbox=\box85
-\tikz@figbox@bg=\box86
-\tikz@tempbox=\box87
-\tikz@tempbox@bg=\box88
-\tikztreelevel=\count370
-\tikznumberofchildren=\count371
-\tikznumberofcurrentchild=\count372
-\tikz@fig@count=\count373
-(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmodulematrix.code.tex
+\tikz@lastx=\dimen330
+\tikz@lasty=\dimen331
+\tikz@lastxsaved=\dimen332
+\tikz@lastysaved=\dimen333
+\tikz@lastmovetox=\dimen334
+\tikz@lastmovetoy=\dimen335
+\tikzleveldistance=\dimen336
+\tikzsiblingdistance=\dimen337
+\tikz@figbox=\box83
+\tikz@figbox@bg=\box84
+\tikz@tempbox=\box85
+\tikz@tempbox@bg=\box86
+\tikztreelevel=\count369
+\tikznumberofchildren=\count370
+\tikznumberofcurrentchild=\count371
+\tikz@fig@count=\count372
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfmatrixcurrentrow=\count374
-\pgfmatrixcurrentcolumn=\count375
-\pgf@matrix@numberofcolumns=\count376
+\pgfmatrixcurrentrow=\count373
+\pgfmatrixcurrentcolumn=\count374
+\pgf@matrix@numberofcolumns=\count375
 )
-\tikz@expandcount=\count377
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-rytopaths.code.tex
+\tikz@expandcount=\count376
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.code.tex
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.code.tex
 File: tikzlibraryshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.geometric.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
 File: tikzlibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.geom
-etric.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex
 File: pgflibraryshapes.geometric.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.misc.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
 File: tikzlibraryshapes.misc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.misc
-.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex
 File: pgflibraryshapes.misc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.symbols.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.symbols.code.tex
 File: tikzlibraryshapes.symbols.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.symb
-ols.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.symbols.code.tex
 File: pgflibraryshapes.symbols.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.arrows.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.arrows.code.tex
 File: tikzlibraryshapes.arrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.arro
-ws.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.arrows.code.tex
 File: pgflibraryshapes.arrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.callouts.code.tex
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.call
-outs.code.tex))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryshapes.multipart.code.tex
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.callouts.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.callouts.code.tex)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
 File: tikzlibraryshapes.multipart.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.mult
-ipart.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex
 File: pgflibraryshapes.multipart.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfnodepartlowerbox=\box89
-\pgfnodeparttwobox=\box90
-\pgfnodepartthreebox=\box91
-\pgfnodepartfourbox=\box92
-\pgfnodeparttwentybox=\box93
-\pgfnodepartnineteenbox=\box94
-\pgfnodeparteighteenbox=\box95
-\pgfnodepartseventeenbox=\box96
-\pgfnodepartsixteenbox=\box97
-\pgfnodepartfifteenbox=\box98
-\pgfnodepartfourteenbox=\box99
-\pgfnodepartthirteenbox=\box100
-\pgfnodeparttwelvebox=\box101
-\pgfnodepartelevenbox=\box102
-\pgfnodeparttenbox=\box103
-\pgfnodepartninebox=\box104
-\pgfnodeparteightbox=\box105
-\pgfnodepartsevenbox=\box106
-\pgfnodepartsixbox=\box107
-\pgfnodepartfivebox=\box108
-)))
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryfit.code.tex
+\pgfnodepartlowerbox=\box87
+\pgfnodeparttwobox=\box88
+\pgfnodepartthreebox=\box89
+\pgfnodepartfourbox=\box90
+\pgfnodeparttwentybox=\box91
+\pgfnodepartnineteenbox=\box92
+\pgfnodeparteighteenbox=\box93
+\pgfnodepartseventeenbox=\box94
+\pgfnodepartsixteenbox=\box95
+\pgfnodepartfifteenbox=\box96
+\pgfnodepartfourteenbox=\box97
+\pgfnodepartthirteenbox=\box98
+\pgfnodeparttwelvebox=\box99
+\pgfnodepartelevenbox=\box100
+\pgfnodeparttenbox=\box101
+\pgfnodepartninebox=\box102
+\pgfnodeparteightbox=\box103
+\pgfnodepartsevenbox=\box104
+\pgfnodepartsixbox=\box105
+\pgfnodepartfivebox=\box106
+))) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex
 File: tikzlibraryfit.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-rycalc.code.tex
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 File: tikzlibrarycalc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryintersections.code
-.tex (C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryfpu.code.tex)
-\pgf@intersect@solutions=\count378
-) (C:\Program Files\MiKTeX\tex/latex/pgfopts\pgfopts.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryintersections.code.tex (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)
+\pgf@intersect@solutions=\count377
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/pgfopts/pgfopts.sty
 Package: pgfopts 2014/07/10 v2.1a LaTeX package options with pgfkeys
-\pgfopts@list@add@a@toks=\toks52
-\pgfopts@list@add@b@toks=\toks53
-) (C:\Program Files\MiKTeX\tex/latex/elocalloc\elocalloc.sty
+\pgfopts@list@add@a@toks=\toks51
+\pgfopts@list@add@b@toks=\toks52
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/elocalloc/elocalloc.sty
 Package: elocalloc 2016/12/15 v0.03 local allocation for LaTeX 2015+ (DPC)
-) (C:\Program Files\MiKTeX\tex/latex/environ\environ.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/environ/environ.sty
 Package: environ 2014/05/04 v0.3 A new way to define environments
-(C:\Program Files\MiKTeX\tex/latex/trimspaces\trimspaces.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/trimspaces/trimspaces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
-)) (C:\Program Files\MiKTeX\tex/latex/inlinedef\inlinedef.sty
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/inlinedef/inlinedef.sty
 Package: inlinedef 2008/07/10 v1.0 Inlined expansions within definitions
-\ID@toks=\toks54
-\ID@count=\count379
+\ID@toks=\toks53
+\ID@count=\count378
 )
-\ID@usercommands=\toks55
-\safeloop@depth=\count380
-\safeRKloop@depth=\count381
-\forest@temp@dimen=\dimen332
-\forest@temp@count=\count382
-\forest@n=\count383
-\forest@temp@global@count=\count384
-\forest@temp@toks=\toks56
-\forest@temparray@M=\count385
-\forest@temparray@N=\count386
-\forest@global@temparray@M=\count387
-\forest@global@temparray@N=\count388
-\forest@isnum@count=\count389
-\forest@isdim@nonintpart=\count390
-\forest@isdim@dimen=\dimen333
-\forest@sort@m=\count391
-\forest@sort@k=\count392
-\forest@sort@p=\count393
-\bracket@content=\toks57
-\bracket@afterthought=\toks58
-\forest@node@maxid=\count394
-\forest@process@left@M=\count395
-\forest@process@left@N=\count396
-\forest@process@right@M=\count397
-\forest@process@right@N=\count398
-\forest@process@saved@M=\count399
-\forest@process@saved@N=\count400
-\forest@process@result@M=\count401
-\forest@process@result@N=\count402
-\forest@process@n=\count403
-\forest@nodewalk@branch@toks=\toks59
-\forest@nodewalk@shortsteps@resolution=\toks60
-\forest@do@dynamics=\toks61
-\forest@box=\box109
-\forest@xg=\dimen334
-\forest@yg=\dimen335
-\forest@xs=\dimen336
-\forest@ys=\dimen337
-\forest@pi@toks=\toks62
-\forest@segment@toks=\toks63
-\forest@PIi@toks=\toks64
-\forest@PIii@toks=\toks65
+\ID@usercommands=\toks54
+\safeloop@depth=\count379
+\safeRKloop@depth=\count380
+\forest@temp@dimen=\dimen338
+\forest@temp@count=\count381
+\forest@n=\count382
+\forest@temp@global@count=\count383
+\forest@temp@toks=\toks55
+\forest@temparray@M=\count384
+\forest@temparray@N=\count385
+\forest@global@temparray@M=\count386
+\forest@global@temparray@N=\count387
+\forest@isnum@count=\count388
+\forest@isdim@nonintpart=\count389
+\forest@isdim@dimen=\dimen339
+\forest@sort@m=\count390
+\forest@sort@k=\count391
+\forest@sort@p=\count392
+\bracket@content=\toks56
+\bracket@afterthought=\toks57
+\forest@node@maxid=\count393
+\forest@process@left@M=\count394
+\forest@process@left@N=\count395
+\forest@process@right@M=\count396
+\forest@process@right@N=\count397
+\forest@process@saved@M=\count398
+\forest@process@saved@N=\count399
+\forest@process@result@M=\count400
+\forest@process@result@N=\count401
+\forest@process@n=\count402
+\forest@nodewalk@branch@toks=\toks58
+\forest@nodewalk@shortsteps@resolution=\toks59
+\forest@do@dynamics=\toks60
+\forest@box=\box107
+\forest@xg=\dimen340
+\forest@yg=\dimen341
+\forest@xs=\dimen342
+\forest@ys=\dimen343
+\forest@pi@toks=\toks61
+\forest@segment@toks=\toks62
+\forest@PIi@toks=\toks63
+\forest@PIii@toks=\toks64
 \forest@copy@in=\read4
 \forest@copy@out=\write6
-\forest@externalize@max@outer@n=\count404
-\forest@externalize@inner@n=\count405
-) (C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty
+\forest@externalize@max@outer@n=\count403
+\forest@externalize@inner@n=\count404
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2021/02/14 v1.3d Input encoding file
-\inpenc@prehook=\toks66
-\inpenc@posthook=\toks67
+\inpenc@prehook=\toks65
+\inpenc@posthook=\toks66
 
 Package inputenc Warning: inputenc package ignored with utf8 based engines.
 
-) (C:\Program Files\MiKTeX\tex/latex/media9\media9.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/media9/media9.sty
 Package: media9 2021/10/18 v1.23 acrobat-9/X compatible media
-\g_mix_pkgresizeflag_int=\count406
-(C:\Program Files\MiKTeX\tex/latex/media9\pdfbase.sty
-Package: pdfbase 2021/09/12 v0.53 driver independent access to low-level PDF fe
-atures
-\g_pbs_page_int=\count407
-\g_pbs_obj_int=\count408
-\g_pbs_oc_int=\count409
-) (C:\Program Files\MiKTeX\tex/latex/ocgx2\ocgbase.sty
+\g_mix_pkgresizeflag_int=\count405
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/media9/pdfbase.sty
+Package: pdfbase 2021/09/12 v0.53 driver independent access to low-level PDF features
+\g_pbs_page_int=\count406
+\g_pbs_obj_int=\count407
+\g_pbs_oc_int=\count408
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/ocgx2/ocgbase.sty
 Package: ocgbase 2021/06/11 v0.20 support package for ocgx2.sty
-\g_ocgbase_nd_int=\count410
+\g_ocgbase_nd_int=\count409
 )
-\l_mix_poster_box=\box110
-\g_mix_wd_dim=\dimen338
-\g_mix_ht_dim=\dimen339
-\g_mix_dp_dim=\dimen340
-\g_mix_rmcnt_int=\count411
-\l_mix_viewcnt_int=\count412
-\g@mix@page@int=\count413
-\g_mix_resizeflag_int=\count414
-\l_mix_lineno_int=\count415
-\l_mix_pbtn_box=\box111
-\g_mix_mbtncnt_int=\count416
-\mix@btn@dim=\dimen341
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/multirow\multirow.sty
+\l_mix_poster_box=\box108
+\g_mix_wd_dim=\dimen344
+\g_mix_ht_dim=\dimen345
+\g_mix_dp_dim=\dimen346
+\g_mix_rmcnt_int=\count410
+\l_mix_viewcnt_int=\count411
+\g@mix@page@int=\count412
+\g_mix_resizeflag_int=\count413
+\l_mix_lineno_int=\count414
+\l_mix_pbtn_box=\box109
+\g_mix_mbtncnt_int=\count415
+\mix@btn@dim=\dimen347
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip71
-\multirow@cntb=\count417
+\multirow@cntb=\count416
 \multirow@dima=\skip72
-\bigstrutjot=\dimen342
-)
-(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
-ryarrows.code.tex
+\bigstrutjot=\dimen348
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryarrows.code.tex
 File: tikzlibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.code.tex
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.code.tex
 File: pgflibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\arrowsize=\dimen343
-)) (C:\Program Files\MiKTeX\tex/latex/graphics\rotating.sty
+\arrowsize=\dimen349
+)) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/rotating.sty
 Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
-(C:\Program Files\MiKTeX\tex/latex/base\ifthen.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@r@tfl@t=\count418
+\c@r@tfl@t=\count417
 \rotFPtop=\skip73
 \rotFPbot=\skip74
-\rot@float@box=\box112
-\rot@mess@toks=\toks68
-) (C:\Program Files\MiKTeX\tex/latex/wasysym\wasysym.sty
+\rot@float@box=\box110
+\rot@mess@toks=\toks67
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/wasysym/wasysym.sty
 Package: wasysym 2020/01/19 v2.4 Wasy-2 symbol support package
 \symwasy=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
 (Font)                  U/wasy/m/n --> U/wasy/b/n on input line 93.
-) (17_stationarity.aux)
+) (./17_stationarity.aux)
 \openout1 = `17_stationarity.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 274.
@@ -1190,43 +1025,33 @@ LaTeX Font Info:    ... okay on input line 274.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring ON on input line 274.
-(C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/refcount\refcount.sty
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
-)
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/generic/gettitlestring\gettitlest
-ring.sty
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count419
+\c@section@level=\count418
 )
 LaTeX Info: Redefining \ref on input line 274.
 LaTeX Info: Redefining \pageref on input line 274.
 LaTeX Info: Redefining \nameref on input line 274.
+(./17_stationarity.out) (./17_stationarity.out)
+\@outlinefile=\write7
+\openout7 = `17_stationarity.out'.
 
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-basic-dictionary-Engli
-sh.dict
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-basic-dictionary-English.dict
 Dictionary: translator-basic-dictionary, Language: English 
-)
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-bibliography-dictionar
-y-English.dict
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-bibliography-dictionary-English.dict
 Dictionary: translator-bibliography-dictionary, Language: English 
-)
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-environment-dictionary
--English.dict
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-environment-dictionary-English.dict
 Dictionary: translator-environment-dictionary, Language: English 
-)
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-months-dictionary-Engl
-ish.dict
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-months-dictionary-English.dict
 Dictionary: translator-months-dictionary, Language: English 
-)
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-numbers-dictionary-Eng
-lish.dict
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-numbers-dictionary-English.dict
 Dictionary: translator-numbers-dictionary, Language: English 
-)
-(C:\Program Files\MiKTeX\tex/latex/translator\translator-theorem-dictionary-Eng
-lish.dict
+) (c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/translator/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
@@ -1255,19 +1080,16 @@ Package fontspec Info: latinmodern-math scale = 0.9999967668407183.
 
 Package fontspec Info: Font family 'latinmodern-math.otf(0)' created for font
 (fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
+(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
+(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
@@ -1290,38 +1112,28 @@ Package fontspec Info: latinmodern-math scale = 0.9999967668407183.
 
 Package fontspec Info: Font family 'latinmodern-math.otf(1)' created for font
 (fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
-latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf}].
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,Style=MathScriptScript}},BoldFont={latinmodern-math.otf}].
 (fontspec)              
 (fontspec)              This font family consists of the following NFSS
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <9.3075->s*[0.9999967668407183]"[latinmodern-math.otf]/O
-T:script=math;language=dflt;"<6.57-9.3075>s*[0.9999967668407183]"[latinmodern-m
-ath.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[0.9999967668407183]"[l
-atinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
+(fontspec)             <9.3075->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;"<6.57-9.3075>s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
+(fontspec)             <->s*[0.9999967668407183]"[latinmodern-math.otf]/OT:script=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 10.95pt on input line 274.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
 (Font)              `operators' in the math version `normal' on input line 274.
-
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 274.
+(Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input line 274.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
 (Font)              `operators' in the math version `bold' on input line 274.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 274.
+(Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on input line 274.
 
 Package fontspec Info: latinmodern-math scale = 0.9999967668407183.
 
@@ -1355,11 +1167,7 @@ Package fontspec Info: latinmodern-math scale = 1.000096766517402.
 
 Package fontspec Info: Font family 'latinmodern-math.otf(2)' created for font
 (fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
-latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=1.0001,FontAd
-justment={\fontdimen
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,Style=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=1.0001,FontAdjustment={\fontdimen
 (fontspec)             8\font =7.41315pt\relax \fontdimen 9\font
 (fontspec)             =4.3143pt\relax \fontdimen 10\font =4.8618pt\relax
 (fontspec)             \fontdimen 11\font =7.5117pt\relax \fontdimen 12\font
@@ -1375,10 +1183,7 @@ justment={\fontdimen
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <9.3075->s*[1.000096766517402]"[latinmodern-math.otf]/OT
-:script=math;language=dflt;"<6.57-9.3075>s*[1.000096766517402]"[latinmodern-mat
-h.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[1.000096766517402]"[lati
-nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
+(fontspec)             <9.3075->s*[1.000096766517402]"[latinmodern-math.otf]/OT:script=math;language=dflt;"<6.57-9.3075>s*[1.000096766517402]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[1.000096766517402]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 (fontspec)             and font adjustment code:
 (fontspec)             \fontdimen 8\font =7.41315pt\relax \fontdimen 9\font
@@ -1392,8 +1197,7 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             \fontdimen 22\font =2.7375pt\relax \fontdimen 20\font
 (fontspec)             =0pt\relax \fontdimen 21\font =0pt\relax 
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[1.000096766517402]"[latinmodern-math.otf]/OT:scrip
-t=math;language=dflt;"
+(fontspec)             <->s*[1.000096766517402]"[latinmodern-math.otf]/OT:script=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 (fontspec)             and font adjustment code:
 (fontspec)             \fontdimen 8\font =7.41315pt\relax \fontdimen 9\font
@@ -1410,13 +1214,11 @@ t=math;language=dflt;"
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
 (Font)              `symbols' in the math version `normal' on input line 274.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 274.
+(Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on input line 274.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
 (Font)              `symbols' in the math version `bold' on input line 274.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 274.
+(Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on input line 274.
 
 Package fontspec Info: latinmodern-math scale = 0.9999967668407183.
 
@@ -1450,11 +1252,7 @@ Package fontspec Info: latinmodern-math scale = 0.9998967671640342.
 
 Package fontspec Info: Font family 'latinmodern-math.otf(3)' created for font
 (fontspec)             'latinmodern-math.otf' with options
-(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},Sm
-allCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=
-latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,St
-yle=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=0.9999,FontAd
-justment={\fontdimen
+(fontspec)             [Scale=MatchLowercase,BoldItalicFont={},ItalicFont={},SmallCapsFont={},Script=Math,SizeFeatures={{Size=9.3075-},{Size=6.57-9.3075,Font=latinmodern-math.otf,Style=MathScript},{Size=-6.57,Font=latinmodern-math.otf,Style=MathScriptScript}},BoldFont={latinmodern-math.otf},ScaleAgain=0.9999,FontAdjustment={\fontdimen
 (fontspec)             8\font =0.438pt\relax \fontdimen 9\font =2.19pt\relax
 (fontspec)             \fontdimen 10\font =1.82864pt\relax \fontdimen 11\font
 (fontspec)             =1.21545pt\relax \fontdimen 12\font =6.56999pt\relax
@@ -1464,10 +1262,7 @@ justment={\fontdimen
 (fontspec)             series/shapes:
 (fontspec)              
 (fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <9.3075->s*[0.9998967671640342]"[latinmodern-math.otf]/O
-T:script=math;language=dflt;"<6.57-9.3075>s*[0.9998967671640342]"[latinmodern-m
-ath.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[0.9998967671640342]"[l
-atinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
+(fontspec)             <9.3075->s*[0.9998967671640342]"[latinmodern-math.otf]/OT:script=math;language=dflt;"<6.57-9.3075>s*[0.9998967671640342]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=0;"<-6.57>s*[0.9998967671640342]"[latinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
 (fontspec)             and font adjustment code:
 (fontspec)             \fontdimen 8\font =0.438pt\relax \fontdimen 9\font
@@ -1475,8 +1270,7 @@ atinmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 (fontspec)             \fontdimen 11\font =1.21545pt\relax \fontdimen 12\font
 (fontspec)             =6.56999pt\relax \fontdimen 13\font =0pt\relax 
 (fontspec)             - 'bold' (b/n) with NFSS spec.:
-(fontspec)             <->s*[0.9998967671640342]"[latinmodern-math.otf]/OT:scri
-pt=math;language=dflt;"
+(fontspec)             <->s*[0.9998967671640342]"[latinmodern-math.otf]/OT:script=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 (fontspec)             and font adjustment code:
 (fontspec)             \fontdimen 8\font =0.438pt\relax \fontdimen 9\font
@@ -1485,58 +1279,36 @@ pt=math;language=dflt;"
 (fontspec)             =6.56999pt\relax \fontdimen 13\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 2
-74.
+(Font)              `largesymbols' in the math version `normal' on input line 274.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 274.
+(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on input line 274.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 274
-.
+(Font)              `largesymbols' in the math version `bold' on input line 274.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 274.
-LaTeX Info: Redefining \microtypecontext on input line 274.
-Package microtype Info: Applying patch `item' on input line 274.
-Package microtype Info: Applying patch `toc' on input line 274.
-Package microtype Info: Applying patch `eqnum' on input line 274.
-
-Package microtype Warning: Unable to apply patch `footnote' on input line 274.
-
-Package microtype Info: Character protrusion enabled (level 2).
-Package microtype Info: Using protrusion set `basicmath'.
-Package microtype Info: No adjustment of tracking.
-Package microtype Info: No adjustment of spacing.
-Package microtype Info: No adjustment of kerning.
-
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\mt-LatinModernRom
-an.cfg
-File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
-ern Roman (RS)
-)
+(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on input line 274.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
-(17_stationarity.nav)
-Missing character: There is no 5 in font nullfont!
+(./17_stationarity.nav)
+Missing character: There is no 5 ("35) in font nullfont!
 LaTeX Font Info:    Font shape `TU/FontAwesome(0)/m/n' will be
 (Font)              scaled to size 8.04663pt on input line 275.
-(C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\mt-TU-empty.cfg
-File: mt-TU-empty.cfg 2021/06/22 v1.1 microtype config. file: fonts with nonsta
-ndard glyph set (RS)
-) [1
 
-] (17_stationarity.toc) [2
+Overfull \vbox (1.32187pt too high) detected at line 275
+ []
+
+[1
+
+] (./17_stationarity.toc) [2
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.665pt on input line 297.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 5.475pt on input line 297.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-97.
-(C:\Program Files\MiKTeX\tex/latex/lm\omllmm.fd
-File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 297.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
 (Font)              scaled to size 10.95099pt on input line 297.
@@ -1550,23 +1322,16 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 7.66417pt on input line 297.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 5.47441pt on input line 297.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 297
-.
-(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
+LaTeX Font Info:    Trying to load font information for U+msa on input line 297.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\mt-msa.cfg
-File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 297
-.
-(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
+LaTeX Font Info:    Trying to load font information for U+msb on input line 297.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (C:\Users\megahefm\AppData\Roaming\MiKTeX\tex/latex/microtype\mt-msb.cfg
-File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+wasy on input line 29
-7.
-(C:\Program Files\MiKTeX\tex/latex/wasysym\uwasy.fd
+LaTeX Font Info:    Trying to load font information for U+wasy on input line 297.
+(c:/Users/megahefm/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2020/01/19 v2.4 Wasy-2 symbol font definitions
 )
 
@@ -1591,10 +1356,10 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 7.99915pt on input line 297.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 5.99936pt on input line 297.
-Missing character: There is no 1 in font nullfont!
-Missing character: There is no 3 in font nullfont!
-Missing character: There is no 1 in font nullfont!
-Missing character: There is no 8 in font nullfont!
+Missing character: There is no 1 ("31) in font nullfont!
+Missing character: There is no 3 ("33) in font nullfont!
+Missing character: There is no 1 ("31) in font nullfont!
+Missing character: There is no 8 ("38) in font nullfont!
 [3
 
 ] [4
@@ -1605,31 +1370,29 @@ Missing character: There is no 8 in font nullfont!
 ] [6
 
 ]
-File: 17_stationarity_files/figure-beamer/Stationary-1.pdf Graphic file (type p
-df)
+File: 17_stationarity_files/figure-beamer/Stationary-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/Stationary-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 339
+Overfull \vbox (15.26318pt too high) detected at line 339
  []
 
 [7
 
 ]
-File: 17_stationarity_files/figure-beamer/nonStationary-1.pdf Graphic file (typ
-e pdf)
+File: 17_stationarity_files/figure-beamer/nonStationary-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/nonStationary-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 344
+Overfull \vbox (15.26318pt too high) detected at line 344
  []
 
 [8
 
 ]
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no 4 in font nullfont!
+Missing character: There is no 2 ("32) in font nullfont!
+Missing character: There is no 4 ("34) in font nullfont!
 [9
 
-] (17_stationarity.toc) [10
+] (./17_stationarity.toc) [10
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1644,7 +1407,7 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 File: 17_stationarity_files/figure-beamer/gnp-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/gnp-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 380
+Overfull \vbox (15.26318pt too high) detected at line 380
  []
 
 [12
@@ -1657,7 +1420,7 @@ Overfull \vbox (7.26318pt too high) detected at line 380
 File: 17_stationarity_files/figure-beamer/rw1-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/rw1-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 405
+Overfull \vbox (15.26318pt too high) detected at line 405
  []
 
 [15
@@ -1666,7 +1429,7 @@ Overfull \vbox (7.26318pt too high) detected at line 405
 File: 17_stationarity_files/figure-beamer/rw2-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/rw2-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 410
+Overfull \vbox (15.26318pt too high) detected at line 410
  []
 
 [16
@@ -1675,12 +1438,12 @@ Overfull \vbox (7.26318pt too high) detected at line 410
 File: 17_stationarity_files/figure-beamer/rw3-1.pdf Graphic file (type pdf)
 <use 17_stationarity_files/figure-beamer/rw3-1.pdf>
 
-Overfull \vbox (7.26318pt too high) detected at line 415
+Overfull \vbox (15.26318pt too high) detected at line 415
  []
 
 [17
 
-] (17_stationarity.toc) [18
+] (./17_stationarity.toc) [18
 
 ] [19
 
@@ -1689,59 +1452,62 @@ Overfull \vbox (7.26318pt too high) detected at line 415
 ]
 \openout4 = `17_stationarity.vrb'.
 
-(17_stationarity.vrb) [21
+(./17_stationarity.vrb) [21
 
 ] [22
 
 ]
 \openout4 = `17_stationarity.vrb'.
 
-(17_stationarity.vrb) [23
+(./17_stationarity.vrb) [23
 
 ]
 \openout4 = `17_stationarity.vrb'.
 
-(17_stationarity.vrb) [24
+(./17_stationarity.vrb) [24
 
-] (17_stationarity.toc) [25
+] (./17_stationarity.toc) [25
 
 ]
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no 4 in font nullfont!
+Missing character: There is no 2 ("32) in font nullfont!
+Missing character: There is no 4 ("34) in font nullfont!
 [26
 
 ] [27
 
 ]
-Missing character: There is no 5 in font nullfont!
+Missing character: There is no 5 ("35) in font nullfont!
+
+Overfull \vbox (1.32187pt too high) detected at line 563
+ []
+
 [28
 
 ]
-\tf@nav=\write7
-\openout7 = `17_stationarity.nav'.
+\tf@nav=\write8
+\openout8 = `17_stationarity.nav'.
 
-\tf@toc=\write8
-\openout8 = `17_stationarity.toc'.
+\tf@toc=\write9
+\openout9 = `17_stationarity.toc'.
 
-\tf@snm=\write9
-\openout9 = `17_stationarity.snm'.
+\tf@snm=\write10
+\openout10 = `17_stationarity.snm'.
 
-(17_stationarity.aux)
+(./17_stationarity.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.475pt have occurred.
 
+Package rerunfilecheck Info: File `17_stationarity.out' has not changed.
+(rerunfilecheck)             Checksum: 239334AFF86B06BDF15FB5EDCC47FF74;446.
  ) 
 Here is how much of TeX's memory you used:
- 49421 strings out of 410969
- 1091698 string characters out of 2828074
- 1536053 words of memory out of 3000000
- 69345 multiletter control sequences out of 15000+600000
+ 47451 strings out of 478181
+ 1079393 string characters out of 5852708
+ 1474094 words of memory out of 5000000
+ 67252 multiletter control sequences out of 15000+600000
  479022 words of font info for 108 fonts, out of 8000000 for 9000
- 1348 hyphenation exceptions out of 8191
- 128i,16n,132p,1614b,702s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 14 hyphenation exceptions out of 8191
+ 99i,16n,132p,1612b,708s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on 17_stationarity.pdf (28 pages).
-
-! xelatex: security risk: running with elevated privileges
-! miktex-dvipdfmx: security risk: running with elevated privileges

@@ -1,0 +1,138 @@
+\institute[Miami University]{
+	Associate Professor\\
+	Department of Information Systems and Analytics \\
+	Farmer School of Business \\ 
+	Miami University \\
+	\textcolor{white}{ }\\
+	
+	\faGithub \, \href{https://github.com/fmegahed}{fmegahed} \\
+	\faTwitter \, \href{https://twitter.com/fadelmegahed}{@FadelMegahed} \\
+	\faPaperPlane \,   \href{mailto:fmegahed@miamioh.edu?subject=ISA 444 Questions}{fmegahed@miamioh.edu} \\
+	\faQuestion \,   \href{https://calendly.com/fmegahed/}{Click here to schedule a virtual meeting} }
+
+% [A] Theme Stuff
+\usetheme{CambridgeUS}
+\usecolortheme{beaver}
+\definecolor{miamired}{RGB}{200,16,46}
+\definecolor{darkgreen}{rgb}{0.09, 0.45, 0.27}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+%\setbeamertemplate{footline}[frame number]
+\setbeamercolor{title}{fg=miamired}
+\setbeamercolor{block title}{bg=gray!35,fg=black}
+\setbeamercolor{block body}{bg=gray!0,fg=black}
+\setbeamercolor{frametitle}{fg=miamired}
+\usefonttheme[]{serif}
+\setbeamertemplate{items}[ball]
+\setbeamercolor{alerted text}{fg=miamired,bg=}
+\setbeamercolor*{item}{fg=miamired}
+\setbeamercolor{section number projected}{bg=miamired}
+\setbeamercolor{colorbox}{bg=miamired, fg=white}
+\setbeamercolor{section in head/foot}{bg=miamired}
+\setbeamercolor{author in head/foot}{bg=miamired}
+\setbeamercolor{bibliography entry author}{fg=miamired}
+\setbeamercolor{bibliography entry title}{fg=black} 
+\setbeamercolor{bibliography entry location}{fg=miamired} 
+\setbeamercolor{bibliography entry note}{fg=black!85}
+\setbeamertemplate{bibliography item}[text]
+%\setbeamertemplate{bibliography item}[article] % To have an article instead of the number
+% https://tex.stackexchange.com/questions/183052/what-are-all-the-possible-first-arguments-to-setbeamerfont/183053#183053
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamerfont{block body}{series=\bfseries}
+\setbeamerfont{itemize item}{series=\bfseries}
+\setbeamerfont*{itemize/enumerate subbody}{parent=itemize/enumerate body}
+\setbeamerfont*{itemize/enumerate subsubbody}{parent=itemize/enumerate body}
+\setbeamerfont{section in toc}{series=\bfseries}
+\setbeamerfont{normal text}{series=\bfseries}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{footline}{series=\tiny}
+\setbeamerfont{headlineline}{series=\tiny}
+\setbeamerfont{section in head/foot}{series=\tiny}
+\setbeamerfont{subitem}{series=\bfseries}
+\setbeamerfont{subsubitem}{series=\bfseries}
+\setbeamerfont{subsection in head/foot}{series=\tiny}
+\setbeamerfont{subsubsection in head/foot}{series=\tiny}
+\setbeamerfont{page number in head/foot}{series=\tiny}
+\setbeamerfont{date}{series=\scriptsize}
+\setbeamerfont{date in head/foot}{series=\tiny}
+\setbeamercolor*{block title example}{fg=miamired,
+	bg=miamired!10}
+\setbeamercolor*{block body example}{fg= black}
+
+\setbeamerfont{bibliography item}{size=\footnotesize}
+\setbeamerfont{bibliography entry author}{size=\footnotesize}
+\setbeamerfont{bibliography entry title}{size=\footnotesize}
+\setbeamerfont{bibliography entry location}{size=\footnotesize}
+\setbeamerfont{bibliography entry note}{size=\footnotesize}
+
+% [B] Needed Packages
+\usepackage[export]{adjustbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{color, colortbl}
+\usepackage[justification=centering]{caption}
+\usepackage{fontawesome}
+\usepackage{forest}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{media9}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usepackage{rotating}
+\usepackage{wasysym}
+
+% [C] New Commands and Default Pathes
+\captionsetup{labelformat=empty}
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\newcommand{\checkboxFadel}{$\text{\rlap{$\checkmark$}}\square$}
+\newcommand{\EndofPage}{\vskip0pt plus 1filll}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\graphicspath{ {Figures/} }
+\setbeamertemplate{frametitle continuation}{[\insertcontinuationcount]}
+\setbeamercovered{still covered={\opaqueness<1->{5}},again covered={\opaqueness<1->{60}}}
+% begining of the new definition
+\makeatletter
+\newcommand*\fix@beamer@close{%
+	\ifnum\beamer@trivlistdepth>0
+	\beamer@closeitem
+	\fi
+}
+\newcommand*\fix@beamer@open{%
+	\ifnum\beamer@trivlistdepth>0
+	\gdef\beamer@closeitem{}%
+	\fi
+}
+\BeforeBeginEnvironment{itemize}{\fix@beamer@close}
+\AfterEndEnvironment{itemize}{\fix@beamer@open}
+\makeatother
+% end of the new definition
+
+\makeatletter
+\def\mathcolor#1#{\@mathcolor{#1}}
+\def\@mathcolor#1#2#3{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+\makeatother
+
+\AtBeginSection{
+	\begin{frame}{Outline}
+  	\tableofcontents[currentsection,
+  	subsectionstyle=hide,
+  	subsubsectionstyle=hide]
+  \end{frame}
+}
+
+\AtBeginSubsection{
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection, subsectionstyle=show/shaded/hide, subsubsectionstyle=hide]
+  \end{frame}
+}
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}

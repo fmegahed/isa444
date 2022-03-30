@@ -1,0 +1,556 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "18 - ARMA Models"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.8,
+                      fig.height= 2.9,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, tidyquant, xtable, magrittr, fpp2, ggpubr)
+library(ggplot2); theme_set(theme_bw(base_size = 8))
+```
+
+# Preface
+
+
+### Quick Refresher on What we Covered in Class so Far {.allowframebreaks}
+
+\begin{block}{\textbf{Main Learning Outcomes Discussed in Class so Far}}
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have studied the \textcolor{miamired}{basic components of time series}, including trends, seasonal components, and cyclical components.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have considered \textcolor{miamired}{why and how} we forecast.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have learned how we \textcolor{miamired}{evaluate forecast accuracy} with measures such as Mean Absolute Error, Root Mean Square Error, Mean Absolute Percent Error.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have learned to compute forecast accuracy to evaluate both \textcolor{miamired}{in-sample} and \textcolor{miamired}{out-of-sample performance} of forecasts.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have considered \textcolor{miamired}{Moving Average, Decomposition,} and \textcolor{miamired}{Smoothing Methods} for exploring and forecasting time series.} 
+\end{block}
+
+
+\begin{block}{\textbf{Main Learning Outcomes Discussed in Class so Far}}
+  $\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have learned \textcolor{miamired}{preliminaries} regarding the \textcolor{miamired}{autocorrelation structure} of time series and how to plot the \textcolor{miamired}{autocorrelation} and \textcolor{miamired}{partial autocorrelation} over time.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We have studied a \textcolor{miamired}{random walk model} and know how to recognize one using the ACF function.} \\
+		$\quad$ \textcolor{darkgreen}{\large \checkboxFadel} \textbf{We know what it means for a time series to be \textcolor{miamired}{nonstationary}, and how to test for this formally.} \\
+\end{block}
+
+
+### Where We are Going
+  - Using all the information we have learned, we will learn to **Formally Model** a time series with statistical models.  
+
+  - Some of these models will be **Extrapolative**, and some will be **Causal**.
+
+
+### Learning Objectives for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Describe the behavior of the ACF and PACF of an AR(p) process.}
+			\item \textbf{Describe the behavior of the ACF and PACF of an MA(q) process.}
+			\item \textbf{Describe the behavior of the ACF and PACF of an ARMA (p,q) process.}
+			\item \textbf{Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.}
+	\end{itemize}
+\end{block}
+
+
+### Preface: ARMA Models
+
+Models we consider here may have two components, an autoregressive component (AR) and a moving average component (MA).
+
+
+# Autoregressive Processes
+
+### The First Order Autoregressive Process {.allowframebreaks}
+
+The **First Order Autoregressive Process—AR(1)** is given by  
+\begin{equation*}
+y_t = \delta + \phi y_{t-1} + \epsilon_t,
+\end{equation*}
+where $|\phi| < 1$ is a weight, and $\epsilon_t$ is white noise. Essentially, this is similar (not exactly the same though) as regressing $y_t$ on $y_{t-1}$. 
+
+\begin{equation*}
+E(y_t) = \mu = \frac{\delta}{1 - \phi}
+\end{equation*}
+
+\begin{equation*}
+Var(y_t) = \sigma^2 \frac{1}{1 - \phi^2}
+\end{equation*}
+
+The *population* autocorrelation function of the AR(1) process at lag $k$ is
+\begin{equation*}
+\rho(k) = \phi^k
+\end{equation*}
+
+
+The theoretical/population ACF of an AR(1) process with $\phi = 0.6$ will look like this:
+
+```{r theoraticalacf, fig.height=1.75, echo=FALSE}
+arTheoryACF = data.frame(lag = 0:12)
+arTheoryACF %<>% mutate(acf = 0.6^lag)
+ggplot(arTheoryACF, aes(x = lag, y = acf)) + geom_bar(stat = 'identity') +
+  scale_x_continuous(breaks = scales::pretty_breaks(n=13)) + xlim(0, 13) +
+  theme_bw()
+```
+
+### Example Plots of Simulated AR(1) Data [1]
+
+```{r ar1sim1, echo=FALSE}
+ar.sim = arima.sim(model=list(ar=c(.8)),n=500)
+
+p1 = ar.sim %>% autoplot() + theme_bw() + labs(y = 'AR(1): 0.8')
+p2 = acf(ar.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of Simulated AR(1) Data [2]
+
+```{r ar1sim2, echo=FALSE}
+ar.sim = arima.sim(model=list(ar=c(-.8)),n=500)
+
+p1 = ar.sim %>% autoplot() + theme_bw() + labs(y = 'AR(1): -0.8')
+p2 = acf(ar.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL) + ylim(c(-1,1))
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of Simulated AR(1) Data [3]
+
+**Notice how the ACF “dies down” in each case.**
+
+
+### The Second Order Autoregressive Process {.allowframebreaks}
+
+The **Second Order Autoregressive Process—AR(2)** is given by  
+\begin{equation*}
+y_t = \delta + \phi_1 y_{t-1} \color{miamired}{+ \phi_2 y_{t-2} }  \color{black}{+ \epsilon_t},
+\end{equation*}
+where $|\phi_1| < 1 \text{ and } |\phi_2| < 1$ are weights, and $\epsilon_t$ is white noise. Essentially, this is similar (not exactly the same though) as regressing $y_t$ on $y_{t-1} \text{ and } y_{t-2}$. 
+
+
+\begin{equation*}
+E(y_t) = \mu = \frac{\delta}{1 - \phi_1 - \phi_2}
+\end{equation*}
+
+\begin{equation*}
+Var(y_t) = \phi_1 \gamma(1) + \phi_2 \gamma(2) + \sigma^2,
+\end{equation*}
+where $\gamma(1)$ and $\gamma(2)$ are the autocovariance functions at lags 1 and 2, respectively.
+
+The *population* autocorrelation function of the AR(1) process at lag $k$ is
+\begin{equation*}
+\rho(k) = \phi_1 \rho(k-1) + \phi_2 \rho(k-2)
+\end{equation*}
+
+The AR(2) model can be seen as an “adjusted” AR(1) model for which a single exponential decay expression as in the AR(1) model is not enough to describe the pattern in the ACF. Hence an additional term for the
+second lag is added.
+
+
+
+### Example Plots of Simulated AR(2) Data [1]
+
+```{r ar2sim1, echo=FALSE}
+ar.sim1 = arima.sim(model=list(ar=c(0.4, 0.5)), n=500)
+
+p1 = ar.sim1 %>% autoplot() + theme_bw() + labs(y = 'AR(2): 0.4, 0.5')
+p2 = acf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of Simulated AR(2) Data [2]
+
+```{r ar2sim2, echo=FALSE}
+ar.sim2 = arima.sim(model=list(ar=c(-0.4, 0.5)),n=500)
+
+p1 = ar.sim2 %>% autoplot() + theme_bw() + labs(y = 'AR(2): -0.4, 0.5')
+p2 = acf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL) + ylim(c(-1,1))
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### The General Order Autoregressive Process—AR(p) {.allowframebreaks}
+
+The **General Order Autoregressive Process—AR(p)** is given by
+\begin{equation*}
+y_t = \delta + \phi_1 y_{t-1} \color{miamired}{+ \phi_2 y_{t-2} + \dots + \phi_p y_{t-p}}  \color{black}{+ \epsilon_t},
+\end{equation*}
+where $|\phi_i| < 1 \, \forall i = 1, 2, \dots , p$ are weights, and $\epsilon_t$ is white noise. Essentially, this is similar (not exactly the same though) as regressing $y_t$ on $y_{t-1}, \dots, y_{t-p}$. 
+
+
+\begin{equation*}
+E(y_t) = \mu = \frac{\delta}{1 - \phi_1 - \phi_2 - \dots - \phi_p}
+\end{equation*}
+
+\begin{equation*}
+Var(y_t) = \sum_{i=1}^{p}\phi_i \gamma(i) +  \sigma^2,
+\end{equation*}
+where $\gamma(i)$ is the autocovariance functions at lag $i$.
+
+The *population* autocorrelation function of the AR(2) process at lag $k$ is
+\begin{equation*}
+\rho(k) = \sum_{i=1}^{p}\phi_i \rho(k-i) \text{ for } k > 0
+\end{equation*}
+
+
+The ACF of an AR($p$) process, for $p>1$ is a mixture of exponential decay and a damped sinusoid expression (damped sinusoid from the lag 2 and greater).
+
+### AR Model: Determining if the Data Can Be Modeled as an AR Process
+
+  - We can usually tell from the ACF that there is an autoregressive (AR) component to the data because the ACF plot tends to geometrically decrease in magnitude (i.e., "die down").  
+  
+  - The **Order** of an AR Process refers to how many lags you include in the autoregressive model.  
+  
+  - Because the ACF of the AR model is a mixture, the **ACF is not useful for determining the order of the AR process**.  
+
+  - Thus, the ACF helps us to know that we have an **AR model**, but not which AR model to fit!  
+  
+
+### AR Model: Determining the Order
+
+Recall the **Partial Autocorrelation:** The Partial Autocorrelation between $y_t$ and $y_{t+k}$ is the correlation between $y_t$ and $y_{t+k}$ removing the effects of $y_{t+1}, y_{t+2}, \dots, y_{t+k-1}$.  
+
+  - When plotted over multiple lags, we refer to the plot as the Partial Autocorrelation Function or PACF.  
+  
+  - For an AR($p$) model, the PACF between $y_t$ and $y_{t+k}$ should be 0 $\forall k > p$.  
+  
+  - Thus, for an AR($p$) process, the PACF should “cut off” after lag $p$.
+
+
+
+### Example Plots of AR Processes [1]
+
+```{r ar2sim1b, echo=FALSE}
+p1 = ar.sim1 %>% autoplot() + theme_bw() + labs(y = 'AR(2)')
+p2 = acf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+p3 = pacf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, 
+          labels = c('AR(2): 0.4, 0.5', '', ''), nrow = 3) 
+```
+
+### Example Plots of AR Processes [2]
+
+```{r ar2sim2b, echo=FALSE}
+p1 = ar.sim2 %>% autoplot() + theme_bw() +labs(y = 'AR(2)')
+p2 = acf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL) + ylim(c(-1,1))
+p3 = pacf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, 
+          labels = c('AR(2): -0.4, 0.5', '', ''), nrow = 3) 
+```
+
+### Example Plots of AR Processes [3]
+
+```{r ar3sim, echo=FALSE}
+
+ar.sim3 = arima.sim(model=list(ar=c(0.4, -0.5, 0.3)),n=500)
+
+p1 = ar.sim3 %>% autoplot() + theme_bw() +labs(y = 'AR(3)')
+p2 = acf(ar.sim3, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+p3 = pacf(ar.sim3, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, 
+          labels = c('AR(3): 0.4, -0.5, 0.3', '', ''), nrow = 3) 
+```
+
+
+### Example Plots of AR Processes [4]
+**Note how the PACF is not significant after lag (p) in each case.**
+
+
+# The Moving Average (MA) Process
+
+
+### The Moving Average Process {.allowframebreaks}
+
+The moving average process of order $q, MA(q)$, process is given as
+\begin{equation*}
+  y_t = \mu + \epsilon_t - \theta_1 \epsilon_{t-1}  - \dots - \theta_q\epsilon_{t-q} 
+\end{equation*}
+where $\theta_i$ is a weight, and $\epsilon_i$ is white noise. **An MA(q) process is always stationary regardless of the weights.**
+
+\begin{equation*}
+  \begin{split}
+    E(y_t) &= E(\mu + \epsilon_t - \theta_1 \epsilon_{t-1}  - \dots - \theta_q\epsilon_{t-q}) \\
+           &= \mu
+  \end{split}
+\end{equation*}
+
+\begin{equation*}
+  \begin{split}
+    Var(y_t) &= Var(\mu + \epsilon_t - \theta_1 \epsilon_{t-1}  - \dots - \theta_q\epsilon_{t-q}) \\
+           &= \sigma^2 (1 + \theta_1^2 + \dots + \theta_q^2)
+  \end{split}
+\end{equation*}
+
+The POPULATION autocorrelation function of the MA($q$) process at lag $k$ is
+
+\begin{equation*}
+  \rho(k) = 
+  \begin{cases}
+    \frac{(-\theta_k + \theta_1 \theta_{k+1} + \dots + \theta_{q-k} \theta_{q})}{1+ \theta_1^2 + \dots + \theta_q^2}, & k = 1, \, 2, \dots, \, q \\
+    0, & k > q
+  \end{cases}
+\end{equation*}
+
+This feature of the ACF is very helpful in identifying the MA model and its appropriate order because the ACF function of a MA model is not significant (i.e., “cuts off”) after lag $q$.
+
+
+
+### Example Plots of MA Processes [1]
+
+```{r ma1sim, echo=FALSE}
+ma.sim = arima.sim(model=list(ma=c(0.7, 0.5)),n=500)
+
+p1 = ma.sim  %>% autoplot() + theme_bw() +labs(y = 'MA(2): 0.7, 0.5')
+p2 = acf(ma.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of MA Processes [2]
+
+```{r ma2sim, echo=FALSE}
+ma.sim = arima.sim(model=list(ma=c(0.7, 0.5, 0.7)),n=500)
+
+p1 = ma.sim  %>% autoplot() + theme_bw() +labs(y = 'MA(2): 0.7, 0.5, 0.7')
+p2 = acf(ma.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of MA Processes [3]
+
+```{r ma3sim, echo=FALSE}
+ma.sim = arima.sim(model=list(ma=c(-0.7, -0.5, 0.7)),n=500)
+
+p1 = ma.sim  %>% autoplot() + theme_bw() +labs(y = 'MA(3): -.7, -.5, .7')
+p2 = acf(ma.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+### Example Plots of MA Processes [4]
+
+```{r ma4sim, echo=FALSE}
+ma.sim = arima.sim(model=list(ma=c(0.2, 0.4, 0.6, 0.8)),n=500)
+
+p1 = ma.sim  %>% autoplot() + theme_bw() +labs(y = 'MA(4): .2, .4, .6, .8')
+p2 = acf(ma.sim, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, ncol = 1, 
+          labels = c('', ''), nrow = 2) 
+```
+
+
+# ARMA Models
+
+
+### Mixed Autoregressive Moving Average Processes {.allowframebreaks}
+Sometimes, if a really high order seems needed for an AR process, it may be better, instead, to add one or more MA term. This results in a mixed autoregressive moving average or an ARMA model.
+
+**In general, an ARMA(p,q) model is given as**
+\begin{equation*}
+  y_t = \color{miamired}{\delta + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p}} \color{blue}{+ \epsilon_t - \theta_1 \epsilon_{t-1}  - \dots - \theta_q\epsilon_{t-q} }
+\end{equation*}
+
+The ACF and PACF of the ARMA(p,q) process exhibit exponential decay exponential decay and/or damped sinusoid patterns. This makes
+identification of the order of the ARMA(p,q) process difficult.
+
+\begin{table}
+  \centering
+  \begin{tabular}{c P{2in} P{2in}}
+\hline \hline
+    \textbf{Model} & \textbf{ACF} & \textbf{PACF} \\ \hline
+    AR(p) & Exponentially decays or damped sinusoidal pattern & Cuts off after lag $p$ \\ \hline
+    MA(q) & Cuts off after lag $q$ & Exponentially decays or damped sinusoidal pattern \\ \hline 
+    ARMA(p,q) & Exponentially decays or damped sinusoidal pattern & Exponentially decays or damped sinusoidal pattern \\ \hline \hline
+  \end{tabular}
+\end{table}
+
+
+
+
+### Example Plot of an ARMA(1,1): AR=.6, MA=.8 [1]
+```{r arma1sim1, echo=FALSE}
+ar.sim1 = arima.sim(model=list(ar=c(.6),ma=c(0.8)),n=500)
+
+ar.sim1 %>% autoplot() + theme_bw() +labs(y = 'ARMA')
+```
+
+### Example Plot of an ARMA(1,1): AR=.6, MA=.8 [2]
+```{r arma1sim2, echo=FALSE}
+acf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+```
+
+### Example Plot of an ARMA(1,1): AR=.6, MA=.8 [3]
+```{r arma1sim3, echo=FALSE}
+pacf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+```
+
+### Example Plot of an ARMA(1,1): AR=.6, MA=.8 [4]
+```{r arma1sim4, echo=FALSE}
+p1 = ar.sim1 %>% autoplot() + theme_bw() +labs(y = 'ARMA')
+p2 = acf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+p3 = pacf(ar.sim1, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, 
+          labels = c('ARMA(1,1): AR=.6, MA=.8', '', ''), nrow = 3) 
+```
+
+
+### Example Plots of an ARMA(1,1): AR=-.7, MA=-.6 [1]
+```{r arma2sim1, echo=FALSE}
+ar.sim2 = arima.sim(model=list(ar=c(-0.7),ma=c(-0.6)),n=500)
+
+ar.sim2 %>% autoplot() + theme_bw() +labs(y = 'ARMA')
+```
+
+
+### Example Plots of an ARMA(1,1): AR=-.7, MA=-.6 [2]
+```{r arma2sim2, echo=FALSE}
+acf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+```
+
+
+### Example Plots of an ARMA(1,1): AR=-.7, MA=-.6 [3]
+```{r arma2sim3, echo=FALSE}
+pacf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+```
+
+
+### Example Plots of an ARMA(1,1): AR=-.7, MA=-.6 [4]
+```{r arma2sim4, echo=FALSE}
+p1 = ar.sim2 %>% autoplot() + theme_bw() +labs(y = 'ARMA')
+p2 = acf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+p3 = pacf(ar.sim2, plot = FALSE, lag.max = 25) %>% 
+  autoplot() + theme_bw() + labs(title = NULL)
+
+ggarrange(p1, p2, p3, ncol = 1, 
+          labels = c('ARMA(1,1): AR=-.7, MA=-.6', '', ''), nrow = 3) 
+```
+
+
+
+# How to Fit an AR, MA, or ARMA Model
+
+### The 5-Step Procedure {.allowframebreaks}
+
+  1. Plot the data over time.  
+  
+  2. Do the data seem stationary? If necessary, conduct a test for stationarity.  
+  
+  3. Once you can assume stationarity, find the ACF plot.  
+    a. If the ACF plot cuts off, fit an MA($q$), where $q=$ the cutoff point.  
+    b. If the ACF plot dies down, find the PACF plot.  
+      i. If the PACF plot cuts off, fit an AR($p$) model, where $p=$ the cutoff point.
+      ii. If the PACF plot dies down, fit an ARMA ($p,q$) model.  
+        You must iterate through $p$ and $q$ using a guess and check method starting with ARMA(1,1) models -- increment each by  1.
+  
+  4. Evaluate the model residuals and consider the ACF and PACF of the residuals.  
+  
+  5. If model fit is good, forecast future values.
+
+
+**Note:** 
+
+  - Often you will fit multiple models in Step 3 and compare models in Step 4 to select the best fit.
+
+
+
+### Live Demo
+
+Viscosity of a fluid is a measure that corresponds to “thickness”. For example, honey has a higher viscosity than water. A chemical company needs precise forecasts of the viscosity of a product in order to control product quality. Using the [18 - viscosity.csv](https://miamioh.instructure.com/courses/167327/files/23771321?module_item_id=3688201), we have 95 daily readings to use to develop a forecast. 
+
+**In order to develop a forecast, let us first figure out what type of ARMA(p, q) model to fit and then develop the forecast.**
+
+
+# Recap
+
+### Summary of Main Points
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Describe the behavior of the ACF and PACF of an AR(p) process.}
+			\item \textbf{Describe the behavior of the ACF and PACF of an MA(q) process.}
+			 \item \textbf{Describe the behavior of the ACF and PACF of an ARMA (p,q) process.}
+			\item \textbf{Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.}
+	\end{itemize}
+\end{block}
+
+
+### Summary Table
+\begin{table}
+  \centering
+  \begin{tabular}{c P{2in} P{2in}}
+\hline \hline
+    \textbf{Model} & \textbf{ACF} & \textbf{PACF} \\ \hline
+    AR(p) & Exponentially decays or damped sinusoidal pattern & Cuts off after lag $p$ \\ \hline
+    MA(q) & Cuts off after lag $q$ & Exponentially decays or damped sinusoidal pattern \\ \hline 
+    ARMA(p,q) & Exponentially decays or damped sinusoidal pattern & Exponentially decays or damped sinusoidal pattern \\ \hline \hline
+  \end{tabular}
+\end{table}
+
+ 
+
+
+---
+
+\maketitle

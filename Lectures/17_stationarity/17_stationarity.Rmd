@@ -135,7 +135,7 @@ Successive **differencing** is typically used to achieve stationarity.
 
 **First Differences:** $y_t^\prime = y_t - y_{t-1}$.
 
-**Second Differences"** $y_t'' = y_t^\prime - y_{t-1}^\prime$.
+**Second Differences:** $y_t'' = y_t^\prime - y_{t-1}^\prime$.
 
 \footnotetext{Slides are based on \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's Handouts} for ISA 444, Spring 2020.}
 

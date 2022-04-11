@@ -1,0 +1,282 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "21 - ARIMA Models"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    latex_engine: xelatex
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.8,
+                      fig.height= 2.9,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, tidyquant, xtable, magrittr, fpp2, ggpubr)
+```
+
+# Preface
+
+### Recap of What we Have Covered Last Two Weeks
+
+**ARMA Models:** Models we considered may have three components, an autoregressive component (AR), and a moving average component (MA).
+
+\begin{block}{\textbf{Main Learning Outcomes from Last 2 Classes}}
+  \begin{itemize}
+      \item \textbf{Describe the behavior of the ACF and PACF of an AR(p) process.}
+			\item \textbf{Describe the behavior of the ACF and PACF of an MA(q) process.}
+			 \item \textbf{Describe the behavior of the ACF and PACF of an ARMA (p,q) process.}
+			\item \textbf{Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARMA model.}
+	\end{itemize}
+\end{block}
+
+
+### Summary Table for ARMA Models
+\begin{table}
+  \centering
+  \begin{tabular}{c P{2in} P{2in}}
+\hline \hline
+    \textbf{Model} & \textbf{ACF} & \textbf{PACF} \\ \hline
+    AR(p) & Exponentially decays or damped sinusoidal pattern & Cuts off after lag $p$ \\ \hline
+    MA(q) & Cuts off after lag $q$ & Exponentially decays or damped sinusoidal pattern \\ \hline 
+    ARMA(p,q) & Exponentially decays or damped sinusoidal pattern & Exponentially decays or damped sinusoidal pattern \\ \hline \hline
+  \end{tabular}
+\end{table}
+
+
+### Finalizing Example from Class 18 and a Non-Graded Activity
+Let us finalize the example in [18_class_code_full.R](https://miamioh.instructure.com/courses/167327/files/23786079?module_item_id=3689531).
+
+After we go through the example, you will:
+\begin{itemize}
+\item fit an AR(2), check the residuals from the model, and examine the accuracy metrics from the fitted model
+\item Based on the residuals and accuracy metrics determine whether the AR(2) fit is better than the MA(1) approach.
+\end{itemize}
+
+
+
+
+### Learning Outcomes for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Explain how ARIMA models work when compared to ARMA models.}
+			\item \textbf{Fit an ARIMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.}
+			\item \textbf{Describe AIC, AICc, and BIC and how they are used to measure model fit.}
+      \item \textbf{Describe the algorithm used within the auto.arima() function to fit an ARIMA model.}
+      \item \textbf{Describe the results of the auto.arima() function.}
+	\end{itemize}
+\end{block}
+
+
+# ARIMA Models
+
+
+### ARIMA Models for Nonstationary Processes
+When the time series is nonstationary, differencing can be used to transform the series. The ADF or KPSS tests can be used to test for stationarity, and the `ndiffs()` function is useful for determining the number of differences necessary to achieve stationarity.
+
+
+### A Live-Example
+
+In class, we will use the [GNP Data](https://fred.stlouisfed.org/series/GNP) to highlight how ARIMA models can be fit and used for forecasting.
+
+
+### Non-graded In-Class Activity
+You have 10 minutes to examine and model `series10` in [21 - InClass ARIMA Practice.csv](https://miamioh.instructure.com/courses/167327/files/23895210?module_item_id=3698033), where you should:  
+
+  - Determine an appropriate model to fit based on examining the output from the `ndiffs()`, examining both the `acf()` and `pacf()` of your data (or differenced data), and the output from the `checkresiduals()`.
+  
+  - Once you fit an appropriate model, return its accuracy metrics and use it to forecast the values of the time-series for the next 10 time periods. **From your results, which of the following models did you pick? Why?**
+    * ARIMA(1, 0, 1)  
+    * ARIMA(2, 0, 1)  
+    * ARIMA(1, 0, 2)  
+    * ARIMA(2, 0, 2)
+
+# Some Measures of Goodness of Fit
+
+### Additional Measures of Goodness of Fit {.allowframebreaks}
+
+**Akaike’s Information Criterion:** Akaike suggests measuring the goodness of fit of a model by balancing the error of the fit against the number of parameters in the model.\footnotemark
+
+$AIC = 2k - 2\ln{\hat{(L)}}$, 
+
+where $k$ is the number of parameters in the model and $\hat{L}$ is the sample likelihood function. The value of $k$ that gives a minimum AIC gives the best model. This is simply a penalty imposed on the error variance for the number of
+parameters in the model.
+
+
+**Bias Corrected AIC:** $AICc = AIC + \frac{2k^2 + 2k}{n - k - 1}$.
+
+The AICc is usually preferred over the AIC.
+
+
+**Bayesian Information Criterion:** $BIC = \ln{(n)}k - 2\ln{\hat{(L)}}$. 
+
+BIC is also known as the Schwarz Information Criterion (SIC). The BIC has
+a larger penalty for model size and tends to choose smaller models.
+
+
+**Studies have shown:**  
+
+  - BIC does well at getting correct model in large samples.  
+  - AICc tends to get correct models in smaller samples with a large number of parameters.
+  
+  
+**Why did we discuss these metrics today?**  
+
+  - They were printed with some of the models that we have examined in class.   
+  - They are used with the `auto.arima()`, which comes from the [forecast package](https://cran.r-project.org/web/packages/forecast/forecast.pdf) (loaded with `fpp2`).
+
+\footnotetext{Slides are based on  \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+# The `auto.arima()` Function
+
+### The `auto.arima()` Function {.allowframebreaks}
+
+The auto.arima() function can be used to automatically fit ARIMA models to a time series. It is a useful function, but it should be used with caution.\footnotemark
+
+**The function**  
+
+  - Uses “brute force” to fit many models and then selects the “best” based on a certain model criterion  
+  - Works best when the data are stationary, but can be used with nonstationary data  
+  - Tends to overfit the data  
+  - Should always be used as a starting point for selecting a model and all models derived from the `auto.arima()` function should be properly vetted and evaluated.
+
+
+The `auto.arima()` function combines  
+  - Unit root tests (KPSS by default)  
+  - Minimization of AICc
+to obtain an $ARIMA(p,d,q)$ model using the following algorithm:
+
+
+  1. Determine the number of differences, $d$, using a sequence of KPSS tests.  
+  
+  2. Determine $p$ and $q$ by minimizing AICc after differencing the data d times. Rather than considering all possible $p$ and $q$ combinations, a stepwise approach is taken.  
+      - The best initial model with lowest AICc is selected from the following four:   
+        - ARIMA (2,$d$,2),  
+        - ARIMA (0,$d$,0),  
+        - ARIMA (1,$d$,0), and   
+        - ARIMA (0,$d$,1).  
+        - *If d=0, then a constant, $c$, is included. If $d \ge 1$, then the constant is set to 0. The results of this step is called the current model.*  
+      - Variations on the current model are considered by  
+        - Vary $p$ and/or $q$ from current model by $\pm 1$  
+        - Include/exclude $c$ from current model.  
+        - The best model considered so far (either current or one of variations) becomes the *new current model*. 
+      - Repeat previous step until no lower AICc can be found.
+    
+\footnotetext{Slides are based on  \href{https://miamioh.edu/fsb/directory/?up=/directory/farmerl2}{Dr. Allison Jones-Farmer's} lecture notes, Miami University, Spring 2020.}
+
+
+### Live Coding: Example 1
+
+In class, we will use a different snapshot of the GNP data that we have explored in class so far. The purpose of this different snapshot is two-fold:   
+
+  - We are not sure whether the model we fit last class would be appropriate (so this is somewhat of a revision of what to do in order to fit the "best" ARIMA model by hand).      
+  
+  - Walk you through the process of finding the model selected from the `auto.arima()`
+  
+```{r autoArima}
+pacman::p_load(astsa) 
+gnpData = gnp # will be loaded from the astsa package until 2002
+
+# We will build on this example in class
+```
+
+
+### Live Coding: Example 2 (Rolling Origin)
+
+We will discuss the example below in great detail in class.
+
+\tiny
+```{r manyModels, eval=FALSE}
+btc_df = readRDS("btc_histDay.rds")
+btc_df %>% ggplot(aes(x = date, y = close)) + geom_line()
+
+nested_df = btc_df %>%
+  select(date, close) %>% # keeping only relevant cols
+  rsample::rolling_origin(initial = which(btc_df$date == "2020-12-31"),
+                 assess =  1, # predict 1-day ahead
+                 cumulative = TRUE) # each training sample grows by 1 day
+
+nested_df %<>% mutate(
+  data = map(.x = splits, .f = rsample::analysis),
+  trainDates = map(.x = data, .f = `[[`, 'date' ),
+  trainClose = map(.x = data, .f = extract2, 'close'),
+  target_data = map(.x = splits, .f = rsample::assessment),
+  target_date = map(.x = target_data, .f = extract2, 'date'),
+  target_close = map_dbl(.x = target_data, .f= extract2, 'close')
+) 
+
+head(nested_df)
+
+results_df = nested_df %>% 
+  select(-c(data, trainDates, target_data, target_date))
+
+results_df %<>%
+  mutate(autoArima = map(.x = trainClose, .f = auto.arima) %>% 
+           map(.f = forecast, h = 1) %>% map_dbl(.f = extract2, "mean") )
+```
+
+\normalsize
+
+
+
+# Recap
+
+### Summary of Main Points
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Explain how ARIMA models work when compared to ARMA models.}
+			\item \textbf{Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.}
+			\item \textbf{Describe AIC, AICc, and BIC and how they are used to measure model fit.}
+      \item \textbf{Describe the algorithm used within the auto.arima() function to fit an ARIMA model.}
+      \item \textbf{Describe the results of the auto.arima() function.}
+	\end{itemize}
+\end{block}
+
+
+### Things to Do to Prepare for Next Class
+
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+ 
+ - Go through the posted assignment (see next slide).
+ 
+ 
+### Graded Assignment 11: Evaluating your Understanding
+
+Please go to \href{https://miamioh.instructure.com/courses/167327/quizzes/449743?module_item_id=3698031}{Canvas (click here)} and answer the questions. **The assignment is due on April 13, 2022 at 8:30 AM**
+
+**What/Why/Prep?** The purpose of this assignment is to evaluate your understanding and retention of ARIMA modeling.
+
+**General Guidelines:**  
+
+\vspace{-0.5\baselineskip}
+
+  - Individual assignment.  
+  - This is **NOT** a timed assignment.    
+  - Proctorio is NOT required for this assignment.  
+  - You will need to have R installed (or accessible through the \href{https://virtualpc.fsb.miamioh.edu/RDWeb/Pages/en-US/default.aspx}{Remote Desktop})
+ 
+
+---
+
+\maketitle

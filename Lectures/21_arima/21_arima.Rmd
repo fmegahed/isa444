@@ -189,7 +189,7 @@ to obtain an $ARIMA(p,d,q)$ model using the following algorithm:
 
 In class, we will use a different snapshot of the GNP data that we have explored in class so far. The purpose of this different snapshot is two-fold:   
 
-  - We are not sure whether the model we fit last class would be appropriate (so this is somewhat of a revision of what to do in order to fit the "best" ARIMA model by hand).      
+  - We are not sure whether the model we fit in the beginning of class would be appropriate (so this is somewhat of a revision of what to do in order to fit the "best" ARIMA model by hand).      
   
   - Walk you through the process of finding the model selected from the `auto.arima()`
   

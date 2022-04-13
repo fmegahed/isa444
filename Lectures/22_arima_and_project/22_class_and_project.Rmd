@@ -1,0 +1,243 @@
+---
+title: 22 - ARIMA Modeling Recap, Rolling Origins and Forecasting Many Time Series
+  in R
+author: "Fadel M. Megahed"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    number_sections: TRUE
+    theme: readable
+    paged_df: TRUE
+    code_folding: show
+    code_download: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = c('png', 'pdf', 'tiff'),
+                      fig.retina = 2,
+                      out.width = '100%',
+                      fig.asp = 0.7,
+                      autodep = TRUE)
+
+options(qwraps2_markup = "markdown")
+```
+
+# R Setup and Required Packages
+
+In the code chunk below, we load the packages used to support our analysis. Note that the code of this and any of the code chunks can be hidden by clicking on the 'Hide' button to facilitate the navigation. **The reader can hide all code and/or download the Rmd file associated with this document by clicking on the Code button on the top right corner of this document.**
+
+```{r pkgs}
+if( require(pacman) == FALSE ) install.packages('pacman')
+
+pacman::p_load(tidyverse, # for data wrangling and nesting
+               tidyquant, # for getting stock data
+               timetk, # nice time-series pkg
+               fpp2, # for forecasting and accuracy
+               magrittr, # for two-way pipe
+               rsample, # for rolling origin
+               stargazer, # print model nicely
+               sweep) # for getting model paramaters
+
+```
+
+
+# Question Based on Last Class {.tabset .tabset-pills .tabset-fade}
+
+**Write the equation for the fitted ARIMA model based on the output below from last class.**
+
+```{r last_class_example, results='asis'}
+pacman::p_load(astsa)
+
+gnp_data = astsa::gnp
+
+cat('## Plotting the GNP Data {-}  \n \n')
+# step 1
+autoplot(gnp_data)
+
+cat('## Differences Required to Make it Stationary {-}  \n \n')
+# step 2
+ndiffs(gnp_data)
+
+# step3 look at the acf and pacf of diff data 
+gnp_data_diff = diff(gnp_data, differences = 2)
+
+cat('## ACF Plot {-}  \n \n')
+
+acf(gnp_data_diff)
+
+cat('## PACF Plot {-}  \n \n')
+pacf(gnp_data_diff)
+
+# step 4 is fitting a/the model
+auto_arima_model = auto.arima(y = gnp_data)
+
+cat('## ARIMA Summary {-}  \n \n')
+```
+
+```{r summary_arima}
+summary(auto_arima_model)
+```
+
+
+---
+
+# A Visual Summary of ARIMA Modeling
+
+[![General process for forecasting using an ARIMA model.](https://otexts.com/fpp2/arimaflowchart.png)](https://otexts.com/fpp2/arimaflowchart.png)
+
+---
+
+# The Rolling Origin
+
+## A Conceptual Drawing
+
+[![The rolling origin.](https://www.openforecast.org/adam/images/03-ROProcessCO.gif)](https://www.openforecast.org/adam/images/03-ROProcessCO.gif)
+
+## R Implementation for a Single DataSet
+
+```{r msft_stock_ro}
+msft = tq_get('MSFT', from = '1990-01-01', periodicity = 'monthly') %>% 
+  select(date, adjusted) %>% 
+  filter(date <= '2022-04-01')
+
+rolled_data = rolling_origin(
+  data = msft,
+  initial = 300,
+  assess = 1,
+  cumulative = TRUE
+)
+
+rolled_data
+
+analysis( rolled_data$splits[[2]] )
+assessment( rolled_data$splits[[1]] )
+```
+
+## Many Models
+
+```{r many_models}
+rolled_data %<>% mutate(
+  data = map(.x = splits, .f = analysis),
+  # extracting both the train dates and their associated closing price
+  train_date = map(.x = data, .f = `[[`, 'date' ),
+  train_adjusted = map(.x = data, .f = extract2, 'adjusted') %>% 
+    map(.f = ts, start = c(1990, 01), frequency = 12),
+  # extracting the target data
+  target_data = map(.x = splits, .f = assessment),
+  target_date = map_dbl(.x = target_data, .f = extract2, 'date') %>% as_date(),
+  target_adjusted = map_dbl(.x = target_data, .f= extract2, 'adjusted')
+) 
+
+results_df = rolled_data %>% 
+  select(-c(data, train_date, target_data, target_date))
+
+results_df %<>%
+  mutate(
+    naive_fct = map(.x = train_adjusted, .f = naive, h = 1),
+         
+    hw_fct = map(.x = train_adjusted, .f = hw, h = 1),
+    
+    auto_arima_fct = map(.x = train_adjusted, .f = auto.arima) %>% 
+      map(.f = forecast, h = 1)
+    )
+
+results_summary = map_dfr(.x = results_df %>% 
+                            select(ends_with('fct')) %>% extract2(1),
+                      .f = sweep::sw_sweep, fitted = TRUE)
+
+results_summary %>% tail()
+```
+
+
+---
+
+# Many Datasets and Models
+
+## Acquiring Some Data
+
+```{r the_data}
+stocks = tq_get(x = c('AAPL', 'MSFT'),
+                from = '1990-01-01', 
+                periodicity = 'monthly') %>% 
+  select(symbol, date, adjusted) %>% 
+  filter(date <= '2022-04-01') %>% 
+  group_by(symbol) %>% 
+  nest() 
+
+stocks
+
+```
+
+## Rolling Origin
+
+```{r rolling_origin_many}
+stocks %<>% 
+  mutate(rolled = map(.x = data, .f = rolling_origin,  initial = 300) ) %>% 
+  unnest(rolled) %>% 
+  relocate(symbol, id, splits)
+
+stocks
+```
+
+## Extracting the Needed Data
+
+```{r extract_features}
+stocks_rolling = stocks %>% 
+  mutate(
+    train_data = map(.x = splits, .f = analysis),
+    train_dates = map(.x = train_data, .f = extract2, 'date'),
+    train_adjusted = map(.x = train_data, .f = extract2, 'adjusted') %>% 
+      map(.f = ts, start = c(1990, 01), frequency = 12),
+    target_data = map(.x = splits, .f = assessment),
+    target_data = map(.x = splits, .f = assessment),
+    target_date = map_dbl(.x = target_data, .f = extract2, 'date') %>% as_date(),
+    target_adjusted = map_dbl(.x = target_data, .f= extract2, 'adjusted')
+  ) %>% 
+  select(-c(data, train_dates, target_data, target_date))
+```
+
+## Fitting the Models
+
+```{r fitting_many_models}
+results = stocks_rolling %>% 
+  mutate(
+    naive_fit = map(.x = train_adjusted, .f = naive, h = 1, level = 95),
+    naive_fct = map_dbl(.x = naive_fit, .f = extract2, 'mean'),
+    
+    hw_fit = map(.x = train_adjusted, .f = hw, h = 1, level = 95),
+    hw_fct = map_dbl(hw_fit, .f = extract2, 'mean'),
+    
+    auto_arima_fit = map(.x = train_adjusted, .f = auto.arima),
+    auto_arima_fct = map(.x = auto_arima_fit, .f = forecast, h = 1,
+                         level = 95) %>% 
+      map_dbl(.f = extract2, 'mean')
+  )
+
+summary_results = results %>% 
+  summarise(
+    naive = forecast::accuracy(naive_fct, x = target_adjusted) %>% list(),
+    hw = forecast::accuracy(hw_fct, x = target_adjusted) %>% list(),
+    auto_arima = forecast::accuracy(auto_arima_fct, x = target_adjusted) %>% list()
+    )
+
+summary_results %>% 
+  pivot_longer(cols = 2:4, names_to = 'model', values_to = 'acc_metrics') %>% 
+  mutate(ME = map_dbl(.x = acc_metrics, .f = extract2, 1),
+         RMSE = map_dbl(.x = acc_metrics, .f = extract2, 2),
+         MAE = map_dbl(.x = acc_metrics, .f = extract2, 3),
+         MPE = map_dbl(.x = acc_metrics, .f = extract2, 4),
+         MAPE = map_dbl(.x = acc_metrics, .f = extract2, 5)) -> summary_table
+
+summary_table %>%
+  group_by(model) %>% 
+  summarise(across(.cols = ME:MAPE, list(avg = mean, sd = sd)))
+
+```

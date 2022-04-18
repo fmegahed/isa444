@@ -1,0 +1,154 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "23 - Seasonal ARIMA Models"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.8,
+                      fig.height= 2.9,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, tidyquant, xtable, magrittr, fpp2, ggpubr)
+```
+
+# Preface
+
+### Recap of What we Have Covered Last Week
+
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Describe AIC, AICc, and BIC and how they are used to measure model fit.}
+      \item \textbf{Describe the algorithm used within the auto.arima() function to fit an ARIMA model.}
+      \item \textbf{Describe the results of the auto.arima() function.}
+      \item \textbf{Applying the rolling origin concept using R (will not be on the exam)}
+      \item \textbf{Forecasting many time-series using a nested structure (will also not be on the exam)}
+	\end{itemize}
+\end{block}
+
+
+### A Comment on the `map()` Function
+
+\tiny
+```{r manyModels, eval=FALSE}
+btc_df = readRDS("btc_histDay.rds")
+
+btc_df %>% ggplot(aes(x = date, y = close)) + geom_line()
+
+nested_df = btc_df %>%
+  # keeping only relevant cols
+  select(date, close) %>% 
+  rsample::rolling_origin(initial = which(btc_df$date == "2020-12-31"),
+                 assess =  1, # predict 1-day ahead
+                 cumulative = TRUE) # each training sample grows by 1 day
+
+nested_df %<>% mutate(
+  data = map(.x = splits, .f = rsample::analysis),
+  # extracting both the train dates and their associated closing price
+  trainDates = map(.x = data, .f = `[[`, 'date' ),
+  trainClose = map(.x = data, .f = extract2, 'close'),
+  # extracting the target data
+  target_data = map(.x = splits, .f = rsample::assessment),
+  target_date = map(.x = target_data, .f = extract2, 'date'),
+  target_close = map_dbl(.x = target_data, .f= extract2, 'close')
+) 
+
+head(nested_df)
+
+results_df = nested_df %>% 
+  select(-c(data, trainDates, target_data, target_date))
+
+results_df %<>%
+  mutate(autoArima = map(.x = trainClose, .f = auto.arima) %>% 
+           map(.f = forecast, h = 1) %>% 
+      map_dbl(.f = extract2, "mean") )
+```
+
+\normalsize
+
+
+### Learning Outcomes for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Describe a seasonal ARIMA model and explain how it applies to a seasonal time series.}
+      \item \textbf{Recognize when to fit a seasonal ARIMA model.}
+	\end{itemize}
+\end{block}
+
+
+
+# Seasonal ARIMA Models
+
+### Live Coding: Example 1
+```{r birthData}
+pacman::p_load(astsa)
+birthData = birth # also from the astsa package
+```
+
+### In-Class Activity
+
+Use the data [“23 - Netflix_growth_pct_2000.csv”](https://miamioh.instructure.com/courses/167327/files/23966290?module_item_id=3703219). 
+
+Fit an ARIMA model using the auto.arima() function. Describe the model that is fit, evaluate the model residuals. Please answer the following questions.  
+
+1. Based on the summary function (applied to your model object), please explain what are the AR lag coefficients included in the model?  
+
+2. What does the seasonal ARIMA, D, parameter value indicate?  
+
+3. What did we learn from the non-seasonal ARIMA parameters? 
+
+4. In terms of the predictive performance, do we have a reasonable model?
+
+5. In terms of the assumptions behind the ARIMA model, do we have a reasonable model?
+
+
+### Things to Do to Prepare for Exam 3 (April 22--25, 2022)
+ 
+ - Go through the slides, examples and make sure you have a good understanding of what we have covered. There will be a larger focus on interpreting the outputs from R. 
+ 
+ - Given that several of you expressed the need for more time on the exam, the exam will be virtual and you will have 120 minutes to complete it. **Note that the exam is still designed for 80 minutes.**  
+  * **Proctorio** will be required and I will be **recording your screen, audio, video, and web traffic**. You will need to be using Google Chrome with the Proctorio add-in installed.
+
+
+### Exam 3 Information: General Guidelines
+
+-  Individual assignment.  
+
+- This is a timed assignment. The exam is designed to be completed in 80 minutes -- you have 120 minutes so that time is not an issue at all.  
+
+- You have to complete this assignment in one sitting.  
+
+- Open-notes (you can open other tabs, make sure you do not close the one for the "quiz").   
+
+- The quiz is made of 25 multiple choice questions, each worth 4 points.  
+
+- Proctorio is required (see previous slide).
+
+ 
+
+
+---
+
+\maketitle

@@ -1,0 +1,106 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "24 - Time Series Regression"
+author: Fadel M. Megahed
+date: 'Spring 2022'
+output:
+  beamer_presentation:
+    number_sections: false
+    toc: false
+    slide_level: 3
+    includes: 
+      in_header: structure.txt
+classoption: "aspectratio=169"
+always_allow_html: yes
+bibliography: refs.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      verbose = FALSE,
+                      progress = FALSE,
+                      fig.align = "center",
+                      fig.pos = 'p',
+                      fig.width = 5.8,
+                      fig.height= 2.9,
+                      allowframebreaks = TRUE,
+                      fig.margin=TRUE,
+                      kable.force.latex = TRUE,
+                      cache = TRUE)
+options(kableExtra.latex.load_packages = FALSE)
+pacman::p_load(kableExtra, tidyverse, tidyquant, xtable, magrittr, fpp2, ggpubr)
+```
+
+# Preface
+
+### Learning Outcomes for Today's Class
+\begin{block}{\textbf{Main Learning Outcomes}}
+  \begin{itemize}
+      \item \textbf{Explain the simple and multiple linear regression models and interpret the parameters.}
+      \item \textbf{Interpret the sample linear regression coefficients in the language of the problem.}
+      \item \textbf{Use a simple linear regression model for trend adjustment (time-series data).}
+	\end{itemize}
+\end{block}
+
+
+
+# Simple and Multiple Linear Regression Models
+
+### The Simple Linear Regression Model
+
+$$y_t = \beta_0 + \beta_1 x_{t,1} + \epsilon_t$$ 
+
+$y_t:$
+
+\vspace{0.2in}
+
+$\beta_0:$
+
+\vspace{0.2in}
+
+$\beta_1:$
+
+\vspace{0.2in}
+
+$x_{t,1}:$
+
+\vspace{0.2in}
+
+$\epsilon_t:$
+
+\vspace{0.2in}
+
+
+### The Multiple Linear Regression Model with $q$ Predictors
+
+$$y_t = \beta_0 + \beta_1 x_{t,1} + \beta_2 x_{t,2} + \dots + \beta_q x_{t,q} + \epsilon_t$$ 
+
+
+$\beta_0:$
+
+\vspace{0.5in}
+
+$\beta_1, \beta_2, \dots, \beta_q:$
+
+\vspace{0.5in}
+
+
+
+# Use a simple linear regression model for trend adjustment (time-series data)
+
+### Live Coding in Class
+```{r jj}
+pacman::p_load(tidyverse, fpp2, astsa)
+jj = jj #from the astsa package
+```
+
+
+ 
+
+
+---
+
+\maketitle

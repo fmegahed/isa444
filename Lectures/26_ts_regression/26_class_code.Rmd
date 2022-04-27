@@ -1,0 +1,160 @@
+---
+title: "26 - Class Notes"
+author: "Fadel M Megahed"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    paged_df: true
+    theme: simplex
+    code_folding: show
+    code_download: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Learning Objectives for Today's Class {-}
+
+  1. Use a simple linear regression model for trend adjustment.
+  2. Interpret regression diagnostic plots.  
+  3. Create prediction intervals for individual values of the response variable.  
+
+# Required Packages {-}
+In the code chunk below, we use the `pacman` package to load the required packages and install them if necessary.
+
+```{r packages}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               magrittr, # for the two-way pipe
+               fpp2, # accuracy() function, Arima(), auto.arima(),
+               astsa, # package is for the required data
+               plotly, # for interactive graphs
+               stargazer) 
+```
+
+# Recap of What we Covered Last Class
+
+## Loading the J&J Data
+```{r jj}
+jj = jj # assigning the jj data (from astsa) to an object of the same name
+class(jj) # to check and see if the class is a ts object
+frequency(jj) # to check the frequency --> based on the print out (=4)
+jj
+p = autoplot(jj) + theme_bw()
+ggplotly(p)
+```
+
+Based on the plot, we can make three observations:  
+
+  (1) The data is not linear, which means that fitting a linear regression directly to this data is not prudent.  
+  (2) The variance was not constant as it increased over time (with larger values of the EPS).  
+  (3) The data is exhibiting a seasonal pattern (fourth quarter is consistently below the values for q3 and q1).
+  
+
+## Transforming the J&J TS
+
+```{r logtransform}
+log_jj = log(jj)
+p2 = autoplot(log_jj)
+ggplotly(p2) # a linear regression line is probably okay (the variance is more stable with the transformation)
+```
+
+
+## Time as the Independent Variable
+```{r extractingTime}
+t = time(log_jj) # time makes a decimal date from the ts (if freq  >  1)
+t
+```
+
+## Fit the Model
+
+```{r model}
+model = lm(log_jj ~ t) # t is the ind variable and log_jj is the response
+names(model)
+summary(model)
+```
+
+**Let us recap some of the outputs.** 
+
+### Regression Equation
+```{r extractingValuesForEquation}
+intercept = summary(model) %>% .[['coefficients']] %>% .['(Intercept)', 'Estimate']
+beta1 = summary(model) %>% .[['coefficients']] %>% .['t', 'Estimate']
+sigma = summary(model) %>% .[['sigma']]
+```
+$y_t = `r round(intercept, 4)` + `r round(beta1, 4)`t + \varepsilon, \, \text{where } \varepsilon\sim\mathcal N(0, ~ `r round(sigma, 4)`^2)$ 
+
+### Predicted/Fitted Values and Residuals
+```{r fittedVals}
+fit = model$fitted.values
+res = model$residuals 
+```
+
+### Multiple R2
+```{r multipleR2, results='asis'}
+modelSummary = summary(model)
+stargazer(model, type = 'html' )
+```
+
+
+
+### Tests for Significance
+Just talked about the interpretation of the t-statistic for the slope, where we
+mentioned that 58.45 means that we are 58.45 standard errors above 0. Hence,
+t is a significant predictor of the log_EPS and the p-value is very small.
+
+
+### Question: What would be our forecast values log EPS for 1981?
+
+#### Approach 1: Manual Calculations
+
+For Q1, my predicted log EPS = `r intercept + beta1*1981.00`.
+
+For Q2, my predicted log EPS = `r intercept + beta1*1981.25`.
+
+For Q3, my predicted log EPS = `r intercept + beta1*1981.50`.
+
+For Q4, my predicted log EPS = `r intercept + beta1*1981.75`.
+
+
+#### Approach 2: Using the predict or forecast functions
+
+```{r predict1981, results='hold'}
+predict_1981 = forecast(
+  model, newdata = data.frame(t = c(1981.00, 1981.25, 1981.5, 1981.75) ) )
+
+predict_1981$mean
+
+autoplot(predict_1981)
+
+```
+
+
+
+
+# Use a simple linear regression model for trend adjustment.
+
+Today, we will talk about using the `tslm()`, which comes from the [forecast](https://cran.r-project.org/web/packages/forecast/index.html) in R. 
+
+
+
+```{r tslmDiscussion}
+
+```
+
+# Interpret regression diagnostic plots.  
+
+
+```{r diagnostics}
+source('resPlotTS.R')
+
+
+```
+
+# Create prediction intervals for individual values of the response variable.
+
+This is easily obtained based on the output from the `forecast()`. If you wanted to have different intervals then the default of 80 and 95, please change the arguments to level.

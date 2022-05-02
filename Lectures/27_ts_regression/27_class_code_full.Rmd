@@ -1,0 +1,172 @@
+---
+title: "27 - Time Series Regression"
+subtitle: "Regression with a Trend and Seasonality"
+author: "Fadel M Megahed"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    paged_df: true
+    theme: simplex
+    code_folding: show
+    code_download: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Recap of What we Learned Last Week
+
+  1. Conduct tests for significance of individual regression coefficients.  
+  2. Use a simple linear regression model for trend adjustment.
+  3. Interpret regression diagnostic plots.  
+  4. Create prediction intervals for individual values of the response variable.  
+  5. Discuss Exam 03 (Not in R).
+ 
+  
+## Required Packages
+In the code chunk below, we use the `pacman` package to load the required packages and install them if necessary.
+
+```{r packages}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               magrittr, # for the two-way pipe
+               fpp2, # accuracy() function, Arima(), auto.arima(),
+               astsa, # package is for the required data
+               plotly, # for interactive graphs
+               stargazer) 
+
+source('resPlotTS.R') # loading our resPlot function from Last Class
+
+options(scipen = 999)
+```
+
+
+
+## A Refresher of Time-Series Regression Concepts Learned so Far
+
+Using the `jj` dataset from the [astsa package](https://cran.r-project.org/web/packages/astsa/astsa.pdf), we have discussed how we can regress the logged EPS for J&J as a function of time. The regression can be performed using the: (a) `lm()` from base R, where we would need to create the time-feature(s) ourselves, or (b) using the `tslm()` from the forecast package (which we typically load using fpp2). **In class, I will quickly go through the process of fitting the data to ensure that we are all on the same page.**
+```{r tsRegRecap}
+jj = jj 
+autoplot(jj)
+
+log_jj = log(jj)
+autoplot(log_jj)
+
+t = time(log_jj)
+
+model1 = lm(log_jj ~ t)
+summary(model1)
+
+```
+
+$y_t = -327.547628 + 0.166797t$
+
+```{r model1stargazer, results='asis'}
+stargazer(model1, type = 'html')
+
+```
+
+### Model2 from tslm
+
+```{r model2}
+model2 = tslm(log_jj ~ trend)
+summary(model2)
+
+point_fcts = forecast(model2, h = 12, level = 95)$mean 
+
+eps_fcts = exp(point_fcts)
+
+forecast(model2, h = 12, level = 95) %>% autoplot()
+
+resplot(res = model2$residuals,
+        fit = model2$fitted.values,
+        freq = 4)
+
+```
+
+
+## Main Learning Outcomes for Today's Class
+  
+  (1) Use regression to account for seasonality in a time series.  
+  (2) Compare the performance of the regression model with that obtained from `auto.arima()`.
+
+
+---
+
+
+# Seasonal Regression
+
+## Using the `lm()` Function
+```{r seasonalReg1}
+# to ensure that R treats the cycle as a categorical variable
+# we use the factor function to convert the 1, 2, 3, 4 to factors
+q = cycle(log_jj) %>% factor() 
+
+model3 = lm(log_jj ~ t + q)
+model.matrix(model3)
+
+summary(model3)
+
+
+
+
+```
+
+
+## Using the `tslm()` Function
+
+```{r seasonalReg2}
+model4 = tslm(log_jj ~ trend + season)
+summary(model4)
+
+forecast_3yrs = forecast(model4, h = 12, level = 95)
+autoplot(forecast_3yrs)
+
+# to compare whether model4 is better than model2
+
+# a) check the BIC
+BIC(model4)
+BIC(model2)
+# from these values, the goodness of fit for model 4 is better since 
+# its BIC value is lower
+
+# b) the accuracy values
+acc_values = rbind(
+  accuracy(model4),
+  accuracy(model2)
+)
+row.names(acc_values) = c('reg w/ trend + season', 'reg w/ trend' )
+acc_values
+
+# c) am I meeting the assumptions behind the regression model
+# using the resplot or using the checkresiduals
+resplot(res = model4$residuals, fit = model4$fitted.values, freq = 4)
+checkresiduals(model4)
+# from both outputs the residuals are correlated over time so its not a good model
+```
+
+
+---
+
+# Comparison with auto.arima()
+
+Use the log_jj data.  
+
+  (1)	Use the `auto.arima()` function to fit an arima model to the data.  What model is fit to the data?   
+  
+  (2) Compare the residuals and the accuracy of the seasonal regression, to the auto.arima results.  Which model fits better?
+
+```{r activity1}
+model5 = auto.arima(log_jj)
+# from the summary, we have learned about the type of ARIMA model fitted to the data
+# additionally, the BIC value of -143 is lower than that of model 4
+# (i.e., a better fit)
+# the accuracy metrics are better than those of models 2 and 4 
+summary(model5)
+# we have uncorrelated residuals over time as indicated by the plot + ljung-box test
+checkresiduals(model5)
+```

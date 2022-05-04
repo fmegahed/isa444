@@ -1,0 +1,241 @@
+---
+title: "28 - Time Series Regression and autoML"
+subtitle: "Regression with ARIMA errors and autoML"
+author: "Fadel M Megahed"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    paged_df: true
+    theme: simplex
+    code_folding: show
+    code_download: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      verbose = FALSE)
+```
+
+
+# Required Packages
+In the code chunk below, we use the `pacman` package to load the required packages and install them if necessary.
+
+```{r packages}
+if(require(pacman)==FALSE) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               magrittr, # for the two-way pipe
+               fpp2, # accuracy() function, Arima(), auto.arima(),
+               astsa, # package is for the required data
+               plotly, # for interactive graphs
+               stargazer) 
+
+source('resPlotTS.R') # loading our resPlot function from Last Class
+```
+
+
+
+# Combining Regression with ARIMA Models
+
+We have learned to fit ARIMA models to predict a series from itself, removing the autocorrelation from a series. These methods are useful, but don’t allow us to combine “outside” information to boost our forecast.
+
+Now we will discuss combining regression (**outside information**) and ARIMA models (inside information) to forecast a time series.
+
+A multiple regression model takes on the form:  
+$$Y_t = \beta_0 + \beta_1 x_{t,1} + \beta_2 x_{t,2} + \dots + \beta_q x_{t,q} + \epsilon_t,$$
+where we typically assume that $\epsilon_t$ is independent, identically distributed white noise (normally distributed).
+
+
+## What we Learned from the J&J Example 
+
+**Based on the J&J Example**, when our dependent and independent variables are observed over time, $\epsilon_t$  is often correlated over time. **Hence, the assumptions of iid residuals are not met and the fitted regression models should not be used.**
+
+## Possible Solution 
+
+Thus, we will restate our model as follows:  
+$$Y_t = \beta_0 + \beta_1 x_{t,1} + \beta_2 x_{t,2} + \dots + \beta_q x_{t,q} + \eta_t,$$ 
+where $\eta_t$ **follows an ARIMA model.**  
+
+When we model $\eta_t$, there will be errors from this model, denoted as $\epsilon_t$.  Thus, we have the errors from the regression, $\eta_t$, and the errors from the ARIMA model, denoted as $\epsilon_t$.  Only the errors from the ARIMA, $\eta_t$ are iid white noise.
+
+
+## Using R to Fit The Model
+
+We will use the “uschange” data from the `fpp2` package to forecast changes in personal consumption expenditures based on personal disposable income from 1970 to 2016.  
+
+**Process:**  
+
+  (1) Start by plotting the quarterly changes in US consumption and personal income  
+  (2) Fit a regression with Y = change in consumption and X = Change in personal income, with autocorrelated errors  
+  (3) Check the residual plots to ensure the assumptions of the model are met  
+  
+
+```{r inclassExample}
+# for more information about the data ?fpp2::uschange 
+uschange = fpp2::uschange 
+uschange
+
+# First step
+autoplot(uschange[, 1:2], facet=TRUE)
+
+# Why is the regression model alone inadequate?
+reg_regression = lm( uschange[,'Consumption'] ~  uschange[,'Income'] )
+summary(reg_regression)
+
+# from the resplot, we conclude that our residuals are NOT iid
+# there is significant autocorrelation in the residuals
+# we will need an ARIMA type model to account for the correlation in the residuals
+resplot(res = reg_regression$residuals,
+        fit = reg_regression$fitted.values,
+        freq = 4)
+
+# Step2: Fitting a regression model with an ARIMA model on the errors
+reg_w_arima_errors = auto.arima(y = uschange[,'Consumption'],
+                                xreg = uschange[,'Income'] )
+
+summary(reg_w_arima_errors)
+```
+
+From the summary output, our model is:
+
+$y_t = 0.5990 + 0.2028x_t + \eta_t$, where:  
+
+  - $y_t$ is the change in the consumption variable per quarter  
+  - $x_t$ is our independent variable (change in income per quarter)
+  - $\eta_t = 0.6922\eta_{t-1} + 	\epsilon_t -0.5758\epsilon_{t-1} + 0.1984	\epsilon_{t-2} $
+
+
+```{r inclassExample2}
+resplot(res = reg_w_arima_errors$residuals,
+        fit = reg_w_arima_errors$fitted,
+        freq = 4)
+
+checkresiduals(reg_w_arima_errors)
+
+```
+
+---
+
+# Things to Explore on your Own
+
+  (1) Compare the results from the class example, with the following three models:  
+    (a) auto.arima using only the Y series.  
+    (b) autoarima using two explanatory variables ("Income" and "Savings").  
+    (c) lm using both income and savings.  
+    
+  (2) Which models are suitable? (i.e., the assumptions about the model residuals are met).  
+  
+  (3) Among the suitable models, pick the best model.
+
+
+```{r activity2}
+
+
+```
+
+
+---
+
+# A Very Short Introduction to autoML
+
+In the code chunk below, we will use the h2o package to train and fit multiple machine learning models for predicting the daily closing price of the ziliqa cryptocurrency. For more details on h2o, please refer to the [h2o R Booklet](https://h2o-release.s3.amazonaws.com/h2o/rel-zumbo/1/docs-website/h2o-docs/booklets/RBooklet.pdf)
+
+```{r autoML}
+# * Installing the latest release for h2o ----
+if(require(h2o) == FALSE) install.packages("h2o")
+
+
+# * Loading the Other Packages --------------------------------------------
+pacman::p_load(tidyquant, # for tq_get and it also loads zoo (package for ts data)
+               tidyverse, # for ggplot2, dplyr, etc
+               magrittr, # for the two way pipe
+               fpp2, # loads the forecast package
+               lubridate, # to manipulate "dates"
+               DataExplorer, # for plotting missing
+               h2o)
+
+zil = tq_get('ZIL-USD', from = '2018-01-01', to = Sys.Date() -1 ) %>% 
+  select(date, close, volume)
+
+# * Exploratory Analysis of ZIL Data ----
+# (A) Checking to see missing data
+colSums(is.na(zil)) # returns the number of missing values per Column
+plot_missing(zil, ggtheme = theme_bw(), theme_config = list(legend.position = c('none')))
+
+
+# * Feature Engineering ----
+# (B) Generate some features
+df = zil %>%  
+  mutate(year = lubridate::year(date),
+         quarter = lubridate::quarter(date) %>% as.factor(),
+         month = lubridate::month(date, label = TRUE) %>% as.character() %>% as.factor(), # to not make it an ordered factor
+         day = lubridate::wday(date, label = T) %>% as.character() %>% as.factor(), # to not make it an ordered factor
+         lag1Close = lag(close),
+         lag7Close = lag(close, n =7),
+         laggedMA7 = rollmeanr(close, k = 7, na.pad = T) %>% lag(),
+         laggedMA30 = rollmeanr(close, k = 30, na.pad = T) %>% lag(),
+         laggedMA50 = rollmeanr(close, k = 50, na.pad = T) %>% lag(),
+         )
+str(df) 
+
+df = na.omit(df)
+
+# * Model Fitting ---------------------------------------------------------
+# * * Training Data ----
+trainData = df %>% filter(year < 2021)
+validData = df %>% filter(year == 2021)
+testData = df %>% filter(year > 2021)
+
+# * * Response and Predictor Variables
+y = "close"
+x = setdiff(colnames(df), c("close", "date") )
+
+
+# * * Using h2o package ----
+h2o.init(nthreads = 10)
+trainDataH2o = trainData %>% as.h2o()
+validDataH2o = validData %>% as.h2o()
+testDataH2o = testData %>% as.h2o()
+
+fittedModels = h2o.automl(x = x, 
+                          y = y,
+                          training_frame = trainDataH2o,
+                          validation_frame = validDataH2o,
+                          leaderboard_frame = testDataH2o,
+                          nfolds = 5,
+                          stopping_metric = "AUTO",
+                          max_runtime_secs = 120)
+
+# * * Printing the fitted Models
+fittedModels
+
+bestModel = fittedModels@leader
+bestModel
+
+predictions = h2o.predict(bestModel, newdata = testDataH2o)
+
+testError = h2o.performance(bestModel, newdata = testDataH2o)
+testError
+```
+
+---
+
+
+# Exam 04 Information
+
+- Q1 and Q2 interpretation of regression coefficients  
+
+- Q3 interpretation of res plot
+
+- Q4 and Q5 interpretation of tslm() outputs  
+
+- Q6 Interpretation of model summary
+
+- Q7-Q8 interpretation of ARIMA with xreg 
+
+- Q9-Q22 interpretations of which models to fit, autocorrelation, etc based on a plot of a time-series and its ACF 
+
+- Q23-Q32 conceptual multiple choice questions

@@ -273,7 +273,7 @@ DT::datatable(decomposed_tibble, rownames = F, options = list(pageLength = 6)) |
 
 **Predictive Analytics:** where **statistical** and **machine learning** models are used to help us utilize independent variable[s] to predict an outcome variable of choice.  
 
-```{r forecast, out.height='400px', out.width='800px', echo=FALSE, cache=FALSE}
+```{r forecast, out.height='250px', out.width='600px', echo=FALSE, cache=FALSE}
 hw_model = forecast::hw(y = clothing_ts, h = 12, level = 95, initial = 'simple')
 
 clothing_df = 
@@ -365,7 +365,7 @@ knitr::include_graphics("../../figures/ba_flow_chart.png")
 
 .pull-right[
 
-```{r hotel_bookings, echo=FALSE, cache=FALSE, out.height='500px', out.width='100%'}
+```{r hotel_bookings, echo=FALSE, cache=FALSE, out.height='250px', out.width='80%'}
 df_hotel = tibble::tribble(
          ~date, ~rooms_booked,
   "2019-01-01",          250L,
@@ -622,9 +622,9 @@ DT::datatable(nbaPerGame,
 
 **Time Series Data:** Comparable measurements recorded on a single (or a few) variables over time (usually a long period of time).
 
-**Example 2:** Stock prices of U.S. Airlines
+**Example:** Stock prices of U.S. Airlines
 
-```{r timeseries2, out.height='400px', out.width='900px', echo=FALSE, cache=FALSE}
+```{r timeseries2, out.height='250px', out.width='700px', echo=FALSE, cache=FALSE}
 airlines = tidyquant::tq_get(c('DAL', 'UAL', 'AAL', 'LUV'),
               from = "2020-01-01")
 
@@ -694,7 +694,7 @@ class: inverse, center, middle
 
 A **trend** is an increasing or decreasing pattern over time.
 
-```{r trendUP, out.height='400px', out.width='900px', echo=FALSE, cache=FALSE}
+```{r trendUP, out.height='250px', out.width='700px', echo=FALSE, cache=FALSE}
 netflix = tidyquant::tq_get(c('NFLX'), from = "2020-04-01", to = "2021-08-25")
 
 netflix_plot = 
@@ -726,7 +726,7 @@ count:false
 
 A **trend** is an increasing or decreasing pattern over time.
 
-```{r trendDown, out.height='400px', out.width='900px', echo=FALSE, cache=FALSE}
+```{r trendDown, out.height='250px', out.width='700px', echo=FALSE, cache=FALSE}
 delta = tidyquant::tq_get(c('DAL'), from = "2020-02-03", to = "2020-04-30")
 
 delta_plot = 
@@ -757,7 +757,7 @@ plotly::ggplotly(
 
 **Seasonality** refers to the property of a time series that displays REGULAR patterns that repeat at a constant frequency (*m*).
 
-```{r hoteplot2, out.height='400px', out.width='900px', echo=FALSE, cache=FALSE}
+```{r hoteplot2, out.height='250px', out.width='700px', echo=FALSE, cache=FALSE}
 plotly::ggplotly(
   hotel_plot,
   tooltip = c("x", "y", "color")
@@ -770,7 +770,7 @@ plotly::ggplotly(
 
 **Cyclical fluctuations** are somewhat irregular (unknown duration).
 
-```{r autoSales, out.height='400px', out.width='900px', echo=FALSE, cache=FALSE}
+```{r autoSales, out.height='250px', out.width='700px', echo=FALSE, cache=FALSE}
 autoSales = tidyquant::tq_get(x = 'TOTALSA', from = '1960-01-01', get = 'economic.data')
 
 autosales_plot = 
@@ -799,7 +799,7 @@ plotly::ggplotly(
 
 ---
 
-# Kahoot Competition
+# Kahoot Competition #01
 
 To assess your understanding and retention of the topics covered so far, you will **compete in a Kahoot competition (consisting of 5 questions)**:  
 

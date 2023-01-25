@@ -329,3 +329,10 @@ b, strong {
     -moz-transform: rotate(2deg);
     transform: rotate(2deg);     
 }
+
+.rt
+{
+  position:absolute;
+  right:5px;
+  bottom:25px;
+}

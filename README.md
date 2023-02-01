@@ -10,6 +10,7 @@
 | 01           |    01/23     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/spring2023/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
 |            |    01/25     | Introduction to R       | [02_intro_r.html](https://fmegahed.github.io/isa444/spring2023/class02/02_intro_r.html) | [02_intro_r.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_intro_r.pdf) | [02_intro_r.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_intro_r.pptx) |
 | 02           |    01/30     | Visualizing Time Series Data      | [03_ts_viz.html](https://fmegahed.github.io/isa444/spring2023/class03/03_ts_viz.html) | [03_ts_viz.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_ts_viz.pdf) | [03_ts_viz.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_ts_viz.pptx) |
+|            |    02/01     | Visualizing Time Series Data (Cont.)      | [03_ts_viz.html](https://fmegahed.github.io/isa444/spring2023/class03/03_ts_viz.html) | [03_ts_viz.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_ts_viz.pdf) | [03_ts_viz.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_ts_viz.pptx) |
 
 
  ## Acknowledgments

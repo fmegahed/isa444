@@ -12,6 +12,7 @@
 | 02           |    01/30     | Visualizing Time Series Data      | [03_ts_viz.html](https://fmegahed.github.io/isa444/spring2023/class03/03_ts_viz.html) | [03_ts_viz.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_ts_viz.pdf) | [03_ts_viz.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_ts_viz.pptx) |
 |            |    02/01     | Visualizing Time Series Data (Cont.)      | [03_ts_viz.html](https://fmegahed.github.io/isa444/spring2023/class03/03_ts_viz.html) | [03_ts_viz.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_ts_viz.pdf) | [03_ts_viz.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_ts_viz.pptx) |
 |  03        |    02/06     | Summarizing and Transforming Time Series Data      | [05_ts_summary.html](https://fmegahed.github.io/isa444/spring2023/class05/05_ts_summary.html) | [05_ts_summary.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/05_ts_summary.pdf) | [05_ts_summary.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/05_ts_summary.pptx) |
+|          |    02/08     | Naive Forecast, Measures of Forecast Accuracy, and Prediction Intervals      | [06_forecast_accuracy.html](https://fmegahed.github.io/isa444/spring2023/class06/06_forecast_accuracy.html) | [06_forecast_accuracy.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_forecast_accuracy.pdf) | [06_forecast_accuracy.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_forecast_accuracy.pptx) |
 
 
  ## Acknowledgments

@@ -14,7 +14,7 @@
 |  03        |    02/06     | Summarizing and Transforming Time Series Data      | [05_ts_summary.html](https://fmegahed.github.io/isa444/spring2023/class05/05_ts_summary.html) | [05_ts_summary.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/05_ts_summary.pdf) | [05_ts_summary.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/05_ts_summary.pptx) |
 |          |    02/08     | Naive Forecast, Measures of Forecast Accuracy, and Prediction Intervals      | [06_forecast_accuracy.html](https://fmegahed.github.io/isa444/spring2023/class06/06_forecast_accuracy.html) | [06_forecast_accuracy.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_forecast_accuracy.pdf) | [06_forecast_accuracy.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_forecast_accuracy.pptx) |
 |  03        |    02/13     | Lab 01: Basic Tools Applied to Many TS      | [07_multiple_ts_eda.html](https://fmegahed.github.io/isa444/spring2023/class07/07_multiple_ts_eda.html) | [07_multiple_ts_eda.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_multiple_ts_eda.pdf) | [07_multiple_ts_eda.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_multiple_ts_eda.pptx) |
-
+|          |    02/15     | Nonseasonal Smoothing      | [08_nonseasonal_smoothing.html](https://fmegahed.github.io/isa444/spring2023/class08/08_nonseasonal_smoothing.html) | [08_nonseasonal_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/08_nonseasonal_smoothing.pdf) | [08_nonseasonal_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/08_nonseasonal_smoothing.pptx) |
 
 
  ## Acknowledgments

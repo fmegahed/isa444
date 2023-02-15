@@ -4,15 +4,15 @@
 if(require(renderthis)==FALSE) remotes::install_github("jhelvy/renderthis", dependencies = TRUE)
 if(require(officer) == FALSE) install.packages('officer')
 
-renderthis::to_pdf(from = 'lectures/07_multiple_ts_eda/07_multiple_ts_eda.html',
-                   to = 'pdfs/07_multiple_ts_eda.pdf',
+renderthis::to_pdf(from = 'lectures/08_nonseasonal_smoothing/08_nonseasonal_smoothing.html',
+                   to = 'pdfs/08_nonseasonal_smoothing.pdf',
                    complex_slides = TRUE,
                    partial_slides = TRUE,
                    delay = 2)
 
 # I am using my adobe to create the ppt since the text is editable (which is more preferable to students)
-renderthis::to_pptx(from = 'lectures/07_multiple_ts_eda/07_multiple_ts_eda.html',
-                    to = 'ppts/07_multiple_ts_eda.pptx',
+renderthis::to_pptx(from = 'lectures/08_nonseasonal_smoothing/08_nonseasonal_smoothing.html',
+                    to = 'ppts/08_nonseasonal_smoothing.pptx',
                     complex_slides = TRUE,
                     partial_slides = TRUE,
                     delay = 2)

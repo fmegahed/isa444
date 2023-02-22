@@ -16,6 +16,7 @@
 |  03        |    02/13     | Lab 01: Basic Tools Applied to Many TS      | [07_multiple_ts_eda.html](https://fmegahed.github.io/isa444/spring2023/class07/07_multiple_ts_eda.html) | [07_multiple_ts_eda.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_multiple_ts_eda.pdf) | [07_multiple_ts_eda.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_multiple_ts_eda.pptx) |
 |          |    02/15     | Nonseasonal Smoothing (MA-methods)     | [08_nonseasonal_smoothing.html](https://fmegahed.github.io/isa444/spring2023/class08/08_nonseasonal_smoothing.html) | [08_nonseasonal_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/08_nonseasonal_smoothing.pdf) | [08_nonseasonal_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/08_nonseasonal_smoothing.pptx) |
 |  04        |    02/20     | Nonseasonal Smoothing (SES)     | [09_ses.html](https://fmegahed.github.io/isa444/spring2023/class09/09_ses.html) | [09_ses.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/09_ses.pdf) | [09_ses.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/09_ses.pptx) |
+|          |    02/22     | Nonseasonal Smoothing (LES)     | [10_les.html](https://fmegahed.github.io/isa444/spring2023/class10/10_les.html) | [10_ses.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/10_les.pdf) | [10_ses.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/10_les.pptx) |
 
 
  ## Acknowledgments

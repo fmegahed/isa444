@@ -1,0 +1,494 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: '12: Seasonal Decomposition and Smoothing'
+author: '<br>Fadel M. Megahed, PhD <br><br> Endres Associate Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2023"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.asp = 0.618,
+                      fig.align = 'center',
+                      out.width = '70%')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown, downlit) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+# A Brief Discussion of the Exam
+
+- We will go over some of the exam questions.  
+
+- **If you scored less than 17 (75%), please schedule a 15-30 minute meeting with me so we can go over the entire exam.** 
+
+- Irrespective of your grade, you are always welcome to meet with me during office hours (or outside of it if my available meeting slots do not work for you). 
+
+
+
+---
+
+# Learning Objectives for Today's Class
+
+- Explain when to use an additive vs. multiplicative model for a time series.  
+
+- Use classic decomposition methods to detrend and deseasonalize a time series.  
+
+- Recognize time series that are appropriate for triple exponential smoothing (HW).  
+
+- Use HW to forecast future observations of a time series.
+
+
+---
+class: inverse, center, middle
+
+
+# Time Series Components
+
+---
+
+# Definition and Basic Principles
+
+A time series may be made up of:  
+
+  - **Trends (T)** - upward and downward movements  
+  
+  - **Seasonal (S) components** - regular, recurrent patterns that repeat at a fixed known duration (period)  
+  
+  - **Error (E) components** - irregular “noise” that is randomly distributed over time
+
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Note:** A time series may also contain a cyclical component if it displays a somewhat periodic fluctuation, but the fluctuation has a periodicity of unknown duration, usually longer than a year.
+]
+
+
+---
+count: false
+
+# Definition and Basic Principles
+
+```{r co2, echo=FALSE, out.width='85%'}
+df = co2
+
+decomposed = decompose(df)
+
+forecast::autoplot(decomposed) + 
+  ggplot2::theme_bw() + 
+  ggplot2::labs(title = NULL, caption = 'Based on C02 data in base R')
+```
+
+---
+
+# Seasonality: Additive Models
+
+An additive model is written as $Y = T + S + E$. 
+
+**Definition:** *An additive model is appropriate when the trend is approximately linear, and the seasonal components stays constant over time.*
+
+```{r add_plot, echo=FALSE, out.width='60%'}
+retail = tidyquant::tq_get(
+  'RSXFSN', get = "economic.data", from = "2011-01-01", to = "2019-12-01")
+
+retail |>  
+  dplyr::mutate(
+    month = lubridate::month(x = date, label = T)
+  ) |> 
+  ggplot2::ggplot(ggplot2::aes(x = date, y = price)) +
+  ggplot2::geom_line() + 
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.25) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(x=NULL,
+       title = "Seasonality with an Additive Trend", 
+       subtitle = "Retail (- Food Services) from 2011-01-01 to 2019-12-01",
+       caption = 'Data from FRED') +
+  ggplot2::theme_bw() +
+  ggplot2::theme(legend.position = 'bottom')
+```
+
+---
+
+# Seasonality: Multiplicative Models
+
+A fully multiplicative model is written as Y = TSE.
+
+**Definition:** *It is appropriate when the rate of change in the trend and/or the seasonal component and/or the variability in the error term increase or decrease over time.*
+
+```{r airpassengers, echo=FALSE, out.width='55%'}
+data("AirPassengers")
+forecast::autoplot(AirPassengers) + 
+  ggplot2::labs(x=NULL, title = "Seasonality with a Multiplicative Trend: Non-linear trend & seasonal component grows over time",
+       caption = 'AirPassengers R Dataset -- Source: Box, G. E. P., Jenkins, G. M. and Reinsel, G. C. (1976) Time Series Analysis, Forecasting and Control.') +
+  ggplot2::theme_bw()
+```
+
+---
+
+## Some Comments
+
+- When the trend and seasonal component are multiplied together, larger levels in the series will tend to exhibit larger peaks and troughs. When the error term is also multiplicative, the magnitude of the forecast errors will tend to rise and fall with the level of the series.
+
+- If the error variability is relatively constant over time, but the trend and/or seasonal components increase/decrease over time, a **mixed
+additive/multiplicative model**, $Y = TS + E$, may be more appropriate.  
+
+- An alternative to using a purely multiplicative model is to first transform the data using a logarithmic transformation.
+$$
+\begin{split}
+Y & = TSE \\
+\ln{(Y)} & = \ln{(TSE)} \\
+ & = \ln{(T)} + \ln{(S)} + \ln{(E)}
+\end{split}
+$$
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** Slide is from [Dr. Allison Jones-Farmer's](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2) lecture notes, Miami University, Spring 2022.
+]
+
+
+---
+class: inverse, center, middle
+
+# Decomposition Methods
+
+
+---
+
+# Background: Centered Moving Averages
+
+.font50[
+```{r bike_table, echo=FALSE, results='asis'}
+bike = readxl::read_excel("../../data/bike_sales_R.xlsx")
+
+bike$MA3 = '----'
+
+# print results nicely
+print(
+  xtable::xtable(bike, align = c(rep('c', 4)) ), 
+  comment = FALSE, 
+  include.rownames=FALSE,
+  type = 'html'
+  )
+
+#Solution can be obtained using:
+bike$MA3 = zoo::rollmean(
+  bike$`Bike Sales`, k = 3, na.pad = TRUE, align = 'center'
+  ) 
+```
+]
+
+
+---
+
+# Decomposition Methods
+
+Decomposition methods are used to “decompose” a time series into its components. **Decomposition methods are generally poor forecasting methods, but they work well for:**  
+
+  - exploring and visualizing time series data  
+  - detrending and/or deseasonalizing data  
+
+Decomposition methods may be applied to **additive** or **multiplicative** time series.
+
+
+---
+
+# Pure Decomposition of Additive Time Series
+
+  - **Estimate the trend** by calculating the centered moving average for a window of width $K$, denoted as CMA $(K)$. Note you will lose $(K-1)/2$ observations at the beginning and end of the series if $K$ is odd;  suppose $K=3$, so we lose one observation at the beginning and the end.  
+  
+  - **Detrend the series** by subtracting the CMA from the corresponding observations.  
+  
+  - **Estimate the initial seasonal factors** by calculating the average value of the detrended series for each quarter, month, day, etc. (depending on the season length).  
+  
+  - **Standardize the seasonal factors** by computing their averages and then setting the final seasonal factor for each season equal to the initial value minus the overall average.  
+  
+  - **Estimate the error term** by subtracting seasonal factor from the detrended series for each corresponding season.
+  
+
+---
+
+# Out-of-Class: Decompose bike_sales_R.xlsx
+
+Based on the procedure described above, please use Excel/`r fontawesome::fa('r-project', fill = miamired)` to perform the aforementioned five steps. **Please do this on your own as this will provide you with a good fundamental understanding on the process of decomposing a time-series.**
+
+
+---
+
+# Using `r fontawesome::fa('r-project')` as an Alternative
+
+```{r additive_decompose, eval=FALSE}
+bike = readxl::read_excel("../../data/bike_sales_R.xlsx")
+
+bike_ts = ts(bike$`Bike Sales`, start = 1, frequency = 4)
+
+# input to the stats decompose function should be a ts
+bike_decomposed = decompose(
+  x = bike_ts, type = 'additive'
+  )
+
+names(bike_decomposed)
+
+forecast::autoplot(bike_decomposed) + 
+  ggplot2::theme_bw()
+```
+
+
+---
+count: false
+
+# Using `r fontawesome::fa('r-project')` as an Alternative
+
+```{r additive_decompose_out, echo=FALSE, ref.label='additive_decompose'}
+
+```
+
+---
+
+# Let us Explore the `r fontawesome::fa('r-project')` Output
+
+Please take a note of our exploration
+
+---
+
+# The `decompose()` in `r fontawesome::fa('r-project')`
+
+  - The `decompose()` function in `r fontawesome::fa('r-project', fill = miamired)` uses a slightly different algorithm than your textbook presents. 
+  
+  - The MA used to compute the trend estimate is a $2 \times m$ moving average. This means that for quarterly data, a $2 \times 4$ moving average is computed. First a MA(4) is computed, then a MA(2) of the MA(4) is computed. This is used to estimate the trend.  
+  
+  - The seasonal components are computed as usual and centered.
+  
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** Slide is from [Dr. Allison Jones-Farmer's](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2) lecture notes, Miami University, Spring 2022.
+]
+
+---
+
+# Pure Decomposition of Multiplicative Time Series
+
+  - **Estimate the trend** by calculating the centered moving average for a window of width $K$ (i.e., CMA(K)).  For now, let us assume that $k=3$.
+  
+  - **Detrend the series** dividing the observations $2,..,(n-1)$ from the their corresponding CMA(3).  
+  
+  - **Estimate the initial seasonal factors** by calculating the average value of the detrended series for each quarter, month, day, etc. (depending on the season length).  
+  
+  - **Standardize the seasonal factor** by computing their averages and then setting the final seasonal factor for each season equal to the
+initial value divided by the overall average.  
+
+  - **Estimate the error term** by dividing the detrended series by the seasonal factor for each corresponding season.
+
+
+---
+
+# Limitations to Decomposition
+
+  - Decomposition is widely used in practice but is not a good forecasting method.  
+
+  - Decomposition methods are useful for visualizing your data and exploratory data analysis.  
+
+  - Trend estimates are from moving averages and are not available for the first few and last few observations.  
+
+  - Decomposition methods assume that the seasonal factors occur regularly from season to season over every period. This **may not be true over the long run**.  
+
+  - Decomposition methods are not robust to unusual or spurious patterns that may occur in the data.  
+
+Because of these limitations, we need a better forecasting method for seasonal data!
+
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** Slide is from [Dr. Allison Jones-Farmer's](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2) lecture notes, Miami University, Spring 2022.
+]
+
+---
+class: inverse, center, middle
+
+# Holt Winters Seasonal Smoothing/Forecasting
+
+
+---
+
+# Overview of Univariate Forecasting Methods
+
+```{r read_ts_taxonomy, echo=FALSE, out.width='100%', fig.alt="A 10,000 foot view of univariate forecasting techniques", fig.align='center', fig.cap='A 10,000 foot view of forecasting techniques'}
+knitr::include_graphics("../../figures/forecasting_methods1.png")
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Notes:** My (incomplete) classification of **univariate** forecasting techniques, i.e., they exclude popular approaches used in multivariate time series forecasting.  
+]
+
+
+---
+
+# Definition and Basic Principles
+
+
+If a time series has a linear trend with a local trend ( $\beta_1$, growth rate ) and a local seasonal pattern $(SN_t)$ that may be changing over time, we can use the Holt-Winters exponential smoothing method for forecasting to accommodate the seasonal pattern.
+
+
+The Holt-Winters method accommodates time series data with a **local level**, a **local trend**, and a **local seasonal pattern**, all of which are slowly changing over time. There are both additive and multiplicative versions of the Holt-Winters method.
+
+
+---
+
+# Additive Holt-Winters Smoothing/Forecasting
+
+To compute the **forecast**, we will use three smoothing constants, $\alpha$ , to smooth the level, $\beta$ , the smoothing constant to smooth the trend, and $\gamma$ to smooth the seasonal pattern of length/frequency $m$ (e.g. day-of-the-week pattern, $m=7$; quarterly pattern, $m = 4$; monthly pattern, $m = 12$).
+
+The estimate of the **level** is: 
+$$l_t = \alpha (y_t {- sn_{t-L}}) + (1-\alpha)[l_{t-1} + b_{t-1}]$$
+
+The estimate of the **trend** is:
+$$b_t = \beta [l_t - l_{t-1}] + (1-\beta) b_{t-1}$$
+
+---
+count: false
+
+# Additive Holt-Winters Smoothing/Forecasting
+
+
+The estimate of the **seasonal pattern** is:
+$${sn_t = \gamma [y_t - l_{t}] + (1-\gamma) sn_{t-L} }$$
+
+
+To estimate the **point forecast** for time $t+h$ time periods ahead made in time $t$:
+$$\hat{y}_{t+h}(t) = l_t + h \times b_t {+ sn_{t+h-L}}$$
+where $sn_{t+h-L}$ is the most recent estimate of the seasonal pattern for the season corresponding to the time period $t+h$.
+
+
+
+
+---
+
+# Multiplicative Holt-Winters Smoothing/Forecasting
+
+
+To compute the **forecast**, we will use three smoothing constants, $\alpha$ , to smooth the level, $\beta$ , the smoothing constant to smooth the trend, and $\gamma$ to smooth the seasonal pattern of length/frequency $m$ (e.g. day-of-the-week pattern, $m=7$; quarterly pattern, $m = 4$; monthly pattern, $m = 12$).
+
+The estimate of the **level** is: 
+$$l_t = \alpha (y_t {/ sn_{t-L}}) + (1-\alpha)[l_{t-1} + b_{t-1}]$$
+
+The estimate of the **trend** is:
+$$b_t = \beta [l_t - l_{t-1}] + (1-\beta) b_{t-1}$$
+
+
+---
+count: false
+# Multiplicative Holt-Winters Smoothing/Forecasting
+
+The estimate of the **seasonal pattern** is:
+$${sn_t = \gamma [y_t / l_{t}] + (1-\gamma) sn_{t-L} }$$
+
+
+To estimate the **point forecast** for time $t+h$ time periods ahead made in time $t$:
+$$\hat{y}_{t+h}(t) = (l_t + h \times b_t) {\times sn_{t+h-L}}$$
+where $sn_{t+h-L}$ is the most recent estimate of the seasonal pattern for the season corresponding to the time period $t+h$.
+
+---
+
+# Live Demo: Applying HW on the BikSales Data
+
+In our demo, we will use: $\alpha = 0.2$, $\beta = 0.1$, and  $\gamma= 0.1$, with initial values set to simple. **Note that we could have also optimized for our three smoothing parameters, and starting values**, similar to what we did with `forecast::ses()` and `forecast::holt()`.
+
+The goals of this live demo are to:  
+
+- Introduce you to the `forecast::hw()`.  
+- Show you that the resulting model object has the same structure as that of `forecast::ses()` and `forecast::holt()`. 
+- Extend the application of model plotting and accuracy computations to the `forecast::hw()` fitted model.
+
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+# Summary of Main Points
+
+By now, you should be able to do the following:   
+
+- Explain when to use an additive vs. multiplicative model for a time series.  
+
+- Use classic decomposition methods to detrend and deseasonalize a time series.  
+
+- Recognize time series that are appropriate for triple exponential smoothing (HW).  
+
+- Use HW to forecast future observations of a time series.
+
+---
+
+# Things to Do to Prepare for Our Next Class
+
+ - **Recommended:** Thoroughly read [Chapter 4.1-4.4](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i) and [Chapter 4.6-4.7](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed-part-i) of our reference book.  
+ 
+- **Required:** Complete [assignment10](https://miamioh.instructure.com/courses/188655/quizzes/542334/).
+ 

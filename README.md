@@ -17,7 +17,8 @@
 |          |    02/15     | Nonseasonal Smoothing (MA-methods)     | [08_nonseasonal_smoothing.html](https://fmegahed.github.io/isa444/spring2023/class08/08_nonseasonal_smoothing.html) | [08_nonseasonal_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/08_nonseasonal_smoothing.pdf) | [08_nonseasonal_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/08_nonseasonal_smoothing.pptx) |
 |  04        |    02/20     | Nonseasonal Smoothing (SES)     | [09_ses.html](https://fmegahed.github.io/isa444/spring2023/class09/09_ses.html) | [09_ses.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/09_ses.pdf) | [09_ses.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/09_ses.pptx) |
 |          |    02/22     | Nonseasonal Smoothing (LES)     | [10_les.html](https://fmegahed.github.io/isa444/spring2023/class10/10_les.html) | [10_ses.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/10_les.pdf) | [10_ses.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/10_les.pptx) |
-
+|  05        |    02/27     | Exam 01     | -- | --  |--|
+|          |    03/01     | Seasonal Decomposition and Smoothing/Forecasting     | [12_seasonal_decomposition_hw.html](https://fmegahed.github.io/isa444/spring2023/class12/12_seasonal_decomposition_hw.html) | [12_seasonal_decomposition_hw.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/12_seasonal_decomposition_hw.pdf) | [12_seasonal_decomposition_hw.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/12_seasonal_decomposition_hw.pptx) |
 
  ## Acknowledgments
 * The organization of the course is inspired by [Dr. Allison Jones-Farmer](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)'s teaching of the class in Spring 2020. I am extremely thankful that she was willing to share her course materials with me. I have learned a lot from how she set up her course and for her vision for [this undergraduate course](https://bulletin.miamioh.edu/search/?P=ISA%20444).  

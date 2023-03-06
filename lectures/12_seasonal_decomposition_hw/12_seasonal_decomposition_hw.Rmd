@@ -302,7 +302,30 @@ count: false
 
 # Let us Explore the `r fontawesome::fa('r-project')` Output
 
-Please take a note of our exploration
+Please take a note of our explorations.
+
+```{r explore_decomp, include=FALSE}
+# Step 2 Detrend the series
+detrend = co2 - bike_decomposed$trend
+
+matrix_detrend = t(matrix(detrend, nrow = 12) )
+
+# Step 3: initial seasonal factors
+seasonal = colMeans(matrix_detrend, na.rm = T)
+
+# Step 4: Standardize the Series
+overall_avg = mean(seasonal)
+standard_seasonal = seasonal - overall_avg
+
+# see this is identical with this
+bike_decomposed$figure
+
+# Step 5: errors
+errors = detrend - standard_seasonal
+
+errors - bike_decomposed$random
+```
+
 
 ---
 

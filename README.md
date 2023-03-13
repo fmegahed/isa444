@@ -20,6 +20,9 @@
 |  05        |    02/27     | Exam 01     | -- | --  |--|
 |          |    03/01     | Seasonal Decomposition and Smoothing/Forecasting     | [12_seasonal_decomposition_hw.html](https://fmegahed.github.io/isa444/spring2023/class12/12_seasonal_decomposition_hw.html) | [12_seasonal_decomposition_hw.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/12_seasonal_decomposition_hw.pdf) | [12_seasonal_decomposition_hw.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/12_seasonal_decomposition_hw.pptx) |
 |  06        |    03/06     | Fixed Forecasting Windows     | [13_fixed_forecasting_window.html](https://fmegahed.github.io/isa444/spring2023/class13/13_fixed_forecasting_window.html) | [13_fixed_forecasting_window.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/13_fixed_forecasting_window.pdf) | [13_fixed_forecasting_window.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/13_fixed_forecasting_window.pptx) |
+|          |    03/08     | Rolling Forecasting Windows     | Live demo with discussion | Live demo with discussion | Live demo with discussion |
+|  07        |    03/13     | ACF and PACF     | [15_acf_and_pacf.html](https://fmegahed.github.io/isa444/spring2023/class15/15_acf_and_pacf.html) | [15_acf_and_pacf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_acf_and_pacf.pdf) | [15_acf_and_pacf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_acf_and_pacf.pptx) |
+
 
  ## Acknowledgments
 * The organization of the course is inspired by [Dr. Allison Jones-Farmer](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)'s teaching of the class in Spring 2020. I am extremely thankful that she was willing to share her course materials with me. I have learned a lot from how she set up her course and for her vision for [this undergraduate course](https://bulletin.miamioh.edu/search/?P=ISA%20444).  

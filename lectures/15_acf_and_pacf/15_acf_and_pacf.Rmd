@@ -1,0 +1,435 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: '15: ACF and PACF'
+author: '<br>Fadel M. Megahed, PhD <br><br> Endres Associate Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2023"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.asp = 0.618,
+                      fig.align = 'center',
+                      out.width = '70%')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown, downlit) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+# Quick Refresher from Last Week
+
+`r emo::ji("check")` Explain the difference between fixed window and rolling origin forecasting.  
+
+`r emo::ji("check")` Apply several forecasting methods to the fixed forecasting window strategy.    
+
+`r emo::ji("check")` Apply several forecasting methods to the rolling origin forecasting window strategy.    
+
+
+---
+
+# Assignment #11: Demo Based on Class 14
+
+We will write a function that takes ticker/symbol, and returns our `summary_df`. Then, we will:   
+1. find the model that has the lowest MAPE for each ticker/symbol.  
+2. count the number of times a given model has won.  
+
+
+---
+
+
+# Learning Objectives for Today's Class
+
+- Explain what do we mean by population/sample mean, variance, covariance and correlation (**review**).  
+
+- Explain the population autocovariance and autocorrelation.  
+
+- Compute sample estimates of the autcovariance and autocorrelation.  
+
+- Describe the large sample distribution of the autocorrelation function.  
+
+- Explain how sample (partial) autocorrelation is calculated.  
+
+- Use `r fontawesome::fa('r-project', fill = miamired)` to compute both the ACF and PACF.
+
+
+
+---
+class: inverse, center, middle
+
+
+# Review of Population Mean, Variance, Covariance & Correlation
+
+---
+
+# Definition and Notation
+
+A random variable, $Y$, is the outcome of a random experiment. The random nature of $Y$ can occur through a variety of mechanisms including sampling, natural variation, etc . In time series, we write $Y_t$ to represent the random variable at time $t$ , where $t = 1, 2, 3, \dots$. 
+
+Specific observed values of a random variable are written as lower case letters, $y_t$.
+
+
+```{r btc}
+btc = 
+  tidyquant::tq_get('BTC-USD', from = "2023-01-01", to = Sys.Date() -1) |> 
+  dplyr::select(date, adjusted)
+```
+$Y_2$ represents the adjusted **but not observed** closing price for BTC on `r btc$date[2]`. When we observe a value for this we have, $y_2 =$ `r format(btc$adjusted[2], scientific=F)`.  
+
+
+---
+
+# Basic Population Parameter Functions
+
+**Mean Function:** $${\mu_Y}_{t} = \mu_t = E(Y_t).$$
+
+**Variance Function:** $$\sigma_t^2 = E[(Y_t - \mu_t)^2].$$
+
+**Covariance Function:**   The covariance of two random variables,$Y$ and $Z$ is given by
+$$E[(Y - \mu_Y)(Z - \mu_Z)].$$  The covariance measures the *linear dependence* between two random variables.
+
+
+---
+count: false
+# Basic Population Parameter Functions
+
+**The Correlation Coefficient** between two random variables, *Y* and *Z* is given by
+$$\rho = \frac{E[(Y - \mu_Y)(Z - \mu_Z)]}{\sigma_Y \sigma_z}.$$
+
+It measures the scaled linear dependence between two random variables, and is in the interval $[-1, 1]$.
+
+
+---
+class: inverse, center, middle
+
+# Population Autocovariance and Autocorrelation
+
+---
+
+# Autocovariance Function
+
+In time series applications, often, our best predictor of a future observation is the past values of the series. Thus, we measure the linear dependence of the series over time using the autocovariance (autocorrelation) functions. For the random variable $Y$ observed at two different times, $Y_s$ and $Y_t$ , the autocovariance function is defined as: $$\gamma(s, t) = cov(Y_s, Y_t) = E[(Y_s - \mu_s)(Y_t - \mu_t)].$$
+
+
+**Notes:**    
+  - $\gamma(s, t) = \gamma(t, s)$.   
+  - If $\gamma(s, t) = 0$ , then $Y_s$ and $Y_t$ are **NOT linearly related**.   
+  - $\gamma(t, t) = \sigma_t^2$.
+
+
+---
+
+# Autocorrelation Function
+
+In applications, we generally use the Autocorrelation Function (ACF): $$\rho(s, t) = \frac{\gamma(s, t)}{\sqrt{\gamma(s,s)\gamma(t,t)}} = \frac{\gamma(s, t)}{\sqrt{\sigma_s^2\sigma_t^2}}.$$
+
+**Notes:**  
+  - The ACF is in the interval $[-1, 1]$.  
+  - The ACF measures the linear predictability of the series at time $t$ using only information from time $Y_s$.  
+  
+
+---
+
+# Non-graded Class Activity
+
+`r countdown(minutes = 5, seconds = 0, top = 0, font_size = "2em")`
+
+Consider a white noise, centered moving average model, where $w_t$ is distributed $iid$ $N(0,1)$ and $Y_t = \frac{1}{3}(w_{t-1} + w_t + w_{t+1})$.  **Please use the next 5 minutes to solve this either logically or programatically.**
+
+- Population Mean: $E(Y_t) =$ .can-edit.key-activity1a[ ... ]  
+
+- Population Variance: $\sigma^2(Y_t) =$ .can-edit.key-activity1b[ ... ]  
+
+- Population Autocorrelation between times $t$ and $t+1$: $\rho(t+1, 1) =$ .can-edit.key-activity1c[ ... ]   
+
+- Population Autocorrelation between times $t$ and $t+2$: $\rho(t+2, 1) =$ .can-edit.key-activity1d[ ... ]    
+
+- Population Autocorrelation between times $t$ and $t+3$: $\rho(t+3, 1) =$ .can-edit.key-activity1e[ ... ]     
+
+- Population Autocorrelation between times $t$ and $t+4$: $\rho(t+3, 1) =$ .can-edit.key-activity1f[ ... ]    
+
+```{r example_soluion, include=FALSE}
+set.seed(2023)
+df = data.frame( wt = rnorm(100000) )
+
+df = df |> dplyr::mutate(
+  yt = zoo::rollmean(wt, k = 3, fill = NA),
+  lag1_yt = dplyr::lag(yt, n = 1),
+  lag2_yt = dplyr::lag(yt, n = 2),
+  lag3_yt = dplyr::lag(yt, n = 3),
+  lag4_yt = dplyr::lag(yt, n = 4)
+  )
+
+mean_yt = mean(df$yt, na.rm = T)
+var_yt = var(df$yt, na.rm = T)
+
+df_no_nas = na.omit(df)
+cor(x = df_no_nas$yt, y = df_no_nas$lag4_yt)
+
+```
+
+
+
+---
+class: inverse, center, middle
+
+# Sample Estimates of Population Parameters
+
+# and 
+
+# The Large Sample Distribution of the ACF
+
+
+---
+
+# Definitions
+
+.font80[
+**Sample mean:** $$\bar{y} = \frac{1}{n} \sum_{t=1}^{n} y_t$$ 
+
+**Sample variance:** $${\hat{\sigma}_y}^2  =  \frac{1}{n-1} \sum_{t=1}^{n} (y_t- \bar{y})^2$$ 
+
+**Standard error of the mean:** $$\hat{\sigma}_{\bar{y}}^2  =  \sqrt{\frac{{\hat{\sigma}_y}^2}{n}} = \frac{{\hat{\sigma}_y}}{\sqrt{n}}$$
+
+**Lag $k$ Sample Autocorrelation:** $$r_k = \frac{\sum_{t = k + 1}^{n} (y_t - \bar{y}) (y_{t-k} - \bar{y})}{\sum_{t=1}^{n}(y_t - \bar{y})^2}$$
+]
+
+
+---
+
+# Comments on the Sample ACF
+
+- The sample ACF is very useful in helping us to determine the degree of autocorrelation in our time series.  
+
+- However, the sample ACF is subject to random sampling variability. Like the sample mean, the sample ACF has a sampling distribution.
+
+
+---
+
+# Large Sample Distribution of the ACF
+
+.font90[
+- A common heuristic is that at least 50 observations are needed to give a reliable estimate of the population ACF, and that the sample ACF should be computed up to lag $K = \frac{n}{4}$, where $n$ is the length of the series available for training.  
+
+- Under general conditions, for large $n$, and  $k = 1, 2, \dots$,  the ACF follows an approximate normal distribution with zero mean and standard deviation given by $\frac{1}{\sqrt{n}}$.  
+
+- This result can be used to give us a cutoff to determine if there is a statistically significant amount of autocorrelation for a given lag in a series.  
+
+- `R` uses a cutoff of $\pm 1.96 \frac{1}{\sqrt{n}}$ to determine statistical significance of the sample ACF.   
+  - That is if the sample ACF is **within** $\pm 1.96 \frac{1}{\sqrt{n}}$, it is considered **NOT** significant.  
+  - If the sample ACF is $> + 1.96 \frac{1}{\sqrt{n}}$, then there is significant positive autocorrelation at a particular lag.  
+  - If the sample ACF is $< - 1.96 \frac{1}{\sqrt{n}}$, then there is significant negative autocorrelation at a particular lag.
+]
+
+
+---
+
+# Example: The WFJ Sales Dataset
+
+.font80[We will use `r fontawesome::fa('r-project', fill = miamired)` to: (a) plot the ACF for the [WFJ Sales Data](https://miamioh.instructure.com/courses/167327/modules); (b) extract the acf values; and (c) fit a linear model where we attempt to predict sales as a function of lag1. Note that the acf plot corresponds to [Figure 6.2 in your reference book](https://cdn.shopify.com/s/files/1/0859/4364/files/Part_I_POBF-_A_First_Course_in_Forecasting_1.pdf); however `r fontawesome::fa('r-project', fill = miamired)` uses constant significance limits.]
+
+.pull-left[
+
+```{r wfj_sales1, eval = F}
+WFJ = readxl::read_excel(
+  "../../data/WFJ_sales.xlsx") |> 
+  dplyr::select(1,2)
+
+acf_results = acf(x = WFJ$`WFJ Sales`) #<<
+
+acf_results$acf #<<
+```
+]
+
+
+.font70[
+.pull-right[
+```{r wfj_out1, echo = F, results='hold', ref.label='wfj_sales1', fig.dim=c(5,3)}
+
+```
+]
+]
+
+---
+count: false
+
+# Example: The WFJ Sales Dataset
+
+.font80[We will use `r fontawesome::fa('r-project', fill = miamired)` to: (a) plot the ACF for the [WFJ Sales Data](https://miamioh.instructure.com/courses/167327/modules); (b) extract the acf values; and (c) fit a linear model where we attempt to predict sales as a function of lag1. Note that the acf plot corresponds to [Figure 6.2 in your reference book](https://cdn.shopify.com/s/files/1/0859/4364/files/Part_I_POBF-_A_First_Course_in_Forecasting_1.pdf); however `r fontawesome::fa('r-project', fill = miamired)` uses constant significance limits.
+
+.pull-left[
+
+```{r wfj_sales2, eval = F}
+## for a ggplot acf plot (with no lag0)
+forecast::autoplot(acf_results) + #<< 
+  ggplot2::theme_bw() #<<
+```
+
+
+]
+
+.pull-right[
+```{r wfj_out2, echo = F, results='hold', ref.label='wfj_sales2', fig.dim=c(5,5)}
+
+```
+]
+]
+
+
+---
+
+# Example: The WFJ Sales Dataset
+
+.font80[We will use `r fontawesome::fa('r-project', fill = miamired)` to: (a) plot the ACF for the [WFJ Sales Data](https://miamioh.instructure.com/courses/167327/modules); (b) extract the acf values; and (c) fit a linear model where we attempt to predict sales as a function of lag1. Note that the acf plot corresponds to [Figure 6.2 in your reference book](https://cdn.shopify.com/s/files/1/0859/4364/files/Part_I_POBF-_A_First_Course_in_Forecasting_1.pdf); however `r fontawesome::fa('r-project', fill = miamired)` uses constant significance limits.
+
+.pull-left[
+
+```{r wfj_sales3, eval = F}
+WFJ$Lag1 = dplyr::lag(WFJ$`WFJ Sales`, n =1)
+
+# traditional lm model
+model = lm(data = WFJ, formula = `WFJ Sales` ~ Lag1 )
+
+# print model nicely
+stargazer::stargazer(
+  model, type = 'html', header = F, single.row = T)
+```
+
+
+]
+
+.pull-right[
+```{r wfj_out3, echo = F, results='asis', ref.label='wfj_sales3'}
+
+```
+]
+]
+
+
+---
+class: inverse, center, middle
+
+# Partial Autocorrelation
+
+
+---
+
+# General Definition 
+
+**Statistical Definition:** Let us say that we have three variables, $X$, $Y$, and $Z$, all correlated, and we want to know how $X$ and $Y$ are correlated after we remove the effects of $Z$ on each.
+
+
+**Computation Approach:**
+
+$$\hat{X} = a_1 + b_1Z; \qquad \qquad X^* = X - \hat{X}$$
+
+$$\hat{Y} = a_2 + b_2Z; \qquad \qquad Y^* = Y - \hat{Y}$$ 
+
+$Corr(X^*, Y^*)$ is the partial correlation between $X$ and $Y$. It is the correlation that remains after we remove the effect of $Z$.
+
+
+---
+
+# PACF in the Context of Time-Series Analysis
+
+The Partial Autocorrelation between $Y_t$ and $Y_{t+k}$ is the correlation between $Y_t$ and $Y_{t+k}$ after removing the effects of $Y_{t+1}, \, Y_{t+2}, \, Y_{t+3}, \, \dots, \, Y_{t+k-1}$.  
+
+  - We plot the partial autocorrelation over multiple lags just like the autocorrelation function (ACF).  
+  - We refer to the plotted partial autocorrelations as the PACF.
+
+
+---
+
+# Computing the PACF in R
+
+.pull-left[
+```{r wfj_sales4, eval = F}
+pacf_results = pacf(x = WFJ$`WFJ Sales`) #<<
+
+pacf_results$acf #<<
+```
+]
+
+.pull-right[
+```{r wfj_out4, echo = F, results='hold', ref.label='wfj_sales4', fig.dim=c(5,5)}
+
+```
+]
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+# Summary of Main Points
+
+By now, you should be able to do the following:   
+
+- Explain what do we mean by population/sample mean, variance, covariance and correlation (**review**).  
+
+- Explain the population autocovariance and autocorrelation.  
+
+- Compute sample estimates of the autcovariance and autocorrelation.  
+
+- Describe the large sample distribution of the autocorrelation function.  
+
+- Explain how sample (partial) autocorrelation is calculated.  
+
+- Use `r fontawesome::fa('r-project', fill = miamired)` to compute both the ACF and PACF.
+
+---
+
+# Things to Do to Prepare for Our Next Class
+ 
+ - **Required:** Complete [assignment12](https://miamioh.instructure.com/courses/188655/quizzes/540768/).
+ 

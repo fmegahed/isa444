@@ -22,6 +22,8 @@
 |  06        |    03/06     | Fixed Forecasting Windows     | [13_fixed_forecasting_window.html](https://fmegahed.github.io/isa444/spring2023/class13/13_fixed_forecasting_window.html) | [13_fixed_forecasting_window.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/13_fixed_forecasting_window.pdf) | [13_fixed_forecasting_window.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/13_fixed_forecasting_window.pptx) |
 |          |    03/08     | Rolling Forecasting Windows     | Live demo with discussion | Live demo with discussion | Live demo with discussion |
 |  07        |    03/13     | ACF and PACF     | [15_acf_and_pacf.html](https://fmegahed.github.io/isa444/spring2023/class15/15_acf_and_pacf.html) | [15_acf_and_pacf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_acf_and_pacf.pdf) | [15_acf_and_pacf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_acf_and_pacf.pptx) |
+|          |    03/15     | Exam 02    | -- | -- | -- |
+|  08        |    03/27     | Exam 02 Review and Stationarity     | [17_review_and_stationarity.html](https://fmegahed.github.io/isa444/spring2023/class17/17_review_and_stationarity.html) | [17_review_and_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/17_review_and_stationarity.pdf) | [17_review_and_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/17_review_and_stationarity.pptx) |
 
 
  ## Acknowledgments

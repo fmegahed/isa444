@@ -1,0 +1,238 @@
+---
+title: "Exam 02 - Case Study Solution"
+author: "Fadel Megahed"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+format: 
+  html:
+    code-fold: false
+    code-tools: true
+    code-download: true
+    code-link: true
+    highlight-style: pygments
+    number-sections: true
+    paged-df: true
+    toc: true
+    toc-float: true
+    code-overflow: wrap
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  progress = FALSE, 
+  verbose = FALSE,
+  fig.path = "figs/",
+  cache.extra = set.seed(2022), 
+  autodep = TRUE
+)
+
+knitr::dep_auto()
+
+options(qwraps2_markup = "markdown")
+
+# Setting properties for the default theme_bw() behavior for all plots
+if(require(ggplot2) == FALSE) install.packages("ggplot2")
+library(ggplot2) ; theme_set(theme_bw(base_size = 11) + theme(legend.position = 'top')) 
+
+# Setting default color palettes to RColorBrewer Palettes
+if(require(RColorBrewer) == FALSE) install.packages("RColorBrewer")
+scale_colour_discrete = scale_color_brewer(palette = "Dark2")
+```
+
+# Reading the Data
+
+```{r read_data}
+# reading the dataset for total energy generation in the US per state and month
+total_generation = readr::read_csv('../../data/total_generation.csv')# code required to personalize your exam (run only once)
+my_seed2 = TeachingDemos::char2seed('fmegahed') #change to your unique id
+first_state = unique(total_generation$state) |> sample(size = 1)
+first_state = ifelse(first_state == 'DC', yes = 'OH', no = first_state) #new addition for this exam
+
+# The subset of the total_generation dataset that you will be analyzing for your exam
+my_generation = total_generation |>
+  # limiting the data to your first state
+  dplyr::filter(state == first_state)
+```
+
+
+# Basic Exploration of the Data
+
+## Line Chart
+
+```{r line_chart}
+# create date column/variable
+my_generation = my_generation |> 
+  dplyr::mutate(
+    date = lubridate::ymd(paste(year, month, '01', sep = '-')),
+    month = as.factor(month) # primarily for plotting
+    )
+
+my_generation |> 
+  ggplot2::ggplot(ggplot2::aes(x = date, y = generation_megawatt_hrs, group = year)) +
+  ggplot2::geom_point(ggplot2::aes(color = month)) +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = 'none') -> line_plot
+
+plotly::ggplotly(line_plot)
+```
+
+## Seasonal Chart
+
+```{r seasonal_chart}
+
+my_generation |> 
+  dplyr::filter(year > 2010) |> 
+  ggplot2::ggplot(ggplot2::aes(x = month, y = generation_megawatt_hrs, group = year, color = as.factor(year))) +
+  ggplot2::geom_point() +
+  ggplot2::geom_line() +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position = 'none') -> seasonal_plot
+
+plotly::ggplotly(seasonal_plot)
+```
+
+
+## Monthly Averages
+
+```{r monthly_averages}
+my_generation |> 
+  dplyr::group_by(month) |> 
+  dplyr::summarise(avg_gen_month = mean(generation_megawatt_hrs) |> scales::comma()) 
+```
+
+
+## Yearly Averages
+
+```{r yrly_averages}
+my_generation |> 
+  dplyr::group_by(year) |> 
+  dplyr::summarise(avg_gen_yr = mean(generation_megawatt_hrs) |> scales::comma()) |> 
+  print(n = 23)
+```
+
+
+---
+
+# Types of Seasonality and Linear Trends
+
+From my yearly average, it does not seem that the generation for `r first_state` is increasing over the study period. Let us focus on the type of seasonality. 
+
+```{r type_seasonality}
+generation_ts = ts(my_generation$generation_megawatt_hrs, start = c(2001,1), frequency = 12)
+  
+hw_add = forecast::hw(generation_ts, seasonal = 'additive')
+hw_mult = forecast::hw(generation_ts, seasonal = 'multiplicative')
+
+hw_results = rbind(forecast::accuracy(hw_add), forecast::accuracy(hw_mult))
+row.names(hw_results) = c('additive', 'multiplicative')
+hw_results
+```
+
+From my exploration, it seems that the additive model is slighlty better. Both choices are somewhat reasonable here due to the lack of trend.
+
+
+---
+
+# Rolling Window
+
+```{r rolling_window}
+ rolled_data = 
+    rsample::rolling_origin(
+      data = my_generation, 
+      initial = ceiling(0.95*nrow(my_generation)), # for quick analysis
+      assess = 12 # we want to predict one year ahead
+    )
+
+
+rolled_data = rolled_data |> 
+    dplyr::mutate(
+      # extract your training data
+      train_data = purrr::map(.x = splits, .f = rsample::analysis),
+      # extract my training dates and response of interest
+      train_dates = purrr::map(.x = train_data, .f = magrittr::extract2, 'date'),
+      train_resp = purrr::map(.x = train_data, .f = magrittr::extract2, 'generation_megawatt_hrs'),
+      
+      # extract our test/assessment/evaluation data
+      test_data = purrr::map(.x = splits, .f = rsample::assessment),
+      # NOTE
+      # now test_dates and test_response are vectors not a single value
+      test_dates = purrr::map(.x = test_data, .f = magrittr::extract2, 'date'),
+      test_resp = purrr::map(.x = test_data, .f = magrittr::extract2, 'generation_megawatt_hrs')
+    )
+  
+results_df = rolled_data |> 
+    dplyr::select(-c(splits, train_data, test_data))
+
+
+# function for snaive forecast, convert vector to a ts and then forecast
+snaive_fun = function(x){
+  x_ts = ts(data = x, start = c(2001, 1), frequency = 12)
+  snaive_fct = forecast::snaive(y = x_ts, h = 12) |> magrittr::extract2('mean')
+  return(snaive_fct)
+}
+
+
+# function for hw forecast, convert vector to a ts and then forecast
+# testing the function with x = results_df$train_resp[[1]]
+hw_fun = function(x){
+  x_train = x[1:ceiling(0.8*length(x))]
+  x_ts = ts(data = x_train, start = c(2001, 1), frequency = 12)
+  
+  hw_model1 = forecast::hw(y = x_ts, h = 12, initial = 'simple')
+  opt_alpha = hw_model1$model$par['alpha']
+  opt_beta = hw_model1$model$par['beta']
+  opt_gamma = hw_model1$model$par['gamma']
+  
+  x_all_ts = ts(data = x, start = c(2001, 1), frequency = 12)
+  
+  hw_fct = forecast::hw(
+    y = x_all_ts, h = 12, 
+    alpha = opt_alpha, beta = opt_beta, gamma = opt_gamma) |>
+    magrittr::extract2('mean')
+  
+  return(hw_fct)
+}
+
+
+results_df = results_df |> 
+    dplyr::mutate(
+      snaive_fct = purrr::map(.x = train_resp, .f = snaive_fun),
+      hw_fct = purrr::map(.x = train_resp, .f = hw_fun)
+    )
+
+results_df = results_df |> 
+  dplyr::mutate(
+    mape_snaive = purrr::map2(.x = snaive_fct, .y = test_resp, .f = forecast::accuracy) |>
+      purrr::map_dbl(.f = magrittr::extract2, c(5)),
+    mape_hw = purrr::map2(.x = hw_fct, .y = test_resp, .f = forecast::accuracy) |>
+      purrr::map_dbl(.f = magrittr::extract2, c(5))
+  )
+
+avg_mape_snaive = mean(results_df$mape_snaive)
+
+round(avg_mape_snaive, digits = 2) 
+
+avg_mape_hw = mean(results_df$mape_hw)
+
+round(avg_mape_hw, digits = 2)
+
+```
+
+
+---
+
+# Predictions for the Next 12 Months
+
+```{r}
+forecast::hw(y = generation_ts, h = 12, level = 95) |> forecast::autoplot()
+
+forecast::hw(y = generation_ts, h = 12, level = 95)
+```
+

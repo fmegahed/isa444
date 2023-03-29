@@ -4,15 +4,15 @@
 if(require(renderthis)==FALSE) remotes::install_github("jhelvy/renderthis", dependencies = TRUE)
 if(require(officer) == FALSE) install.packages('officer')
 
-renderthis::to_pdf(from = 'lectures/17_review_and_stationarity/17_review_and_stationarity.html',
-                   to = 'pdfs/17_review_and_stationarity.pdf',
+renderthis::to_pdf(from = 'lectures/18_arma/18_arma.html',
+                   to = 'pdfs/18_arma.pdf',
                    complex_slides = TRUE,
                    partial_slides = TRUE,
                    delay = 2)
 
 # I am using my adobe to create the ppt since the text is editable (which is more preferable to students)
-renderthis::to_pptx(from = 'lectures/17_review_and_stationarity/17_review_and_stationarity.html',
-                    to = 'ppts/17_review_and_stationarity.pptx',
+renderthis::to_pptx(from = 'lectures/18_arma/18_arma.html',
+                    to = 'ppts/18_arma.pptx',
                     complex_slides = TRUE,
                     partial_slides = TRUE,
                     delay = 2)

@@ -24,11 +24,13 @@
 |  07        |    03/13     | ACF and PACF     | [15_acf_and_pacf.html](https://fmegahed.github.io/isa444/spring2023/class15/15_acf_and_pacf.html) | [15_acf_and_pacf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_acf_and_pacf.pdf) | [15_acf_and_pacf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_acf_and_pacf.pptx) |
 |          |    03/15     | Exam 02    | -- | -- | -- |
 |  08        |    03/27     | Exam 02 Review and Stationarity     | [17_review_and_stationarity.html](https://fmegahed.github.io/isa444/spring2023/class17/17_review_and_stationarity.html) | [17_review_and_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/17_review_and_stationarity.pdf) | [17_review_and_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/17_review_and_stationarity.pptx) |
+|          |    03/29     | ARMA Model Identification and Fitting     | [18_arma.html](https://fmegahed.github.io/isa444/spring2023/class18/18_arma.html) | [18_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/18_arma.pdf) | [18_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/18_arma.pptx) |
+
 
 
  ## Acknowledgments
 * The organization of the course is inspired by [Dr. Allison Jones-Farmer](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)'s teaching of the class in Spring 2020. I am extremely thankful that she was willing to share her course materials with me. I have learned a lot from how she set up her course and for her vision for [this undergraduate course](https://bulletin.miamioh.edu/search/?P=ISA%20444).  
-* In our course, we are using the [Principles of Business Forecasting Book by Ord, Fildes & Kourentzes](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed). Therefore, the structure of my lecture notes follows the material in the book (but in many cases with updated examples and additional details based on my research and/or the excellent material created by [Dr. Allison Jones-Farmer](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2)). 
+* In our course, we are using the [Principles of Business Forecasting Book by Ord, Fildes & Kourentzes](https://wessexlearning.com/products/principles-of-business-forecasting-2nd-ed). Therefore, the structure of my lecture notes follows the material in the book (but in many cases with updated examples and additional details based on my research and/or the excellent material created by [Dr. Allison Jones-Farmer](https://miamioh.edu/fsb/directory/?up=/directory/farmerl2). 
  
  
  ## Notes

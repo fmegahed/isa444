@@ -1,0 +1,576 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: '18: ARMA Model Identification and Fitting'
+author: '<br>Fadel M. Megahed, PhD <br><br> Endres Associate Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2023"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.asp = 0.618,
+                      fig.align = 'center',
+                      out.width = '70%')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown, downlit) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+# Quick Refresher from Last Class
+
+`r emo::ji("check")`Utilize time-series plots (line charts and ACF) to identify whether a ts is stationary.  
+
+`r emo::ji("check")` Apply transformations to a nonstationary time series to bring it into
+stationarity (**review**).       
+
+`r emo::ji("check")` Conduct formal tests for stationarity using the ADF and KPSS tests.    
+
+
+---
+
+# Assignment #12 - Review
+
+We will go over any questions you may have had pertaining to assignment 12.  
+
+
+---
+
+
+# Learning Objectives for Today's Class
+
+- Describe the behavior of the ACF and PACF of an AR(p) process.  
+
+- Describe the behavior of the ACF and PACF of an MA(q) process.  
+
+- Describe the behavior of the ACF and PACF of an ARMA (p,q) process.  
+
+- Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.  
+
+
+
+---
+
+# Preface: ARMA Models
+
+Models we consider here may have two components, an **autoregressive component** (AR) and a **moving average** component (MA).
+
+
+---
+class: inverse, center, middle
+
+
+# Autoregressive Processes
+
+---
+
+# The First Order Autoregressive Process
+
+The **First Order Autoregressive Process—AR(1)** is given by $$y_t = \delta + \phi y_{t-1} + \epsilon_t,$$
+where $|\phi| < 1$ is a weight, and $\epsilon_t$ is white noise. Essentially, this is similar (not exactly the same though) as regressing $y_t$ on $y_{t-1}$. 
+
+The mean and variance of an AR(1) process are as follows:
+
+$$E(y_t) = \mu = \frac{\delta}{1 - \phi}$$
+
+$$Var(y_t) = \sigma^2 \frac{1}{1 - \phi^2}$$
+
+
+---
+count: false
+
+# The First Order Autoregressive Process
+
+The *population* autocorrelation function of the AR(1) process at lag $k$ is $$\rho(k) = \phi^k$$
+
+The theoretical/population ACF of an AR(1) process with $\phi = 0.6$ will look like this:
+
+```{r theoraticalacf, echo=FALSE,  out.width = '50%'}
+ar_theory = data.frame(lag = 0:12) |>  dplyr::mutate(acf = 0.6^lag)
+
+ar_theory |> 
+  ggplot2::ggplot(ggplot2::aes(x = lag, y = acf)) + 
+  ggplot2::geom_bar(stat = 'identity', fill = miamired) +
+  ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(n=15)) + 
+  ggplot2::xlim(0, 14) +
+  ggplot2::theme_bw(base_size = 18)
+```
+
+
+---
+
+# TS that can be Modeled as an AR(1) Process
+
+TS that can be approximated using an AR(1) model will be **stationary**.
+
+```{r ar1sim1a, echo=FALSE}
+set.seed(202303)
+ar.sim1 = arima.sim(model=list(ar=c(.8)),n=500)
+
+ar.sim1 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'AR(1): 0.8')
+ 
+```
+
+
+---
+count: false
+
+# TS that can be Modeled as an AR(1) Process
+
+TS that can be approximated using an AR(1) model will have **an ACF that dies down**.
+
+```{r ar1sim1b, echo=FALSE}
+acf(ar.sim1, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+---
+count: false
+
+# TS that can be Modeled as an AR(1) Process
+
+TS that can be approximated using an AR(1) model will have **a PACF that cuts-off at lag 1**.
+
+```{r ar1sim1c, echo=FALSE}
+pacf(ar.sim1, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+
+---
+
+# Another Visual Example for an AR(1) Process
+
+TS that can be approximated using an AR(1) model will **be stationary**.
+
+```{r ar1sim2a, echo=FALSE}
+set.seed(202303)
+ar.sim2 = arima.sim(model=list(ar=c(-.8)),n=500)
+
+ar.sim2 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'AR(1): - 0.8')
+ 
+```
+
+
+---
+count: false
+
+# Another Visual Example for an AR(1) Process
+
+TS that can be approximated using an AR(1) model will have **an ACF that dies down (damped sinusoidal)**.
+
+```{r ar1sim2b, echo=FALSE}
+acf(ar.sim2, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+---
+count: false
+
+# Another Visual Example for an AR(1) Process
+
+TS that can be approximated using an AR(1) model will have **a PACF that cuts-off at lag 1**.
+
+```{r ar1sim2c, echo=FALSE}
+pacf(ar.sim2, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+
+---
+
+# General Order Autoregressive Process: AR(p)
+
+The **General Order Autoregressive Process—AR(p)** is given by $$y_t = \delta + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p}  + \epsilon_t,$$
+where $|\phi_i| < 1 \, \forall i = 1, 2, \dots , p$ are weights, and $\epsilon_t$ is white noise. Essentially, this is similar (not exactly the same though) as regressing $y_t$ on $y_{t-1}, \dots, y_{t-p}$. 
+The mean and variance of an AR(p) process are as follows:
+
+$$E(y_t) = \mu = \frac{\delta}{1 - \phi_1 - \phi_2 - \dots - \phi_p}$$
+
+$$Var(y_t) = \sum_{i=1}^{p}\phi_i \gamma(i) +  \sigma^2,$$
+where $\gamma(i)$ is the autocovariance functions at lag $i$.
+
+
+---
+count: false
+
+# General Order Autoregressive Process: AR(p)
+
+The *population* autocorrelation function of the AR(2) process at lag $k$ is
+\begin{equation*}
+\rho(k) = \sum_{i=1}^{p}\phi_i \rho(k-i) \text{ for } k > 0
+\end{equation*}
+
+
+The ACF of an AR($p$) process, for $p>1$ is a mixture of exponential decay and a damped sinusoidal expression (damped sinusoidal from the lag 2 and greater).
+
+
+---
+
+# AR Model: Determining if the Data Can Be Modeled as an AR Process
+
+  - We can usually tell from the ACF that there is an autoregressive (AR) component to the data because the ACF plot tends to geometrically decrease in magnitude (i.e., "die down").  
+  
+  - The **Order** of an AR Process refers to how many lags you include in the autoregressive model.  
+  
+  - Because the ACF of the AR model is a mixture, the **ACF is not useful for determining the order of the AR process**.  
+
+  - Thus, the ACF helps us to know that we have an **AR model**, but not which AR model to fit!  
+  
+
+---
+
+# AR Model: Determining the Order
+
+Recall the **Partial Autocorrelation:** The Partial Autocorrelation between $y_t$ and $y_{t+k}$ is the correlation between $y_t$ and $y_{t+k}$ removing the effects of $y_{t+1}, y_{t+2}, \dots, y_{t+k-1}$.  
+
+  - When plotted over multiple lags, we refer to the plot as the Partial Autocorrelation Function or PACF.  
+  
+  - For an AR(p) model, the PACF between $y_t$ and $y_{t+k}$ should be 0 $\forall k > p$.  
+  
+  - Thus, for an AR(p) process, the PACF should “cut off” after lag $p$.
+
+
+---
+
+# An In-Class Exercise
+
+`r countdown(minutes = 2, seconds = 0, top = 0, font_size = "2em")`
+
+.panelset[
+
+.panel[.panel-name[Activity]
+
+> Over the next 2 minutes, please identify whether this time series can be modeled using an AR process and if yes, what is the order for this model.
+
+]
+
+.panel[.panel-name[TS plot]
+
+```{r ar1sim3a, echo=FALSE, out.width='65%'}
+set.seed(202303)
+ar.sim3 = arima.sim(model=list(ar=c(0.4, -0.5, 0.3)),n=500)
+
+ar.sim3 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'TS')
+ 
+```
+]
+
+.panel[.panel-name[ACF plot]
+
+```{r ar1sim3b, echo=FALSE, out.width='65%'}
+acf(ar.sim3, plot = FALSE, lag.max = 25) |> 
+  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+]
+
+.panel[.panel-name[PACF plot]
+
+```{r ar1sim3c, echo=FALSE, out.width='65%'}
+pacf(ar.sim3, plot = FALSE, lag.max = 25) |> 
+  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+]
+
+.panel[.panel-name[Solution]
+
+.can-edit.key-activity1_sol[
+
+-  **Can the TS be modeled using an AR process?:** ....
+
+-  **If so, what is the order?:** p = ....
+
+]
+
+]
+
+]
+
+
+---
+class: inverse, center, middle
+
+# The Moving Average (MA) Process
+
+
+---
+
+# The Moving Average Process
+
+The moving average process of order $q, MA(q)$, process is given as $$y_t = \mu + \epsilon_t + \theta_1 \epsilon_{t-1}  + \dots + \theta_q\epsilon_{t-q}$$
+
+where $\theta_i$ is a weight, and $\epsilon_i$ is white noise. **An MA(q) process is always stationary regardless of the weights.**
+
+$$\begin{split}
+    E(y_t) &= E(\mu + \epsilon_t + \theta_1 \epsilon_{t-1}  + \dots - \theta_q\epsilon_{t-q}) \\
+           &= \mu
+\end{split}$$
+
+$$\begin{split}
+    Var(y_t) &= Var(\mu + \epsilon_t + \theta_1 \epsilon_{t-1}  + \dots + \theta_q\epsilon_{t-q}) \\
+           &= \sigma^2 (1 + \theta_1^2 + \dots + \theta_q^2)
+  \end{split}$$
+
+
+
+---
+count: false
+
+# The Moving Average Process
+
+The **population** autocorrelation function of the MA($q$) process at lag $k$ is
+
+$$\rho(k) = 
+  \begin{cases}
+    \frac{(\theta_k + \theta_1 \theta_{k+1} + \dots + \theta_{q-k} \theta_{q})}{1+ \theta_1^2 + \dots + \theta_q^2}, & k = 1, \, 2, \dots, \, q \\
+    0, & k > q
+  \end{cases}$$
+
+This feature of the ACF is very helpful in identifying the MA model and its appropriate order because the ACF function of a MA model is not significant (i.e., “cuts off”) after lag $q$.
+
+
+---
+
+# TS that can be Modeled as an MA(1) Process
+
+TS that can be approximated using an MA(1) model will be **stationary**.
+
+```{r ar1sim4a, echo=FALSE}
+set.seed(202303)
+ar.sim4 = arima.sim(model=list(ma=c(.8)),n=500)
+
+ar.sim4 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'MA(1)')
+ 
+```
+
+
+---
+count: false
+
+# TS that can be Modeled as an MA(1) Process
+
+TS that can be approximated using an MA(1) model will have **an ACF that cuts off at lag 1**.
+
+```{r ar1sim4b, echo=FALSE}
+acf(ar.sim4, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+
+---
+
+# TS that can be Modeled as an MA(3) Process
+
+TS that can be approximated using an MA(3) model will be **stationary**.
+
+```{r ar1sim5a, echo=FALSE}
+set.seed(202303)
+ar.sim5 = arima.sim(model=list(ma=c(-0.7, -0.5, 0.7)),n=500)
+
+ar.sim5 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'MA(3)')
+ 
+```
+
+
+---
+count: false
+
+# TS that can be Modeled as an MA(3) Process
+
+TS that can be approximated using an MA(3) model will have **an ACF that cuts off at lag 3**.
+
+```{r ar1sim5b, echo=FALSE}
+acf(ar.sim5, plot = FALSE, lag.max = 25) |> forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+```
+
+---
+class: inverse, center, middle
+
+# ARMA Models
+
+
+---
+
+# ARMA Processes
+
+Sometimes, if a really high order seems needed for an AR process, it may be better to add one or more MA term. This results in a mixed autoregressive moving average (ARMA) model.
+
+**In general, an ARMA(p,q) model is given as** $$y_t = \delta + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t + \theta_1 \epsilon_{t-1}  + \dots + \theta_q\epsilon_{t-q}$$
+
+The ACF and PACF of the ARMA(p,q) process exhibit exponential decay exponential decay/ damped sinusoidal patterns. This makes identifying the order of the ARMA(p,q) difficult.
+
+<html>
+<table>
+<tr>
+<td><b>Model</b></td>
+<td><b>ACF</b></td>
+<td><b>PACF</b></td>
+</tr>
+<tr>
+<td><b>AR(p)</b></td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+<td> Cuts off after lag p </td>
+</tr>
+<tr>
+<td><b>MA(q)</b></td>
+<td> Cuts off after lag q </td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+</tr>
+<tr>
+<td><b>ARMA(p,q)</b></td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+</tr>
+</table>
+</html>
+
+---
+
+# TS that can be Modeled as an ARMA Process
+
+TS that can be approximated using an ARMA(1,1) model will be **stationary**.
+
+```{r ar1sim6a, echo=FALSE}
+set.seed(202303)
+ar.sim6 =  arima.sim(model=list(ar=c(.6),ma=c(0.8)),n=500)
+
+ar.sim6 |>  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(y = 'ARMA(1,1)')
+ 
+```
+
+
+---
+count: false
+
+# TS that can be Modeled as an ARMA Process
+
+TS that can be approximated using an ARMA(1,1) model will have **an ACF that dies down (damped sinusoidal)**.
+
+```{r ar1sim6b, echo=FALSE}
+
+acf(ar.sim6, plot = FALSE, lag.max = 25) |> 
+  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+ 
+```
+
+
+---
+count: false
+
+# TS that can be Modeled as an ARMA Process
+
+TS that can be approximated using an ARMA(1,1) model will have **a PCF that dies down (damped sinusoidal)**.
+
+```{r ar1sim6c, echo=FALSE}
+
+pacf(ar.sim6, plot = FALSE, lag.max = 25) |> 
+  forecast::autoplot() + ggplot2::theme_bw() + ggplot2::labs(title = NULL)
+ 
+```
+
+
+---
+class: inverse, center, middle
+
+# Fitting AR, MA, or ARMA Models
+
+
+---
+
+# Fitting an ARMA Model
+
+.font90[
+1. Plot the data over time.  
+
+2. Do the data seem stationary? If necessary, conduct a test for stationarity.  
+
+3. Once you can assume stationarity, find the ACF plot.  
+  - If the ACF plot cuts off, fit an MA(q), where $q=$ the cutoff point.  
+  - If the ACF plot dies down, find the PACF plot.  
+    + If the PACF plot cuts off, fit an AR(p) model, where $p=$ the cutoff point.
+    + If the PACF plot dies down, fit an ARMA (p,q) model.  
+      * You must iterate through $p$ and $q$ using a guess and check method starting with ARMA(1,1) models -- increment each by  1.
+
+4. Evaluate the model residuals and consider the ACF and PACF of the residuals.  
+
+5. If model fit is good, forecast future values.
+]
+
+.font90[
+**Note:** Often you will fit multiple models in Step 3 and compare models in Step 4 to select the best fit.
+]
+
+
+---
+
+# A Live Demo
+
+Viscosity of a fluid is a measure that corresponds to “thickness”. For example, honey has a higher viscosity than water. A chemical company needs precise forecasts of the viscosity of a product in order to control product quality. Using the [viscosity.csv](https://raw.githubusercontent.com/fmegahed/isa444/main/data/viscosity.csv), we have 95 daily readings to use to develop a forecast. 
+
+**In order to develop a forecast, let us first figure out what type of ARMA(p, q) model to fit and then develop the forecast.**
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+# Summary of Main Points
+
+By now, you should be able to do the following:   
+
+- Describe the behavior of the ACF and PACF of an AR(p) process.  
+
+- Describe the behavior of the ACF and PACF of an MA(q) process.  
+
+- Describe the behavior of the ACF and PACF of an ARMA (p,q) process.  
+
+- Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.

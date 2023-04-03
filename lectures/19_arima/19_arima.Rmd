@@ -1,0 +1,494 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: '19: ARIMA Models'
+author: '<br>Fadel M. Megahed, PhD <br><br> Endres Associate Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2023"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.asp = 0.618,
+                      fig.align = 'center',
+                      out.width = '70%')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown, downlit) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+# Quick Refresher from Last Class
+
+**ARMA Models:** Models we considered may have three components, an autoregressive component (AR), and a moving average component (MA).
+
+`r emo::ji("check")` Describe the behavior of the ACF and PACF of an AR(p) process.   
+
+`r emo::ji("check")` Describe the behavior of the ACF and PACF of an MA(q) process.        
+
+`r emo::ji("check")` Describe the behavior of the ACF and PACF of an ARMA (p,q) process.     
+
+`r emo::ji("check")` Fit an ARMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARMA model.
+
+
+---
+
+# Overview of Univariate Forecasting Methods
+
+```{r read_ts_taxonomy, echo=FALSE, out.width='100%', fig.alt="A 10,000 foot view of univariate forecasting techniques", fig.align='center', fig.cap='A 10,000 foot view of forecasting techniques'}
+knitr::include_graphics("../../figures/forecasting_methods1.png")
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Notes:** My (incomplete) classification of **univariate** forecasting techniques, i.e., they exclude popular approaches used in multivariate time series forecasting.  
+]
+
+
+---
+
+
+# ARMA Processes
+
+Last class, we discussed on how we capitalized on the ACF and PACF plots to identify which ARMA model can be used to model/approximate the observed time-series.
+
+<html>
+<table>
+<tr>
+<td><b>Model</b></td>
+<td><b>ACF</b></td>
+<td><b>PACF</b></td>
+</tr>
+<tr>
+<td><b>AR(p)</b></td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+<td> Cuts off after lag p </td>
+</tr>
+<tr>
+<td><b>MA(q)</b></td>
+<td> Cuts off after lag q </td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+</tr>
+<tr>
+<td><b>ARMA(p,q)</b></td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+<td>Exponentially decays or <br>
+damped sinusoidal pattern</td>
+</tr>
+</table>
+</html>
+
+
+
+---
+
+# Non-graded Activity: A 3rd Model to Visc?
+
+.pull-left-2[
+.font80[
+```{r visc3, eval=FALSE}
+visc = readr::read_csv('../../data/viscosity.csv')
+
+# Step 1: Plot the Data
+visc_ts = ts(data = visc$y)
+forecast::autoplot(visc_ts)
+
+# Step 2: Stationary?
+forecast::ndiffs(x = visc_ts)
+
+# Step 3: Let us Look at the ACF and PACF plot
+acf(x = visc_ts, plot = F) |> 
+  forecast::autoplot() + 
+  ggplot2::scale_x_continuous(
+    breaks = scales::pretty_breaks(n = 25)
+    )
+
+pacf(x = visc_ts, plot = F) |> 
+  forecast::autoplot() + 
+  ggplot2::scale_x_continuous(
+    breaks = scales::pretty_breaks(n = 25)
+    )
+```
+
+In class, we examined AR(2) and MA(4) to model the viscosity data. **Use an AR(3) model to fit this dataset and comment on whether this model is suitable/reasonable to use.**
+
+]
+]
+
+.pull-right-2[
+```{r visc3_out, ref.label='visc3', results='hold', echo=FALSE, out.height='25%'}
+
+```
+
+]
+
+
+
+
+---
+
+# Kahoot Competition #03
+
+To assess your understanding and retention of the topics covered so far, you will **compete in a Kahoot competition (consisting of 7 questions)**:  
+
+- Go to <https://kahoot.it/>  
+
+- Enter the game pin, which will be shown during class
+
+- Provide your first (preferred) and last name
+
+- Answer each question within the allocated time window (**fast and correct answers provide more points**)
+
+
+**Winning the competition involves having as many correct answers as possible AND taking the shortest duration to answer these questions.** The winner `r fontawesome::fa(name = 'trophy', fill = 'gold')` of the competition will receive a $10 Starbucks gift card. Good luck!!!
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**P.S:** The Kahoot competition will have **no impact on your grade**. It is a **fun** way of assessing your knowledge, motivating you to ask questions about topics covered that you do not have a full understanding of it, and providing me with some data to pace class. 
+]
+
+
+
+---
+
+
+# Learning Objectives for Today's Class
+
+- Explain how ARIMA models work when compared to ARMA models.  
+
+- Fit an ARIMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.  
+
+- Describe AIC, AICc, and BIC and how they are used to measure model fit.  
+
+- Describe the algorithm used within the `auto.arima()` function to fit an
+ARIMA model.  
+
+- Describe the results of the `auto.arima()` function.  
+
+---
+class: inverse, center, middle
+
+# ARIMA Models
+
+
+---
+
+# ARIMA Models for Nonstationary Processes
+
+- When the time series is nonstationary, differencing can be used to transform the series.   
+  + The `forecast::ndiffs()` function can be used to determine: (a) whether the ts is stationary, and (b) the number of differences necessary to achieve stationarity.  
+  
+---
+
+# Our 5-Step ARMA Fitting Process
+
+.font90[
+1. Plot the data over time.  
+
+2. Do the data seem stationary? If necessary, conduct a test for stationarity.  
+
+3. Once you can assume stationarity, find the ACF plot.  
+  - If the ACF plot cuts off, fit an MA(q), where $q=$ the cutoff point.  
+  - If the ACF plot dies down, find the PACF plot.  
+    + If the PACF plot cuts off, fit an AR(p) model, where $p=$ the cutoff point.
+    + If the PACF plot dies down, fit an ARMA (p,q) model.  
+      * You must iterate through $p$ and $q$ using a guess and check method starting with ARMA(1,1) models -- increment each by  1.
+
+4. Evaluate the model residuals and consider the ACF and PACF of the residuals.  
+
+5. If model fit is good, forecast future values.
+]
+
+.font90[
+**Note:** Often you will fit multiple models in Step 3 and compare models in Step 4 to select the best fit.
+]
+
+
+---
+
+# Extending Our 5-Step ARMA Fitting Process
+
+```{r fpp3_arima, echo=FALSE, out.width='33%'}
+knitr::include_graphics('https://otexts.com/fpp3/figs/arimaflowchart.png')
+```
+
+
+---
+
+# Fitting an Appropriate ARIMA for Modeling GNP
+
+In class, we will use the [GNP Data](https://fred.stlouisfed.org/series/GNP) to highlight how ARIMA models can be fit and used for forecasting.
+
+```{r gnp_arima_model, include=FALSE}
+gnp = tidyquant::tq_get(x = 'GNP', from = '1947-01-01', get = 'economic.data')
+
+# Step 1: Convert to a TS and Plot
+gnp_ts = ts(data = gnp$price, start = c(1947, 01), frequency = 4)
+
+forecast::autoplot(gnp_ts)
+
+# Step 2 - ndiffs()
+forecast::ndiffs(gnp_ts) # 2 differences are needed
+
+
+## Side Note - plot the differenced data
+differenced_gdp = diff(gnp_ts, differences = 2)
+
+forecast::autoplot( differenced_gdp )
+acf(differenced_gdp, plot = F) |> forecast::autoplot() + 
+  ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(25))
+pacf(differenced_gdp) |> forecast::autoplot() +  ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(25))
+
+# We will start by examining a MA(1) type model
+
+gnp_model1 = forecast::Arima(
+  y = gnp_ts, # original data bec we would like to forecast in these units
+  order = c(p = 0, # not an AR model
+            d = 2, # 2 differences were needed to bring ts to stationarity
+            q = 1) # q = 1 based on how we interpreted the ACF chart
+)
+
+summary(gnp_model1)
+forecast::checkresiduals(gnp_model1)
+
+# We will start by examining a ARIMA(1,2,1) type model
+
+gnp_model2 = forecast::Arima(
+  y = gnp_ts, # original data bec we would like to forecast in these units
+  order = c(p =1, # not an AR model
+            d = 2, # 2 differences were needed to bring ts to stationarity
+            q = 1) # q = 1 based on how we interpreted the ACF chart
+)
+
+summary(gnp_model2)
+forecast::checkresiduals(gnp_model2)
+forecast::forecast(gnp_model2)
+forecast::forecast(gnp_model2) |> forecast::autoplot()
+```
+
+
+---
+class: inverse, center, middle
+
+# Goodness of Fit Measures
+
+
+---
+
+# Akaike Information Criterion (AIC)
+
+.font90[
+- The AIC is a statistical measure used to **compare the goodness of fit of different statistical models to a given dataset**.   
+
+- AIC is based on the `parsimony` principle, favoring simpler models with fewer parameters over more complex ones (while still accounting for the model's ability to fit the data).   
+    + This helps to avoid overfitting, which occurs when a model is too complex and fits the noise in the data, rather than the underlying pattern.
+
+- The **AIC formula** is given by: $AIC = 2k - 2ln(L)$, where  
+    + `k` is the number of parameters in the model (including the intercept, if applicable)  
+    + `L` is the likelihood of the model, measuring how well the model fits the observed data   
+
+In essence, the AIC balances the trade-off between the goodness of fit (measured by the log-likelihood) and the complexity of the model (measured by the number of parameters). **Lower AIC values indicate better model performance, so when comparing multiple models, the one with the lowest AIC is generally considered the best fitting, while also being the simplest**.
+]
+
+
+---
+
+# Corrected Akaike Information Criterion (AICc)
+
+.font90[
+
+- The AICcis a modification of the AIC that provides a **more accurate model selection criterion when the sample size is small or the ratio of the sample size to the number of model parameters is low**.   
+
+- Like the AIC, the AICc is used to compare different statistical models and select the one that best fits the data while penalizing model complexity.
+
+- $AICc = AIC + (2 * k * (k + 1)) / (n - k - 1)$, where  
+    + `AIC` is the original Akaike Information Criterion: $AIC = 2k - 2ln(L)$  
+    + `k` is the number of parameters in the model (including the intercept, if applicable)  
+    + `n` is the sample size  
+
+- The **second term in the AICc formula represents a correction factor that accounts for the small sample size**. As the sample size $(n)$ increases, the correction factor approaches zero, and the AICc converges to the original AIC. Therefore, in cases where the sample size is large, using the AICc instead of AIC won't make a significant difference.  
+
+- When comparing models, the one with the lowest AICc value is considered the best-fitting model while also being the simplest, similar to the AIC. 
+]
+
+
+---
+
+# Bayesian Information Criterion (BIC)
+
+.font90[
+-  The BIC helps in model selection by balancing the trade-off between model complexity and goodness of fit. However, the **BIC penalizes model complexity more heavily than the AIC**.  
+
+- The formula for BIC is: $BIC = -2ln(L) + k * ln(n)$, where   
+    + `L` is the likelihood of the model, measuring how well the model fits the observed data   
+    + `k` is the number of parameters in the model (including the intercept, if applicable)  
+    + `n` is the sample size  
+
+- In the BIC formula, the first term represents the goodness of fit (measured by the log-likelihood), and the second term represents the penalty for model complexity. 
+
+- The penalty term is larger in the BIC than in the AIC, as it is proportional to the natural logarithm of the sample size instead of being a constant value.  
+
+- When comparing models, the one with the lowest BIC value is considered the best-fitting model while also being the simplest, similar to the AIC and AICc. 
+
+- The BIC might be preferred over the AIC or AICc, especially when there is **a preference for more parsimonious models or when dealing with large sample sizes**.
+]
+
+
+---
+
+# AIC, AICc and BIC Summary
+
+**Studies have shown that the:**  
+- BIC does well at getting correct model in large samples.  
+- AICc tends to get correct models in smaller samples with a large number of parameters. 
+
+**Why did we discuss these metrics today?**  
+- They were printed with some of the models that we have examined in class.   
+- They are used with the `auto.arima()`, which comes from the forecast package.  
+
+
+---
+class: inverse, center, middle
+
+# The `auto.arima()` function
+
+
+---
+
+# The `auto.arima()` function
+
+.font90[
+The auto.arima() function can be used to automatically fit ARIMA models to a time series. It is a useful function, but it should be used with caution.  
+
+The `forecast::auto.arima()` function    
+  - Uses “brute force” to fit many models and then selects the “best” based on a certain model criterion  
+  - Works best when the data are stationary, but can be used with nonstationary data  
+  - Tends to overfit the data  
+  - Should always be used as a starting point for selecting a model and all models derived from the `auto.arima()` function should be properly vetted and evaluated.  
+  
+The `forecast::auto.arima()` function combines:
+  - Unit root tests (KPSS by default)  
+  - Minimization of AICc to obtain an `ARIMA(p, d, q)` model using the following algorithm:
+]
+
+
+
+---
+count: false
+
+# The `auto.arima()` function
+
+.font80[
+  1. Determine the number of differences, $d$, using a sequence of KPSS tests.  
+  
+  2. Determine $p$ and $q$ by minimizing AICc after differencing the data d times. Rather than considering all possible $p$ and $q$ combinations, a stepwise approach is taken.  
+      - The best initial model with lowest AICc is selected from the following four:   
+          + ARIMA(2,d,2),  
+          + ARIMA(0,d,0),  
+          + ARIMA(1,d,0), and   
+          + ARIMA(0,d,1).  
+          + *If d=0, then a constant, $c$, is included. If $d \ge 1$, then the constant is set to 0. The results of this step is called the current model.*  
+      - Variations on the current model are considered by  
+          + Vary $p$ and/or $q$ from current model by $\pm 1$   
+          + Include/exclude $c$ from current model.   
+          + The best model considered so far (current or one of variations) becomes the *new current model*.   
+      - Repeat previous step until no lower AICc can be found.
+]
+
+
+---
+
+# Live Coding 
+
+Let us examine how the `forecast::auto.arima()` can be used to model and forecast the [GNP Data](https://fred.stlouisfed.org/series/GNP). 
+
+
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+# Summary of Main Points
+
+By now, you should be able to do the following:   
+
+- Explain how ARIMA models work when compared to ARMA models.  
+
+- Fit an ARIMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.  
+
+- Describe AIC, AICc, and BIC and how they are used to measure model fit.  
+
+- Describe the algorithm used within the `auto.arima()` function to fit an
+ARIMA model.  
+
+- Describe the results of the `auto.arima()` function. 
+
+
+---
+
+# Things to Do to Prepare for Next Class
+
+- Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+
+- Read Chapters $9.1, 9.3-9.7$ in [Forecasting: Principles and Practice](https://otexts.com/fpp3/stationarity.html).  
+
+- Complete [Assignment 13](https://miamioh.instructure.com/courses/188655/quizzes/540767).

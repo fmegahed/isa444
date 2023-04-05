@@ -26,6 +26,7 @@
 |  09        |    03/27     | Exam 02 Review and Stationarity     | [17_review_and_stationarity.html](https://fmegahed.github.io/isa444/spring2023/class17/17_review_and_stationarity.html) | [17_review_and_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/17_review_and_stationarity.pdf) | [17_review_and_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/17_review_and_stationarity.pptx) |
 |          |    03/29     | ARMA Model Identification and Fitting     | [18_arma.html](https://fmegahed.github.io/isa444/spring2023/class18/18_arma.html) | [18_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/18_arma.pdf) | [18_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/18_arma.pptx) |
 |    10      |    04/03     | ARIMA Models, AIC/BIC and Auto ARIMA     | [19_arima.html](https://fmegahed.github.io/isa444/spring2023/class19/19_arima.html) | [19_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/19_arima.pdf) | [19_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/19_arima.pptx) |
+|          |    04/05     | Lab 03: Forecasting at Scale (Rolling Origins with auto.arima and many TS)       | -- | -- | -- |
 
 
 

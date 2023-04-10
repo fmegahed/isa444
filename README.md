@@ -27,7 +27,7 @@
 |          |    03/29     | ARMA Model Identification and Fitting     | [18_arma.html](https://fmegahed.github.io/isa444/spring2023/class18/18_arma.html) | [18_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/18_arma.pdf) | [18_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/18_arma.pptx) |
 |    10      |    04/03     | ARIMA Models, AIC/BIC and Auto ARIMA     | [19_arima.html](https://fmegahed.github.io/isa444/spring2023/class19/19_arima.html) | [19_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/19_arima.pdf) | [19_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/19_arima.pptx) |
 |          |    04/05     | Lab 03: Forecasting at Scale (Rolling Origins with auto.arima and many TS)       | -- | -- | -- |
-
+|    11      |    04/10     | Seasonal ARIMA Models    | [21_seasonal_arima.html](https://fmegahed.github.io/isa444/spring2023/class21/21_seasonal_arima.html) | [21_seasonal_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/21_seasonal_arima.pdf) | [21_seasonal_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/21_seasonal_arima.pptx) |
 
 
  ## Acknowledgments

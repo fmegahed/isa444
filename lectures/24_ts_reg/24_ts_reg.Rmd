@@ -1,0 +1,456 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: '24: Time Series Regression'
+author: '<br>Fadel M. Megahed, PhD <br><br> Endres Associate Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2023"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["r"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      dpi = 300,
+                      fig.asp = 0.618,
+                      fig.align = 'center',
+                      out.width = '70%')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+if(require(icons)==FALSE) devtools::install_github("mitchelloharawild/icons")
+
+pacman::p_load(gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown, downlit) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+
+# Quick Refresher from Last Couple of Weeks
+
+`r emo::ji("check")` Explain how ARIMA models work when compared to ARMA models.   
+
+`r emo::ji("check")` Fit an ARIMA model to a time series, evaluate the residuals of a fitted ARMA model to assess goodness of fit, use the Ljung-Box test for correlation among the residuals of an ARIMA model.       
+
+`r emo::ji("check")` Describe AIC, AICc, and BIC and how they are used to measure model fit.        
+
+`r emo::ji("check")` Describe the algorithm used within the `auto.arima()` function to fit an ARIMA model.   
+
+`r emo::ji("check")` Describe the results of the `auto.arima()` function.  
+
+`r emo::ji("check")` Recognize when to fit a seasonal ARIMA model.    
+
+`r emo::ji("check")`  Describe a seasonal ARIMA model and explain how it applies to a seasonal time series.
+
+
+---
+
+# Overview of Univariate Forecasting Methods
+
+```{r read_ts_taxonomy, echo=FALSE, out.width='100%', fig.alt="A 10,000 foot view of univariate forecasting techniques", fig.align='center', fig.cap='A 10,000 foot view of forecasting techniques'}
+knitr::include_graphics("../../figures/forecasting_methods1.png")
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Notes:** My (incomplete) classification of **univariate** forecasting techniques, i.e., they exclude popular approaches used in multivariate time series forecasting.  
+]
+
+---
+
+
+# Learning Objectives for Today's Class
+
+- Review Exam 03 and understand any mistakes made.  
+
+- Explain the simple and multiple linear regression models and interpret the parameters.  
+
+- Interpret the sample linear regression coefficients in the language of the problem.  
+
+- Use a simple linear regression model for trend adjustment (time-series data).   
+
+---
+class: inverse, center, middle
+
+# Exam 03 Review
+
+
+---
+
+# Exam 03 Review
+
+In class, we will go over the exam and talk about each of the questions.
+
+
+---
+
+class: inverse, center, middle
+
+# A Review of Simple and Multiple Linear Regression Models
+
+
+---
+
+# The Simple Linear Regression Model 
+
+The simple linear regression model is a population-level model, where we attempt to:  
+
+- predict the values of one variable using the values of the other.  
+
+- find a 'best line' through the data points.  
+
+```{r simple_linear_regression1, echo=FALSE, out.width='100%', fig.alt=" A variable Y has a regression on variable X if the mean of Y (black line) E(Y|X) varies with X", fig.align='center', fig.cap='A variable Y has a regression on variable X if the mean of Y (black line) E(Y|X) varies with X.'}
+knitr::include_graphics("https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fnmeth.3627/MediaObjects/41592_2015_Article_BFnmeth3627_Fig1_HTML.jpg?as=webp")
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** Figure is from Altman, N., Krzywinski, M. Simple linear regression. Nature Methods 12, 999–1000 (2015). <https://doi.org/10.1038/nmeth.3627>.  
+]
+
+
+---
+
+# The Simple Linear Regression Model
+
+To account for time-based values for the response and predictor values, the regression equation can be written as  $y_t = \beta_0 + \beta_1 x_{t,1} + \epsilon_t$, where:  
+
+- $y_t$ is the **observed value** of our response (a.k.a target, outcome, or dependent) variable at time $t$.  
+
+- $\beta_0$ is the expected value (i.e., population mean) of $y$ when $x_{t,1} = 0$. Note that this intercept may not always have a physical meaning.  
+
+- $x_{t,1}$ is the **observed value** of our predictor (a.k.a. independent) variable at time $t$.  
+
+- $\epsilon_t$ is the random error term. We assume that these $\epsilon_t \sim \mathcal{N}(0, \sigma^2)$.
+
+
+---
+
+# Multiple Linear Regression with $q$ Predictors
+
+**Multiple** is used to denote that we have $q \ge 2$ predictors, i.e. $y_t = \beta_0 + \beta_1 x_{t,1} + \beta_2 x_{t,2} + \dots + \beta_q x_{t,q} + \epsilon_t$, where:
+
+- $\beta_0$ is the expected value (i.e., population mean) of $y$ when **all** predictors are set to 0, i.e.,  $(x_{t,i} = 0, \forall \text{ all } i)$. Note that this often does not have a physical meaning (especially when the number of predictors are large).  
+
+- $\beta_i$ represents the expected change in $y_t$ for one unit increase in predictor $i$ while keeping all other predictors constant. 
+
+
+
+---
+class: inverse, center, middle
+
+# Using Simple Linear Regression Model for Trend Adjustment (with Time Series Data)
+
+
+---
+
+# An Example
+
+.pull-left[
+
+.font80[
+We will examine an example using the `jj` dataset from the [astsa](https://cran.r-project.org/web/packages/astsa/index.html) `r fontawesome::fa('box', 'gold')`, which captures **Johnson and Johnson's quarterly earnings per share**, 84 quarters (21 years) measured from the first quarter of 1960 to the last quarter of 1980.
+
+```{r jj1, eval=FALSE}
+if(require(astsa) == F) install.packages('astsa')
+
+jj = astsa::jj
+
+jj
+```
+
+]
+
+]
+
+.pull-right[
+
+.font80[
+```{r jj1_out, ref.label = 'jj1', echo=FALSE}
+```
+]
+
+]
+
+
+---
+count: false
+
+# An Example
+
+`r countdown(minutes = 3, seconds = 0, top = 0, font_size = "2em")`
+
+.pull-left[
+
+.font80[
+```{r jj2, eval=FALSE}
+jj = astsa::jj
+
+# Step 1: Plot the ts data
+forecast::autoplot(jj) + #<<
+  ggplot2::theme_bw() + #<<
+  ggplot2::geom_point(size = 1) #<<
+```
+
+**What do we learn from this plot?**  
+
+.can-edit.key-activity1_viz[
+
+- Edit me  
+  
+- ... 
+  
+- ...
+]
+]
+
+]
+
+.pull-right[
+
+.font80[
+```{r jj2_out, ref.label = 'jj2', out.width = '100%', echo=FALSE, fig.dim= c(4.4, 4.4)}
+```
+]
+
+]
+
+---
+count: false
+
+# An Example
+
+`r countdown(minutes = 2, seconds = 0, top = 0, font_size = "2em")`
+
+.pull-left[
+
+.font80[
+```{r jj3, eval=FALSE}
+jj = astsa::jj
+
+# Step 1: Plot the ts data (saved to object to not print)
+p = forecast::autoplot(jj) + #<<
+  ggplot2::theme_bw() + 
+  ggplot2::geom_point(size = 1) 
+
+# stabilizing the variance
+log_jj = log(jj) #<<
+
+# Step 1b: Our updated plot
+forecast::autoplot(log_jj) + #<<
+  ggplot2::theme_bw() + #<<
+  ggplot2::geom_point(size = 1) #<<
+```
+
+**What do we learn from this plot?**  
+
+.can-edit.key-activity2_viz[
+
+- Edit me  
+
+- ...  
+]
+
+]
+
+]
+
+
+
+.pull-right[
+
+.font80[
+```{r jj3_out, ref.label = 'jj3', out.width = '100%', echo=FALSE, fig.dim= c(4.4, 4.4)}
+```
+]
+
+]
+
+
+---
+count: false
+
+# An Example
+
+.pull-left[
+
+.font80[
+```{r jj4, eval=FALSE}
+jj = astsa::jj
+
+# Step 1: Plot the ts data (saved to object to not print)
+p = forecast::autoplot(jj) + 
+  ggplot2::theme_bw() + 
+  ggplot2::geom_point(size = 1) 
+
+# stabilizing the variance
+log_jj = log(jj) 
+
+# Step 1b: Our updated plot
+p2 = forecast::autoplot(log_jj) + #<<
+  ggplot2::theme_bw() + 
+  ggplot2::geom_point(size = 1)
+
+# Step 2: Extract time
+year = time(log_jj) #<<
+
+# Step 3: Fit the regression model
+reg_model = lm(log_jj ~ year) #<<
+
+summary(reg_model) #<<
+```
+
+]
+
+]
+
+.pull-right[
+
+.font80[
+```{r jj4_out, ref.label = 'jj4', out.width = '100%', echo=FALSE, fig.dim= c(4.4, 4.4)}
+```
+]
+
+]
+
+
+---
+count: false
+
+# An Example
+
+`r countdown(minutes = 6, seconds = 0, top = 0, font_size = "2em")`
+
+.font80[
+Based on the previous output, please fill in the following:
+
+.can-edit.key-activity3_viz[
+
+- The sample regression eq: $\hat{y} =$ .... + ....(Year) 
+
+- Your predicted values for Q3 of 1972:  ...
+
+- Residual for Q3 of 1972: ....
+
+- Comments on the intercept term:  ..........
+
+- Slope interpretation: ..........
+
+- R2 interpretation: ..........
+]
+
+]
+
+
+---
+count: false
+
+# An Example
+
+**How to quickly identify the fitted values and residuals for Q3 of 1972 from the fitted model?**
+
+.pull-left[
+.font80[
+.center[**Fitted Values**]
+```{r jj5a}
+ts(reg_model$fitted.values, start = c(1960, 1), frequency = 4) #<<
+```
+]
+]
+
+.pull-right[
+.font80[
+.center[**Residuals**]
+```{r jj5b}
+ts(reg_model$residuals, start = c(1960, 1), frequency = 4) #<<
+```
+]
+]
+
+
+---
+count: false
+
+# An Example
+
+**A Test of Significance of Model Coefficients:**
+
+.font80[
+```{r jj6}
+anova(reg_model) #<<
+```
+
+]
+
+
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+# Summary of Main Points
+
+By now, you should be able to do the following:   
+
+- Explain the simple and multiple linear regression models and interpret the parameters.  
+
+- Interpret the sample linear regression coefficients in the language of the problem.  
+
+- Use a simple linear regression model for trend adjustment (time-series data).  
+
+
+---
+
+# Things to Do to Prepare for Next Class
+
+- Go through the slides, examples and make sure you have a good understanding of what we have covered.  
+
+- Read Chapter $7$ in our reference book [Principles of Business Forecasting](https://cdn.shopify.com/s/files/1/0859/4364/files/Part_I_POBF-_A_First_Course_in_Forecasting_1.pdf?612).  

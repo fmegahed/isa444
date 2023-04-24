@@ -31,6 +31,8 @@
 |          |    04/12     | Catch Up and Review       | -- | -- | -- |
 |    12      |    04/107     | Exam 03    | -- | -- | -- |
 |          |    04/19     | Time Series Regression      | [24_ts_reg.html](https://fmegahed.github.io/isa444/spring2023/class24/24_ts_reg.html) | [24_ts_reg.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/24_ts_reg.pdf) | [24_ts_reg.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/24_ts_reg.pptx) |
+|    13      |    04/24     | Time Series Regression      | [25_ts_reg.html](https://fmegahed.github.io/isa444/spring2023/class25/25_ts_reg.html) | [25_ts_reg.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/25_ts_reg.pdf) | [25_ts_reg.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/25_ts_reg.pptx) |
+
 
 
  ## Acknowledgments

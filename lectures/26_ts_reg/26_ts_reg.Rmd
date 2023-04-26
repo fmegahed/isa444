@@ -101,6 +101,8 @@ knitr::include_graphics("../../figures/forecasting_methods1.png")
 
 - Create prediction intervals for individual values of the response variable.  
 
+- Use regression to account for seasonality in a time series.
+
 
 ---
 class: inverse, center, middle
@@ -393,7 +395,7 @@ resplot <- function(res, fit, ncol = 2, nrow = 3, freq = NULL){
 # Applying the `resPlot()`
 
 .font80[
-```{r jj11, out.width='60%'}
+```{r jj10b, out.width='60%'}
 residuals_tslm = model_tslm$residuals
 fitted_tslm = model_tslm$fitted.values
 
@@ -413,6 +415,221 @@ resplot(res = residuals_tslm, fit = fitted_tslm, freq = 4)
   - The ACF and PACF show a **seasonal pattern in the residuals** – likely need to fit an AR model.  
 
 
+---
+class: inverse, center, middle
+
+# Seasonal Regression
+
+---
+
+# Using the base `lm()`
+
+.pull-left[
+.font80[
+```{r jj11, eval=FALSE}
+# extracting time and quarter
+t = time(log_jj) # renamed year var from last class
+q = cycle(log_jj) |> factor() #<<
+
+model3 = lm(log_jj ~ t + q) #<<
+
+# checking out how the data is set up for lm
+model.matrix(model3) #<<
+```
+]
+]
+
+.pull-right[
+.font80[
+```{r j11_out, ref.label = 'jj11', out.width = '90%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+
+```
+]
+]
+
+
+---
+count: false
+
+# Using the base `lm()`
+
+.pull-left[
+.font80[
+```{r jj12, eval=FALSE}
+# extracting time and quarter
+t = time(log_jj) # renamed year var from last class
+q = cycle(log_jj) |> factor() #<<
+
+model3 = lm(log_jj ~ t + q) #<<
+
+# model summary
+summary(model3)
+```
+]
+]
+
+.pull-right[
+.font80[
+```{r j12_out, ref.label = 'jj12', out.width = '90%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+
+```
+]
+]
+
+
+---
+
+# Using `forecast::tslm()`
+
+.pull-left[
+.font80[
+```{r jj13, eval=FALSE}
+model4 = 
+  forecast::tslm(
+    log_jj ~ trend + season #<<
+  ) 
+
+summary(model4) #<<
+```
+]
+]
+
+.pull-right[
+.font80[
+```{r j13_out, ref.label = 'jj13', out.width = '90%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+
+```
+]
+]
+
+
+---
+count: false
+
+# Using `forecast::tslm()`
+
+.pull-left[
+.font80[
+```{r jj14, eval=FALSE}
+# forecasting 12 quarters ahead
+forecast_3yrs = 
+  forecast::forecast(
+    model4, h = 12, level = 95 #<<
+    )
+
+# a quick plot of the forecast
+forecast::autoplot(forecast_3yrs) + #<<
+  forecast::autolayer(fitted(forecast_3yrs)) + #<<
+  ggplot2::theme_bw() +
+  ggplot2::theme(legend.position = 'none')
+```
+]
+]
+
+.pull-right[
+.font80[
+```{r j14_out, ref.label = 'jj14', out.width = '90%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+
+```
+]
+]
+
+
+---
+
+# Model Comparison: BIC & Forecast Accuracy
+
+.pull-left[
+.font80[
+```{r jj15, eval=FALSE}
+# compare their BIC (lower better)
+cbind(
+  BIC(model_tslm), BIC(model4) #<<
+)
+
+# comparing their forecast accuracy
+acc_values = rbind(
+  forecast::accuracy(model_tslm),
+  forecast::accuracy(model4)
+)
+
+row.names(acc_values) = c('reg w/ trend', 'reg w/ trend + season')
+
+acc_values
+
+```
+]
+]
+
+.pull-right[
+.font60[
+```{r j15_out, ref.label = 'jj15', out.width = '90%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+
+```
+]
+]
+
+
+---
+
+# Model 4's Assumptions
+
+.pull-left[
+.font80[
+```{r jj16, eval=FALSE}
+# using resplot or check residuals
+resplot(
+  res = model4$residuals, 
+  fit = model4$fitted.values,
+  freq = 4
+  )
+
+forecast::checkresiduals(model4)
+
+```
+
+```{r jj16a, out.width = '70%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+# using resplot or check residuals
+resplot(
+  res = model4$residuals, 
+  fit = model4$fitted.values,
+  freq = 4
+  )
+
+```
+]
+]
+
+.pull-right[
+.font60[
+```{r j16_out, out.width = '80%', echo=FALSE, fig.dim= c(4.1, 4.1)}
+forecast::checkresiduals(model4)
+```
+]
+]
+
+
+---
+
+# Comparison with `auto.arima()`
+
+`r countdown(minutes = 5, seconds = 0, top = 0, font_size = "2em")`
+
+.center[.font90[**Is the `auto.arima()` model better for this dataset?**]]
+
+```{r jj17, include=FALSE, eval=FALSE}
+model5 = forecast::auto.arima(log_jj)
+
+# from the summary, we have learned about the type of ARIMA model fitted to the data
+# additionally, the BIC value of -143 is lower than that of model 4
+# (i.e., a better fit)
+# the accuracy metrics are better than those of models 2 and 4 
+summary(model5)
+
+# we have uncorrelated residuals over time as indicated by the plot + ljung-box test
+forecast::checkresiduals(model5)
+```
+
 
 ---
 class: inverse, center, middle
@@ -429,7 +646,9 @@ By now, you should be able to do the following:
 
 - Interpret regression diagnostic plots.  
 
-- Create prediction intervals for individual values of the response variable.  
+- Create prediction intervals for individual values of the response variable.   
+
+- Use regression to account for seasonality in a time series.
 
 
 ---

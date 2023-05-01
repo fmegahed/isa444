@@ -33,7 +33,7 @@
 |          |    04/19     | Time Series Regression      | [24_ts_reg.html](https://fmegahed.github.io/isa444/spring2023/class24/24_ts_reg.html) | [24_ts_reg.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/24_ts_reg.pdf) | [24_ts_reg.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/24_ts_reg.pptx) |
 |    13      |    04/24     | Industry Speaker: Forecasting at Hilton      | -- | -- | -- |
 |          |    04/26     | Time Series Regression      | [26_ts_reg.html](https://fmegahed.github.io/isa444/spring2023/class26/26_ts_reg.html) | [26_ts_reg.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/26_ts_reg.pdf) | [26_ts_reg.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/26_ts_reg.pptx) |
-
+|   14       |    05/01     | Time Series Regression with ARIMA errors     | [27_arima_reg.html](https://fmegahed.github.io/isa444/spring2023/class27/27_arima_reg.html) | [27_arima_reg.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/27_arima_reg.pdf) | [27_arima_reg.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/27_arima_reg.pptx) |
 
 
  ## Acknowledgments

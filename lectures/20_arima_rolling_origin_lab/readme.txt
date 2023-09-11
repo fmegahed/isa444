@@ -1,1 +1,0 @@
-See lab 03 on canvas. The solution for lab 03 will appear after the submission deadline.

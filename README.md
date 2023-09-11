@@ -8,6 +8,10 @@
 | Week          | Date        | Topic                                  | Slides (Hosted Page) | Slides (PDF) | Slides (PPTX)
 | :---:        |    :----:   |          :---                           | :---                 | :---         | :--  |
 | 01           |    08/29     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/fall2023/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
+|            |    08/31     | Introduction to R, Python and LLMs       | [02_llms_r_python.html](https://fmegahed.github.io/isa444/fall2023/class02/02_llms_r_python.html) | [02_llms_r_python.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_llms_r_python.pdf) | [02_llms_r_python.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_llms_r_python.pptx) |
+| 02          |   09/05     | Demo: Data Visualization with ggplot2 and plotnine  | -- | -- | -- |
+|            |    09/07    | TS Visualization      | [04_ts_eda.html](https://fmegahed.github.io/isa444/fall2023/class04/04_ts_eda.html) | [04_ts_eda.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_ts_eda.pdf) | [04_ts_eda.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_ts_eda.pptx) |
+| 03           |    09/12    | TS Summaries and Transformation      | [05_ts_summary.html](https://fmegahed.github.io/isa444/fall2023/class05/05_ts_summary.html) | [05_ts_summary.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/05_ts_summary.pdf) | [05_ts_summary.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/05_ts_summary.pptx) |
 
 
 

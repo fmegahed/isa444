@@ -12,6 +12,7 @@
 | 02          |   09/05     | Demo: Data Visualization with ggplot2 and plotnine  | -- | -- | -- |
 |            |    09/07    | TS Visualization      | [04_ts_eda.html](https://fmegahed.github.io/isa444/fall2023/class04/04_ts_eda.html) | [04_ts_eda.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_ts_eda.pdf) | [04_ts_eda.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_ts_eda.pptx) |
 | 03           |    09/12    | TS Summaries and Transformation      | [05_ts_summary.html](https://fmegahed.github.io/isa444/fall2023/class05/05_ts_summary.html) | [05_ts_summary.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/05_ts_summary.pdf) | [05_ts_summary.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/05_ts_summary.pptx) |
+|           |    09/14    | Forecast Accuracy     | [06_forecast_accuracy.html](https://fmegahed.github.io/isa444/fall2023/class06/06_forecast_accuracy.html) | [06_forecast_accuracy.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_forecast_accuracy.pdf) | [06_forecast_accuracy.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_forecast_accuracy.pptx) |
 
 
 

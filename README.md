@@ -8,6 +8,7 @@
 | Week          | Date        | Topic                                  | Slides (Hosted Page) | Slides (PDF) | Slides (PPTX)
 | :---:        |    :----:   |          :---                           | :---                 | :---         | :--  |
 | 01           |    01/28     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/spring2025/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
+|          |    01/30     | A Python Primer       | [02_basics.html](https://fmegahed.github.io/isa444/spring2025/class02/02_basics.html) | [02_basics.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_basics.pdf) | [02_basics.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_basics.pptx) |
 
 
 

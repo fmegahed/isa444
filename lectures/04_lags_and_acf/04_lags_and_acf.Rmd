@@ -1,0 +1,403 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "04: Plotting a Single Time Series in Python (Cont.)"
+author: '<br>Fadel M. Megahed, PhD <br><br> Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2025"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["python"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.height = 2.75,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(urbnmapr)==FALSE) devtools::install_github('UrbanInstitute/urbnmapr')
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, # data analysis pkgs
+               DataExplorer, scales, plotly, calendR, pdftools, # plots
+               tmap, sf, urbnmapr, tigris, # maps
+               bibliometrix, # for bibliometric analysis of my papers
+               gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+## Quick Refresher of Last Class
+
+`r emo::ji("check")` Generate and interpret simple line charts
+
+`r emo::ji("check")` Create seasonal plots and subplots
+
+---
+
+## Learning Objectives for Today's Class
+
+- Describe a lag and create lag scatter plots.  
+
+- Plot and interpret the autocorrelation function (ACF) for a time-series.
+
+
+
+---
+class: inverse, center, middle
+
+# Describe a lag and create lag scatter plots
+
+---
+
+## What is a Lag?
+
+A **lag** refers to a time delay between an event and its observable effect or measurement.
+
+In time series data, a **lag** is simply a previous observation in the series. For example:  
+  + **Lag 1:** Refers to the value immediately preceding the current value.  
+  + **Lag 2:** Refers to the value two time periods before the current value, and so on.
+
+---
+
+## What is a Lag (Cont.)?
+
+Imagine a time series of daily sales:  
+  + Day 1: $100  
+  + Day 2: $150  
+  + Day 3: $120  
+
+For Day 3, the lag 1 value is the sales from Day 2 ($150). Similarly, the lag 2 value is from Day 1 ($100). 
+
+In mathematical notation, $y_t$ represents the value at time $t$, then:  
+  + $y_{t-1}$ is the lag 1 value of $y_t$  
+  + $y_{t-2}$ is the lag 2 value of $y_t$  
+
+
+---
+
+## Importance of Lags
+
+- **Lags** are important in time series analysis because they can help us understand the relationship between past and present values. They are used in .black[.bold[Forecasting]]:   
+     * **Autoregressive models** Models such as AR (AutoRegressive) and ARIMA models use past values (lags) of the series to predict future values. For example, an AR(1) model uses predicts $y_t$ solely based on $y_{t-1}$.  
+     * **Seasonality:**  Lags help capture seasonal patterns in data.  
+
+.pull-left[     
+```{python example_plot1, echo=FALSE}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches 
+
+df = (
+  pd.read_csv('../../data/aus_beer.csv')
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    color = lambda x: x['quarter'].map({1: 'red', 2: 'blue', 3: 'green', 4: 'purple'})
+    )
+  .query("date >= '2000-01-01'")
+  )
+    
+# Plot the time series
+ax = df.plot(x='date', y='beer', legend=False, color = 'gray')
+# color by quarter name in scatter in scatter plot
+scatter = df.plot(x='date', y='beer', kind='scatter', c=df['color'], ax=ax)
+
+# Create custom legend handles for the quarters
+legend_handles = [
+    mpatches.Patch(color='red', label='Q1'),
+    mpatches.Patch(color='blue', label='Q2'),
+    mpatches.Patch(color='green', label='Q3'),
+    mpatches.Patch(color='purple', label='Q4')
+]
+
+# Add the custom legend to the axes with a title
+ax.legend(handles=legend_handles, title="Quarter", loc='upper left')
+
+# Add axis labels and a title
+plt.show()
+
+```
+]
+
+
+.pull-right[
+```{python acf_out2, echo=FALSE}
+from statsmodels.graphics.tsaplots import plot_acf
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('../../data/aus_beer.csv')
+
+plot_acf(df['beer'], lags=12)
+plt.title('Autocorrelation Function (ACF)')
+plt.xlabel('Lag (quarter)')
+plt.ylabel('Autocorrelation')
+plt.show()
+```
+]
+
+
+
+     
+
+---
+
+
+## Importance of Lags
+
+- **Lags** are important in time series analysis because they can help us understand the relationship between past and present values. Hence, they are used in:  
+  + **Causal Analysis:**  
+     * **Cause and Effect:** In many business scenarios, past events (lags) can be predictors for current outcomes; e.g., past advertising spend might affect current sales.  
+     * **Policy Evaluation:** Understanding the delayed impact of policies or changes (e.g., price changes, marketing campaigns) is essential.  
+     
+
+
+---
+
+## Importance of Lags (Cont.)
+
+- **Lags** are important in time series analysis because they can help us understand the relationship between past and present values. Hence, they are used in:  
+  + **Data Preparation and Feature Engineering:**  
+     * **Feature Creation:** In machine learning models, creating lag features from time series data can help the model understand historical patterns and trends.    
+     * **Smoothing and Differencing:**  Lags are also used in techniques like differencing to stabilize the mean of a time series, which is a common preprocessing step.  
+     
+
+---
+
+## Implementing Lags in Python
+
+In Python, we can create lags using the `shift()` method in pandas.  
+
+```{python lagged_features}
+import pandas as pd
+
+df = (
+  pd.DataFrame(
+    {'date': pd.date_range(start='2025-01-01', periods=5, freq='D'),
+    'sales': [100, 150, 120, 200, 180] }
+    )
+  .assign(
+      lag1 = lambda x: x['sales'].shift(1),
+      lag2 = lambda x: x['sales'].shift(2)
+    )
+)
+
+df.head(3)
+
+```
+]
+
+
+---
+
+## Class Activity: Plot the `aus_beer` Time Series
+
+`r countdown(minutes = 5, seconds = 0, top = 0, font_size = "2em")`
+
++ Load the `aus_beer.csv` dataset from Canvas.  
++ Create a line plot of the `beer` column.  
++ Color the plot by quarter.  
++ Add a legend to the plot.
+
+
+```{python example_plot1again, echo=FALSE, out.width='70%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches 
+
+df = (
+  pd.read_csv('../../data/aus_beer.csv')
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    color = lambda x: x['quarter'].map({1: 'red', 2: 'blue', 3: 'green', 4: 'purple'})
+    )
+  .query("date >= '2000-01-01'")
+  )
+    
+# Plot the time series
+ax = df.plot(x='date', y='beer', legend=False, color = 'gray')
+# color by quarter name in scatter in scatter plot
+scatter = df.plot(x='date', y='beer', kind='scatter', c=df['color'], ax=ax)
+
+# Create custom legend handles for the quarters
+legend_handles = [
+    mpatches.Patch(color='red', label='Q1'),
+    mpatches.Patch(color='blue', label='Q2'),
+    mpatches.Patch(color='green', label='Q3'),
+    mpatches.Patch(color='purple', label='Q4')
+]
+
+# Add the custom legend to the axes with a title
+ax.legend(handles=legend_handles, title="Quarter", loc='upper left')
+
+# Add axis labels and a title
+plt.show()
+
+```
+
+
+---
+
+
+## Demo: Creating and Interpreting Lag Scatter Plots
+
+.pull-left[
+In this demo, we will:  
+  + Create lag scatter plots for a time series.  
+  + Interpret the relationship between the current value and its lagged values.  ]
+
+.pull-right[
+```{python lag_scatter_demo, echo=FALSE, out.width ='100%', fig.align='center', fig.keep='last'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches 
+import seaborn as sns
+
+df = (
+  pd.read_csv('../../data/aus_beer.csv')
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    color = lambda x: x['quarter'].map({1: 'red', 2: 'blue', 3: 'green', 4: 'purple'})
+    )
+  .query("date >= '2000-01-01'")
+  )
+
+# Create lag columns for lags 1 to 9 using assign
+lags = range(1, 9)
+for k in lags:
+    df = df.assign(**{f'lag_{k}': df['beer'].shift(k)})
+
+lag_cols = [f'lag_{k}' for k in lags]
+
+df_melt = df.melt(
+  id_vars=['date', 'beer', 'quarter'],
+  value_vars=lag_cols,
+  var_name='lag',
+  value_name='lag_value'
+  )
+
+# Create the facet grid with Seaborn and color-code by month
+g = sns.FacetGrid(
+  df_melt, col='lag', hue='quarter',
+  palette={1: 'red', 2: 'blue', 3: 'green', 4: 'purple'},
+  col_wrap=3, height=3, 
+  sharex=False, sharey=False
+  )
+g.map(sns.scatterplot, 'lag_value', 'beer', alpha=0.6 )
+# Customize the plot: add axis labels and a main title
+g.set_axis_labels("Lagged beer", "beer")
+g.fig.suptitle('Lag Plots of beer (Lags 1–8) Colored by Quarter')
+g.add_legend(title="Quarter", loc='lower right')
+
+```
+
+]
+
+---
+class: inverse, center, middle
+
+# Plot and interpret the ACF for a Time Series
+
+---
+
+## What is the Autocorrelation Function (ACF)?
+
+The **Autocorrelation Function (ACF)** is a measure of the correlation between a time series and a lagged version of itself.
+
+.pull-left[
+```{python acf, eval=FALSE}
+from statsmodels.graphics.tsaplots import plot_acf
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('../../data/aus_beer.csv')
+
+plot_acf(df['beer'], lags=12)
+plt.title('Autocorrelation Function (ACF)')
+plt.xlabel('Lag (quarter)')
+plt.ylabel('Autocorrelation')
+plt.show()
+```
+]
+
+
+.pull-right[
+```{python acf_out, echo=FALSE}
+from statsmodels.graphics.tsaplots import plot_acf
+import matplotlib.pyplot as plt
+
+# Assume that the data is already loaded in df
+
+plot_acf(df['beer'], lags=12)
+plt.title('Autocorrelation Function (ACF)')
+plt.xlabel('Lag (quarter)')
+plt.ylabel('Autocorrelation')
+plt.show()
+```
+]
+
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+## Summary of Main Points
+
+By now, you should be able to do the following:  
+
+- Describe a lag and create lag scatter plots.
+
+- Plot and interpret the ACF of a time-series.
+
+---
+
+## 📝 Review and Clarification 📝
+
+1. **Class Notes**: Take some time to revisit your class notes for key insights and concepts.
+2. **Zoom Recording**: The recording of today's class will be made available on Canvas approximately 3-4 hours after the session ends.
+3. **Questions**: Please don't hesitate to ask for clarification on any topics discussed in class. It's crucial not to let questions accumulate. 
+  

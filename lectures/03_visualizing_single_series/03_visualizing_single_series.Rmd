@@ -1,0 +1,779 @@
+---
+title: "ISA 444: Business Forecasting"
+subtitle: "03: Plotting a Single Time Series in Python"
+author: '<br>Fadel M. Megahed, PhD <br><br> Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2025"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["python"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.height = 2.75,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(urbnmapr)==FALSE) devtools::install_github('UrbanInstitute/urbnmapr')
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, # data analysis pkgs
+               DataExplorer, scales, plotly, calendR, pdftools, # plots
+               tmap, sf, urbnmapr, tigris, # maps
+               bibliometrix, # for bibliometric analysis of my papers
+               gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+```
+
+## Quick Refresher of Last Class
+
+`r emo::ji("check")` Setting up Python (Colab, Anaconda, and/or VS Code) 
+
+`r emo::ji("check")` Practice basic data reading (from CSVs and the Web)  
+
+`r emo::ji("check")` Use [panda's](https://pandas.pydata.org/) datatime, indexing, and slicing capabilities  
+
+`r emo::ji("check")` (Optional) Discuss generative AI usage in Google Colab
+
+---
+
+## Learning Objectives for Today's Class
+
+- Generate and interpret simple line charts.  
+
+- Create seasonal plots and subplots.
+
+
+
+---
+class: inverse, center, middle
+
+# Generate and Interpret Simple Line Charts
+
+---
+
+## Basics: Tabular Data Formats - Wide vs. Long
+
+
+```{r wide_vs_long, echo=FALSE, out.width="50%"}
+knitr::include_graphics("../../figures/original-dfs-tidy.png")
+
+```
+
+
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** Image is from Garrick Aden-Buie's excellent [tidyexplain GitHub Repository](https://github.com/gadenbuie/tidyexplain/blob/main/images/static/png/original-dfs-tidy.png)
+
+]
+
+
+---
+
+## Basics: Tabular Data Formats - Wide vs. Long
+
+.pull-left[
+.center[**Wide Format**]
+
+```{r wide_format, echo=FALSE}
+tidyr::table4a |> knitr::kable()
+```
+
+
+]
+
+
+.pull-right[
+
+.center[**Wide Format**]
+
+```{r long_format, echo=FALSE}
+tidyr::table1 |> data.frame() |> knitr::kable()
+```
+
+
+]
+
+---
+
+## Basics: The Anatomy of a Chart
+
+```{r anatomy, echo=FALSE, out.width="48%"}
+knitr::include_graphics("https://matplotlib.org/stable/_images/sphx_glr_anatomy_001.png")
+```
+
+
+.footnote[
+<html>
+<hr>
+<html>
+
+**Source:** Image is from the [Matplotlib Documentation](https://matplotlib.org/stable/gallery/showcase/anatomy.html)
+
+]
+
+
+---
+
+## Making Charts in Python: Three Possible Approaches  
+
+1. **Matplotlib**: The most basic and flexible plotting library in Python.  
+
+2. **Panadas**: A wrapper around Matplotlib that makes it easier to create simple plots directly from DataFrames.
+
+3. **Seaborn**: A high-level interface to Matplotlib that makes it easier to create attractive and informative statistical graphics.  
+
+
+---
+
+## Recall: Microsoft's Missed Opportunity in Mobile Phones
+
+.pull-left[
+
+.font90[
+
+- Since Q1 2009, **Windows' Mobile OS's market share <= 2.5%**, and is now at 0.02% ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202403)).
+
+- **Apple's Mobile iOS market share > 19%**, and is now at **27.69%** ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202403)).
+
+- Apple's **iPhone revenues** from 2007 to 2024 was **$2.037 trillion** (per [statista](https://www.statista.com/statistics/263402/apples-iphone-revenue-since-3rd-quarter-2007/)).
+
+- Assuming Microsoft could have captured just **5%** of Apple's market revenue $\rightarrow$ **$102 billion**.
+
+- This estimate **excludes app store and brand value**, which will make the missed opportunity even larger.
+]
+
+]
+
+.pull-right[
+
+
+```{python market_share, echo=FALSE}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+mshare = pd.read_csv("../../data/os_combined-ww-quarterly-20091-20243.csv")
+
+mshare['Date'] = pd.to_datetime(mshare['Date'])
+
+ax = mshare.plot(
+    x='Date',
+    y=['Windows', 'iOS', 'Android'],
+    kind='line',
+    figsize=(6, 3.625),
+    legend=True,
+    linestyle='-',
+    color=['red', 'black', 'gray'],
+    alpha=0.7,
+    linewidth=2,
+    title="Mobile OS Market Share for Windows, iOS and Android (2009 - 2024)",
+    xlabel="Date (Years)",
+    ylabel="Market Share (%)",
+    grid=True
+)
+
+plt.tight_layout(pad = 2.25)
+plt.show()
+
+```
+
+
+<div style="margin-top:-30px;">
+
+```{python apple_revenue, echo=FALSE}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+apple_rev['date'] = pd.to_datetime(apple_rev['date'])
+apple_rev['revenue'] = apple_rev['revenue'].str.replace(r',', '').astype(int)
+
+ax = apple_rev.plot(
+    x='date',
+    y=['revenue'],
+    kind='line',
+    figsize=(6, 3.625),
+    legend=True,
+    linestyle='-',
+    color=['black'],
+    alpha=0.7,
+    linewidth=2,
+    title="Apple's iPhone Revenues (2007 - 2024)",
+    xlabel="Date",
+    ylabel="Revenues in Millions",
+    grid=True
+)
+
+scatter = apple_rev.plot(
+    x='date',
+    y='revenue',
+    kind='scatter',
+    ax=ax,
+    c='black',
+    s=50,
+    alpha=0.7,
+    ylabel="Revenues in Millions",
+    xlabel="Date (Years)",
+    legend = False
+)
+
+scatter.yaxis.set_major_formatter(mpl.ticker.StrMethodFormatter('{x:,.0f}'))
+plt.tight_layout(pad = 2.25)
+plt.show()
+
+```
+
+</div>
+
+]
+
+
+
+---
+
+
+## So, Let's Explore Apple's IPhone Revenues
+
+
+`r countdown(minutes = 5, seconds = 0, top = 0, font_size = "2em")`
+
+.panelset[
+
+.panel[.panel-name[Description]
+
+  - **Dataset**: Load Apple's iPhone revenue data from 2007 to 2024. Click [here](https://miamioh.instructure.com/courses/230182/files/34640807?module_item_id=5790675) to download the data.  
+
+  - Use [pandas](https://pandas.pydata.org/) to read the data into a DataFrame.  
+  - Answer the questions in the following tab.
+
+]
+
+.panel[.panel-name[Questions]
+
+- How many rows and columns are in the dataset?  
+
+- What are the data types of the columns (per Python's understanding of the data)?   
+
+- Do any of the columns need to be converted to a different data type?
+
+
+.can-edit.key-activity3a[
+
+- Edit me  
+  
+- ... 
+  
+- ...
+
+]
+]
+
+.panel[.panel-name[Class Results]
+
+<div style='position: relative; padding-bottom: 56.25%; padding-top: 35px; height: 0; overflow: hidden;'><iframe sandbox='allow-scripts allow-same-origin allow-presentation' allowfullscreen='true' allowtransparency='true' frameborder='0' height='285' src='https://www.mentimeter.com/app/presentation/alnkn25ebq2843izdhvj87uw5yjjky33/embed' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' width='420'></iframe></div>
+
+]
+
+
+.panel[.panel-name[Python Code]
+
+- See Fadel's in-class walkthrough.
+
+```{python walkthrough, include=FALSE}
+import pandas as pd
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+print(apple_rev.shape)
+print(apple_rev.dtypes)
+
+# let us fix the date column and the revenue column
+apple_rev = (
+  apple_rev
+  .assign(date = lambda x: pd.to_datetime(x['date']),
+          revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int))
+  )
+
+print('Our updated data types are:\n', apple_rev.dtypes)
+
+```
+
+
+]
+
+
+]
+
+
+---
+
+## Plotting the Data using Pandas
+
+```{r pandas_plot, echo=FALSE}
+knitr::include_url("https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html", height = "480px")
+
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Source:** [Pandas API for the Plot Method](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html)
+
+]
+
+
+---
+
+## Use Pandas API to Make a Simple Line Chart
+
+`r countdown(minutes = 3, seconds = 0, top = 0, font_size = "2em")`
+
+Use the [Pandas Plot API](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html) to create a simple line chart of Apple's iPhone revenues from 2007 to 2024.  
+
+**How close is the chart to the one you created in Python?**
+
+```{python apple_revenue_matplotlib, echo=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+apple_rev = (
+  apple_rev
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    year = lambda x: x['date'].dt.year,
+    revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int)/1e3,
+    color = lambda x: x['quarter'].map({1: 'red', 2: 'blue', 3: 'green', 4: 'purple'})
+    )
+)
+
+
+ax = apple_rev.plot(
+    x='date',
+    y='revenue',
+    figsize=(6, 3.625),
+    legend=True,
+    linestyle='-',
+    marker='o',
+    c = 'black',
+    alpha=0.7,
+    linewidth=2,
+    title="Apple's iPhone Revenues (2007 - 2024)",
+    xlabel="Date",
+    ylabel="Revenue in Billions",
+    grid=True
+)
+
+ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+
+plt.tight_layout(pad = 2.25)
+plt.show()
+
+```
+
+.footnote[
+<html>
+<hr>
+</html>
+
+**Hint:** The additional **kwargs (keyword arguments) for the `plot` method can be found from  [`matplotlib.pyplot.plot` API Reference](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html).
+]
+
+
+---
+class: inverse, center, middle
+
+# Create Seasonal Plots and Subplots
+
+
+---
+
+## Demo: Lets Improve the Previous Plot Using Pandas
+
+In a **live demo**, we will make the following improvements to the previous plot:  
+- **Color** the data points by `quarter`.   
+-  Add a **custom legend** for the quarters.
+
+
+```{python apple_revenue_improved, echo=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import matplotlib.patches as mpatches 
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+apple_rev = (
+  apple_rev
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    year = lambda x: x['date'].dt.year,
+    revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int)/1e3,
+    color = lambda x: x['quarter'].map({1: 'red', 2: 'blue', 3: 'green', 4: 'purple'})
+    )
+)
+
+ax = apple_rev.plot(
+    x='date',
+    y='revenue',
+    figsize=(6, 3.625),
+    linestyle='-',
+    c = 'black',
+    alpha=0.7,
+    linewidth=2,
+    title="Apple's iPhone Revenues (2007 - 2024)",
+    xlabel="Date",
+    ylabel="Revenue in Billions",
+    grid=True
+)
+
+scatter = apple_rev.plot(
+    x='date',
+    y='revenue',
+    kind='scatter',
+    ax=ax,
+    c=apple_rev['color'],
+    s=50,
+    alpha=0.7,
+    ylabel="Revenue in Billions",
+    xlabel="Date",
+    legend =False
+)
+
+# Create custom legend handles for the quarters
+legend_handles = [
+    mpatches.Patch(color='red', label='Q1'),
+    mpatches.Patch(color='blue', label='Q2'),
+    mpatches.Patch(color='green', label='Q3'),
+    mpatches.Patch(color='purple', label='Q4')
+]
+
+# Add the custom legend to the axes with a title
+ax.legend(handles=legend_handles, title="Quarter", loc='upper left')
+
+plt.tight_layout(pad = 2.25)
+plt.show()
+
+```
+
+
+---
+
+## The Equivalent Seaborn Implementation
+
+.font80[
+
+```{python seaborn_plot, eval=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+apple_rev = apple_rev.assign(
+    date=lambda df: pd.to_datetime(df['date']),
+    quarter=lambda df: df['date'].dt.quarter,
+    revenue=lambda df: df['revenue'].str.replace(',', '').astype(int) / 1e3
+)
+
+plt.figure(figsize=(6, 3.625)) # Create the figure
+
+ax = sns.lineplot(data=apple_rev, x='date', y='revenue', color='black', linewidth=2, alpha=0.7)
+
+sns.scatterplot(
+    data=apple_rev, x='date', y='revenue',
+    hue='quarter',    # variable to color by
+    palette={1: 'red', 2: 'blue', 3: 'green', 4: 'purple'}, # custom color palette
+    s=100,             # Marker size; adjust as desired
+    edgecolor='black', # Optional: add a black edge around markers
+)
+
+# Customize the axes and title, and show the plot
+ax.set_title("Apple's iPhone Revenues (2007 - 2024)")
+ax.set_xlabel("Date")
+ax.set_ylabel("Revenue in Billions")
+plt.show()
+
+
+
+```
+]
+
+
+---
+
+## The Equivalent Seaborn Implementation
+
+```{python seaborn_plot_out, echo=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+
+apple_rev = apple_rev.assign(
+    date=lambda df: pd.to_datetime(df['date']),
+    quarter=lambda df: df['date'].dt.quarter,
+    revenue=lambda df: df['revenue'].str.replace(',', '').astype(int) / 1e3
+)
+
+plt.figure(figsize=(6, 3.625)) # Create the figure
+
+ax = sns.lineplot(data=apple_rev, x='date', y='revenue', color='black', linewidth=2, alpha=0.7)
+
+sns.scatterplot(
+    data=apple_rev, x='date', y='revenue',
+    hue='quarter',    # variable to color by
+    palette={1: 'red', 2: 'blue', 3: 'green', 4: 'purple'}, # custom color palette
+    s=100,             # Marker size; adjust as desired
+    edgecolor='black', # Optional: add a black edge around markers
+)
+
+# Customize the axes and title, and show the plot
+ax.set_title("Apple's iPhone Revenues (2007 - 2024)")
+ax.set_xlabel("Date")
+ax.set_ylabel("Revenue in Billions")
+plt.show()
+
+
+```
+
+---
+
+## What Observations Can You Make from the Chart?
+
+`r countdown(minutes = 3, seconds = 0, top = 0, font_size = "2em")`
+
+.can-edit.key-activity4[
+
+- Edit me  
+  
+- ... 
+  
+- ...
+
+]
+
+---
+
+## Other Types of Seasonal Plots
+
+- **Seasonal Plot (By Month/Quarter)**: A line chart where the data is plotted against the season.
+
+- **Seasonal Subseries Plot**: A line chart where each season is plotted separately. 
+
+- **Multiple Box Plots**: A box plot for each season.
+
+
+---
+
+## Seasonal Plot (By Month/Quarter)
+
+.font80[
+```{python seasonal_plot, eval=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+apple_rev = (
+  pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    year = lambda x: x['date'].dt.year,
+    revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int)/1e3
+    )
+    .query('year >= 2019')
+  )
+
+s = sns.relplot(
+  kind="line",
+  data=apple_rev, x="quarter", y="revenue", 
+  hue="year", marker="o", 
+  # row = "year", # optional: separate by year
+)
+
+# beautify the plot (will not work with row = 'year')
+s.ax.set_xticks(range(1, 5))
+s.ax.set_xticklabels(['Q1', 'Q2', 'Q3', 'Q4'])
+sns.move_legend(s, "upper center", ncols = 3)
+
+plt.show()
+
+```
+]
+
+
+---
+
+## Seasonal Plot (By Month/Quarter)
+
+
+```{python seasonal_plot_out, echo=FALSE, fig.show='last', out.width='63%'}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+apple_rev = (
+  pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    year = lambda x: x['date'].dt.year,
+    revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int)/1e3
+    )
+    .query('year >= 2019')
+  )
+
+s = sns.relplot(
+  kind="line",
+  data=apple_rev, x="quarter", y="revenue", 
+  hue="year", marker="o"
+  # row = "year", # optional: separate by year
+)
+
+# beautify the plot (will not work with row = 'year')
+s.ax.set_xticks(range(1, 5))
+s.ax.set_xticklabels(['Q1', 'Q2', 'Q3', 'Q4'])
+sns.move_legend(s, "upper center", ncols = 3)
+
+plt.show()
+
+```
+
+
+
+---
+
+## Seasonal Subseries Plot
+
+`r countdown(minutes = 3, seconds = 0, top = 0, font_size = "2em")`
+
+.panelset[
+.panel[.panel-name[Description]
+
+- Recall that a seasonal subseries plot is a line chart where each season is plotted separately.  
+
+- Modify the previous code to create a seasonal subseries plot.
+
+]
+
+.panel[.panel-name[Chart to Make]
+
+```{python, echo=FALSE, out.width="43%"}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+apple_rev = (
+  pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+  .assign(
+    date = lambda x: pd.to_datetime(x['date']),
+    quarter = lambda x: x['date'].dt.quarter,
+    year = lambda x: x['date'].dt.year,
+    revenue = lambda x: x['revenue'].str.replace(r',', '').astype(int)/1e3
+    )
+    .query('year >= 2019')
+  )
+
+s = sns.relplot(
+  kind="line",
+  data=apple_rev, x="date", y="revenue", 
+  hue="quarter", marker="o"
+)
+
+sns.move_legend(s, "upper center", ncols = 4)
+
+plt.show()
+```
+
+]
+]
+
+---
+class: inverse, center, middle
+
+# Recap
+
+---
+
+## Summary of Main Points
+
+By now, you should be able to do the following:  
+
+- Generate and interpret simple line charts.
+
+- Create seasonal plots and subplots.
+
+---
+
+## 📝 Review and Clarification 📝
+
+1. **Class Notes**: Take some time to revisit your class notes for key insights and concepts.
+2. **Zoom Recording**: The recording of today's class will be made available on Canvas approximately 3-4 hours after the session ends.
+3. **Questions**: Please don't hesitate to ask for clarification on any topics discussed in class. It's crucial not to let questions accumulate. 
+
+
+---
+
+## 📖 Required Readings 📖
+
+- **Reference** the following pages:  
+
+  + [Pandas Plot API](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.plot.html)  
+  
+  + [An Introduction to Seaborn](https://seaborn.pydata.org/tutorial/introduction.html)  
+  
+  + [An Introduction to Seaborn for data viz with Python](https://python-graph-gallery.com/seaborn/)
+  

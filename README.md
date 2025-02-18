@@ -13,6 +13,7 @@
 |          |    02/06     | Visualizing a Single Series (Lag, Lag Scatter and ACF Plots)       | [04_lags_and_acf.html](https://fmegahed.github.io/isa444/spring2025/class04/04_lags_and_acf.html) | [04_lags_and_acf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_lags_and_acf.pdf) | [04_lags_and_acf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_lags_and_acf.pptx) |
 | 03           |    02/11     | Catch-Up and In-Class Assignment     | -- | -- | -- |
 |          |    02/13     | Centered Moving Averages and Seasonal Decomposition       | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/spring2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
+| 04           |    02/18     |Visualizing Many Time Series       | [07_many_ts.html](https://fmegahed.github.io/isa444/spring2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
 
 
 

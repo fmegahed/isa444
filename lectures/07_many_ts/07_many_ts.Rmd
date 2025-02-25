@@ -455,7 +455,7 @@ plt.tight_layout() # improves title visibility
 ]
 
 
-```{python seaborn_long_data_intermediate, include=FALSE}
+```{python seaborn_long_data_intermediate, include=FALSE, eval=FALSE}
 import datetime as dt
 import yfinance as yf
 import pandas as pd
@@ -699,7 +699,9 @@ imageio.mimsave('../../figures/animated_stock_lineplot.gif', images, fps=0.25)
 
 ## Approach 2: Animated Plots (Result)
 
-![Animated Stock Lineplot](../../figures/animated_stock_lineplot.gif)
+```{r an_plot, echo=FALSE, out.width='100%'}
+knitr::include_graphics('../../figures/animated_stock_lineplot.gif')
+```
 
 ---
 

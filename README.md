@@ -15,6 +15,8 @@
 |          |    02/13     | Centered Moving Averages and Seasonal Decomposition       | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/spring2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
 | 04           |    02/18     | Visualizing Many Time Series       | [07_many_ts.html](https://fmegahed.github.io/isa444/spring2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
 |           |    02/20     | Forecasting Environment       | [08_forecasting_env.html](https://fmegahed.github.io/isa444/spring2025/class08/08_forecasting_env.html) | [08_forecasting_env.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/08_forecasting_env.pdf) | [08_forecasting_env.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/08_forecasting_env.pptx) |
+| 05           |    02/25     | Exam 01: TS Basics       | -- | -- | -- |
+|           |    02/27     | Baseline Forecasts       | [10_baseline_forecasts.html](https://fmegahed.github.io/isa444/spring2025/class10/10_baseline_forecasts.html) | [10_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/10_baseline_forecasts.pdf) | [10_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/10_baseline_forecasts.pptx) |
 
 
 

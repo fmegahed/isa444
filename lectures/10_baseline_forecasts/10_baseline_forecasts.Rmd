@@ -513,6 +513,141 @@ class: inverse, center, middle
 We will now implement the historic average, naive, and seasonal naive forecasts using the [StatsForecast]() library. Our in-class implementation will highlight both the fixed window and rolling-origin approaches.
 
 
+```{python live_demo, eval=FALSE, include=FALSE}
+import pandas as pd
+from utilsforecast.plotting import plot_series
+from statsforecast import StatsForecast # one of the core functions from statforecast
+from statsforecast.models import HistoricAverage, Naive, SeasonalNaive, WindowAverage, SeasonalWindowAverage
+
+from utilsforecast.losses import mae, mape, rmse, bias
+from utilsforecast.evaluation import evaluate
+
+
+# Read and process the data
+# -------------------------
+hotels = pd.read_parquet("/content/other_sample_hotels.parquet")
+print(hotels.info())
+
+print('The number of unique hotel ids is ', hotels['unique_id'].nunique(), '\n')
+print('The unique ids are', hotels['unique_id'].unique(), '\n')
+
+display(hotels)
+
+
+# Plot the data:
+# --------------
+plot_series(hotels, max_ids=16)
+
+
+# Fixed Window:
+# -------------
+models = [
+    HistoricAverage(),
+    Naive(),
+    SeasonalNaive(season_length = 7),
+    WindowAverage(window_size = 14, alias = 'WindowAverage14'),
+    SeasonalWindowAverage(season_length=7, window_size=2)
+]
+
+sf = StatsForecast(models = models, freq = 'D')
+
+# A question: Do we want to fit the models on the entire dataset (i.e., no actuals to judge)?
+# If you want to have a ground truth to compare to, we will typically split the data into a training set and a test/holdout set
+
+# There is one way of doing this.
+min_date = hotels['ds'].min()
+max_date = hotels['ds'].max()
+
+# one limitation of the current evaluation is that June may not be representative of the ts behavior in other month
+# we kinda know that the above statement is true based on the plots of the different of ts
+train = hotels[hotels['ds'] < '2023-06-01']
+test = hotels[hotels['ds'] >= '2023-06-01']
+
+fitted_data = sf.fit(train[['unique_id', 'ds', 'y']])
+predicted_data = sf.predict(h = 30 )
+predicted_data.tail(30)
+
+
+# Understanding the Obtained Forecasted Values:
+# ---------------------------------------------
+print('Historic Average for hotel_98:', train.query("ds < '2023-06-01' and unique_id == 'hotel_98' ")['y'].mean().round(6), '\n')
+
+# I added the values[0] to remove the index from the printout
+print('Naive by Hand for hotel_98:', train.query("ds < '2023-06-01' and unique_id == 'hotel_98' ")['y'].tail(1).values[0].round(6), '\n')
+
+print('Seasonal Naive for hotel_98:', train.query("ds < '2023-06-01' and unique_id == 'hotel_98' ")['y'].tail(7).values[0:7], '\n')
+
+print('Window Average for hotel_98:', train.query("ds < '2023-06-01' and unique_id == 'hotel_98' ")['y'].tail(14).mean().round(6), '\n')
+
+seasonal_window_avg = (
+    train.query("ds < '2023-06-01' and unique_id == 'hotel_98' ")
+    .groupby('day')['y']
+    .rolling(window = 2, min_periods = 2)
+    .mean()
+    .groupby('day') # to extract the last value for each day
+    .tail(1)
+    .round(6)
+    .reset_index(level=1, drop = True) # drop the numeric index and keep the day index
+    .reindex(['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'])
+  )
+
+print('Seasonal Window Average for hotel_98:', seasonal_window_avg)
+
+
+# Visualizing our Predictions:
+# ----------------------------
+plot_series(df = train, forecasts_df=predicted_data, max_ids = 16, palette = 'Paired', models = ['Naive', 'HistoricAverage'])
+
+
+# Rolling Window:
+# ---------------
+cross_df = sf.cross_validation(
+    h = 30,
+    df = train[['unique_id', 'ds', 'y']], # or the full dataset (depending on whether you want to)
+    n_windows=5,
+    step_size = 30 # will create non-overlapping windows
+)
+
+# let us understand our cutoffs
+print('cutoff dates:', cross_df['cutoff'].unique(), '\n')
+cross_df
+
+
+# Evaluating the Models:
+# ----------------------
+evaluation = evaluate(
+    df = cross_df,
+    metrics= [mae, mape, rmse],
+    models = cross_df.columns[4:].tolist() # starting from the Historic Avg
+)
+evaluation = (
+    evaluation
+    .sort_values(by = 'unique_id')
+    .reset_index(drop = True)
+    .assign(best_model = lambda x: x.iloc[:, 2:].idxmin(axis = 1))
+)
+evaluation.head(10)
+
+
+# Selecting the Best Model:
+# -------------------------
+eval_summary = (
+    evaluation
+    .groupby('unique_id')
+    .agg(num_wins = ('best_model', 'value_counts'))
+    .reset_index()
+    .groupby('unique_id')
+    .head(1)
+    .reset_index()
+)
+eval_summary
+
+eval_summary['best_model'].value_counts()
+
+```
+
+
+
 ---
 
 class: inverse, center, middle

@@ -19,6 +19,8 @@
 |           |    02/27     | Baseline Forecasts       | [10_baseline_forecasts.html](https://fmegahed.github.io/isa444/spring2025/class10/10_baseline_forecasts.html) | [10_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/10_baseline_forecasts.pdf) | [10_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/10_baseline_forecasts.pptx) |
 | 06           |    03/04     | Baseline Forecasts (Cont.) and Exam 01 Review      | -- | -- | -- |
 |           |    03/06     | Exponential Smoothing Methods       | [12_exponential_smoothing.html](https://fmegahed.github.io/isa444/spring2025/class12/12_exponential_smoothing.html) | [12_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/12_exponential_smoothing.pdf) | [12_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/12_exponential_smoothing.pptx) |
+| 07           |    03/11     | Lab: Comparing Baseline Models on Multiple TS      | -- | -- | -- |
+|           |    03/13     | Review of Material Covered So Far        | -- | -- | --|
 
 
 

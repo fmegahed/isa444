@@ -113,25 +113,13 @@ a:active {
   width: 36%;
 }
 
-.pull-left-3 {
-  float: left;
-  width: 25%;
-}
-.pull-right-3 {
-  float: right;
-  width: 66%;
-}
-
 .left-code {
-  color: #777;
-  width: 38%;
-  height: 92%;
+  width: 48%;
   float: left;
 }
 .right-plot {
-  width: 60%;
+  width: 50%;
   float: right;
-  padding-left: 1%;
 }
 
 img, video, iframe {

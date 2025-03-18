@@ -21,6 +21,7 @@
 |           |    03/06     | Exponential Smoothing Methods       | [12_exponential_smoothing.html](https://fmegahed.github.io/isa444/spring2025/class12/12_exponential_smoothing.html) | [12_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/12_exponential_smoothing.pdf) | [12_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/12_exponential_smoothing.pptx) |
 | 07           |    03/11     | Lab: Comparing Baseline Models on Multiple TS      | -- | -- | -- |
 |           |    03/13     | Review of Material Covered So Far        | -- | -- | --|
+| 08          |    03/18     | Stationarity, Differencing and Unit Root Tests      | | [15_stationarity.html](https://fmegahed.github.io/isa444/spring2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) | 
 
 
 

@@ -499,8 +499,8 @@ ggplot2::ggplot(
   - Look for seasonality in the time series plot.  
   
 - Examine the **ACF** of the time series:  
-  + A **slow decay** in the ACF plot **(die down)** $\longrightarrow$ **non-stationary**.  
-  + On the other hand, if the ACF plot **drops to zero quickly (cuts off)** $\longrightarrow$ **likely stationary**.  
+  + A **slow decay** in the ACF plot $\longrightarrow$ **non-stationary**.  
+  + On the other hand, if the ACF plot **drops to zero quickly** $\longrightarrow$ **likely stationary**.  
   + **Note:** For non-stationary time series, the **value of $r_1$ is often large and positive**.
   
 
@@ -840,7 +840,7 @@ where $m=$ number of seasons.
 
 * For monthly data $m=12$.  
 * For quarterly data $m=4$.  
-* Seasonally differenced series will have .red[$T-m$] observations.  
+* Seasonally differenced series will have .red[ $T-m$ ] observations.  
 
 
 ---
@@ -1138,9 +1138,11 @@ class: inverse, center, middle
 
 - If the null hypothesis is rejected (e.g., if $p < 0.05$), the time series is considered **stationary**.
 
-- The ADF test is available in Python through the `statsmodels` library, and can be accessed using the `adfuller()` function as follows:  
+- The ADF test is available in Python through the `statsmodels` library, and can be accessed using the `adfuller()` function as follows: 
 
+.center[
 `from statsmodels.tsa.stattools import adfuller`
+]
 
 **Note:** See [this link](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html) for more information on the `adfuller()` function.
 
@@ -1157,7 +1159,9 @@ class: inverse, center, middle
 
 - The KPSS test is available in Python through the `statsmodels` library, and can be accessed using the `kpss()` function as follows:  
 
+.center[
 `from statsmodels.tsa.stattools import kpss`
+]
 
 **Note:** See [this link](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.kpss.html) for more information on the `kpss()` function.
 

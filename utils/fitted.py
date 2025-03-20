@@ -49,3 +49,22 @@ def create_fitted_df(actuals: pd.DataFrame, fitted, model_names) -> pd.DataFrame
 
     return df_fitted
 
+
+
+# Based on https://github.com/Nixtla/fpp3-python/blob/main/4%20Residual%20diagnostics.ipynb
+def augment(model_name, time_var, obs_values):
+
+    type_model_list = []
+    for n in range(len(obs_values)):
+        type_model_list.append(model_name)
+        n += 1
+    fitted_values = model.predict_in_sample()
+    residuals = obs_values - fitted_values["mean"]
+
+    augment_df = pd.DataFrame({'model':type_model_list,
+                        'time_var':time_var,
+                        'obs_values':obs_values,
+                        'fitted_values':fitted_values["mean"],
+                        'residuals':residuals})
+
+    return(augment_df)

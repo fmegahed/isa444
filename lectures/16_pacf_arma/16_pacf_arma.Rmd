@@ -1297,9 +1297,16 @@ damped sinusoidal pattern</td>
 
 ## Fitting AR, MA, and ARMA Models in Python
 
-Let us examine the [viscosity data](https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv).
+Let us examine the [viscosity data](https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv). For this demo, we will only fit ARMA models on the **entire series**, and examine the residuals to see the goodness of fit.
 
-```{python viscosity_data, eval=FALSE}
+However, it should be noted that **you are also expected to utilize the cross-validation method to evaluate the model's predictive performance (which we do not do in this demo to save time).**
+
+```{python viscosity_data, eval=FALSE, include = FALSE}
+import requests
+
+req = requests.get('https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/utils/fitted.py')
+exec(req.text)
+
 # !pip install utilsforecast statsforecast
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -1310,6 +1317,8 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA, ARIMA
+
+import statsmodels.api as sm
 
 df = (
   pd.read_csv('https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv')
@@ -1342,15 +1351,21 @@ models = [
     ARIMA(order=(1, 0, 1), alias = 'arma11'),
     ARIMA(order=(2, 0, 1), alias = 'arma21'),
     ARIMA(order=(1, 0, 2), alias = 'arma12'),
-    ARIMA(order=(2, 0, 2), alias = 'arma22'),
-    AutoARIMA(alias = 'autoarima')
+    ARIMA(order=(2, 0, 2), alias = 'arma22')
 ]
 
 sf = StatsForecast(models = models, freq='D')
-sf.fit(df)
+fitted = sf.fit(df)
 
+res = create_res_df(df, fitted= fitted, model_names=['arma11', 'arma21', 'arma12', 'arma22'])
 
-
+lb_results = pd.concat(
+    [sm.stats.acorr_ljungbox(res.arma11, lags=[10], model_df=2),
+     sm.stats.acorr_ljungbox(res.arma21, lags=[10], model_df=3),
+     sm.stats.acorr_ljungbox(res.arma12, lags=[10], model_df=3),
+     sm.stats.acorr_ljungbox(res.arma22, lags=[10], model_df=4)]
+)
+lb_results.set_axis(['arma11', 'arma21', 'arma12', 'arma22'])
 
 ```
 

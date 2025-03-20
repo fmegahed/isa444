@@ -4495,7 +4495,7 @@ margin-left: 0;
   })
 })()
 </script>
-    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"xd89db5f88b84b6f9cad247d4ceb1bad","expires":14}</script>
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"f9d94ca170d347c2b8908694adabf54e","expires":14}</script>
     <script>(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.himalaya = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
@@ -7791,59 +7791,11 @@ damped sinusoidal pattern&lt;/td&gt;
 
 ## Fitting AR, MA, and ARMA Models in Python
 
-Let us examine the [viscosity data](https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv).
+Let us examine the [viscosity data](https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv). For this demo, we will only fit ARMA models on the **entire series**, and examine the residuals to see the goodness of fit.
+
+However, it should be noted that **you are also expected to utilize the cross-validation method to evaluate the model&#39;s predictive performance (which we do not do in this demo to save time).**
 
 
-``` python
-# !pip install utilsforecast statsforecast
-import pandas as pd
-import matplotlib.pyplot as plt
-
-from utilsforecast.plotting import plot_series
-from coreforecast.differences import num_diffs
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-
-from statsforecast import StatsForecast
-from statsforecast.models import AutoARIMA, ARIMA
-
-df = (
-  pd.read_csv(&#39;https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/viscosity.csv&#39;)
-  )
-
-df = (
-  df
-  .assign(
-    ds = pd.date_range(start=&#39;2024-01-01&#39;, periods=len(df), freq=&#39;D&#39;),
-    unique_id = &#39;viscosity&#39;
-    )
-  [[&#39;unique_id&#39;, &#39;ds&#39;, &#39;y&#39;]]
-)
-
-display( plot_series(df) )
-
-# Does this need differencing
-print(&#39;\n Our series need &#39;, num_diffs(df[&#39;y&#39;]), &#39;differences to be stationary&#39;)
-
-fig, axes = plt.subplots(1, 2, figsize=(15, 5))
-axes[0].set_title(&#39;ACF&#39;)
-axes[1].set_title(&#39;PACF&#39;)
-plot_acf(df[&#39;y&#39;], lags=20, ax=axes[0])
-plot_pacf(df[&#39;y&#39;], lags=20, ax=axes[1])
-plt.show()
-
-print(&#39;Both the ACF and PACF exhibit a damped sinsodial pattern; hence we should be fitting an ARMA type model&#39;)
-
-models = [
-    ARIMA(order=(1, 0, 1), alias = &#39;arma11&#39;),
-    ARIMA(order=(2, 0, 1), alias = &#39;arma21&#39;),
-    ARIMA(order=(1, 0, 2), alias = &#39;arma12&#39;),
-    ARIMA(order=(2, 0, 2), alias = &#39;arma22&#39;),
-    AutoARIMA(alias = &#39;autoarima&#39;)
-]
-
-sf = StatsForecast(models = models, freq=&#39;D&#39;)
-sf.fit(df)
-```
 
 
 

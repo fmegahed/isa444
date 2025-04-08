@@ -23,7 +23,9 @@
 |           |    03/13     | Review of Material Covered So Far        | -- | -- | --|
 | 08          |    03/18     | Stationarity, Differencing and Unit Root Tests      | [15_stationarity.html](https://fmegahed.github.io/isa444/spring2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) | 
 |           |    03/20     | PACF and ARMA Models       | [16_pacf_arma.html](https://fmegahed.github.io/isa444/spring2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) | 
-
+| 09          |    04/01     | ARIMA Models: Hands-On Exploration      | -- | -- | -- | 
+|           |    04/03     | Exam 02      | -- | -- | -- | 
+| 10          | 04/08 | AutoARIMA | [19_arima.html](https://fmegahed.github.io/isa444/spring2025/class19/19_arima.html) | [19_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/19_arima.pdf) | [19_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/19_arima.pptx) |
 
 
 ## Old Versions of the Course 

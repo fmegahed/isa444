@@ -26,6 +26,9 @@
 | 09          |    04/01     | ARIMA Models: Hands-On Exploration      | -- | -- | -- | 
 |           |    04/03     | Exam 02      | -- | -- | -- | 
 | 10          | 04/08 | AutoARIMA | [19_arima.html](https://fmegahed.github.io/isa444/spring2025/class19/19_arima.html) | [19_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/19_arima.pdf) | [19_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/19_arima.pptx) |
+|             | 04/10 | Hands-On Lab: AutoARIMA with Seasonality and Interpretation | --| -- | --|
+| 11 | 04/15 | Hands-On Lab: Feature Engineering (Part 1: Exogenous Variables)  | --| -- | --|
+|  | 04/17 | Hands-On Lab: Feature Engineering (Part 2: ML Prep)  | --| -- | --|
 
 
 ## Old Versions of the Course 

@@ -7,34 +7,13 @@
 
 | Week          | Date        | Topic                                  | Slides (Hosted Page) | Slides (PDF) | Slides (PPTX)
 | :---:        |    :----:   |          :---                           | :---                 | :---         | :--  |
-| 01           |    01/28     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/spring2025/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
-|          |    01/30     | A Python Primer       | [02_basics.html](https://fmegahed.github.io/isa444/spring2025/class02/02_basics.html) | [02_basics.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_basics.pdf) | [02_basics.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_basics.pptx) |
-| 02           |    02/04     | Visualizing a Single Series (Line and Seasonal Plots)      | [03_visualizing_single_series.html](https://fmegahed.github.io/isa444/spring2025/class03/03_visualizing_single_series.html) | [03_visualizing_single_series.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_visualizing_single_series.pdf) | [03_visualizing_single_series.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_visualizing_single_series.pptx) |
-|          |    02/06     | Visualizing a Single Series (Lag, Lag Scatter and ACF Plots)       | [04_lags_and_acf.html](https://fmegahed.github.io/isa444/spring2025/class04/04_lags_and_acf.html) | [04_lags_and_acf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_lags_and_acf.pdf) | [04_lags_and_acf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_lags_and_acf.pptx) |
-| 03           |    02/11     | Catch-Up and In-Class Assignment     | -- | -- | -- |
-|          |    02/13     | Centered Moving Averages and Seasonal Decomposition       | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/spring2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
-| 04           |    02/18     | Visualizing Many Time Series       | [07_many_ts.html](https://fmegahed.github.io/isa444/spring2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
-|           |    02/20     | Forecasting Environment       | [08_forecasting_env.html](https://fmegahed.github.io/isa444/spring2025/class08/08_forecasting_env.html) | [08_forecasting_env.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/08_forecasting_env.pdf) | [08_forecasting_env.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/08_forecasting_env.pptx) |
-| 05           |    02/25     | Exam 01: TS Basics       | -- | -- | -- |
-|           |    02/27     | Baseline Forecasts       | [10_baseline_forecasts.html](https://fmegahed.github.io/isa444/spring2025/class10/10_baseline_forecasts.html) | [10_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/10_baseline_forecasts.pdf) | [10_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/10_baseline_forecasts.pptx) |
-| 06           |    03/04     | Baseline Forecasts (Cont.) and Exam 01 Review      | -- | -- | -- |
-|           |    03/06     | Exponential Smoothing Methods       | [12_exponential_smoothing.html](https://fmegahed.github.io/isa444/spring2025/class12/12_exponential_smoothing.html) | [12_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/12_exponential_smoothing.pdf) | [12_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/12_exponential_smoothing.pptx) |
-| 07           |    03/11     | Lab: Comparing Baseline Models on Multiple TS      | -- | -- | -- |
-|           |    03/13     | Review of Material Covered So Far        | -- | -- | --|
-| 08          |    03/18     | Stationarity, Differencing and Unit Root Tests      | [15_stationarity.html](https://fmegahed.github.io/isa444/spring2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) | 
-|           |    03/20     | PACF and ARMA Models       | [16_pacf_arma.html](https://fmegahed.github.io/isa444/spring2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) | 
-| 09          |    04/01     | ARIMA Models: Hands-On Exploration      | -- | -- | -- | 
-|           |    04/03     | Exam 02      | -- | -- | -- | 
-| 10          | 04/08 | AutoARIMA | [19_arima.html](https://fmegahed.github.io/isa444/spring2025/class19/19_arima.html) | [19_arima.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/19_arima.pdf) | [19_arima.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/19_arima.pptx) |
-|             | 04/10 | Hands-On Lab: AutoARIMA with Seasonality and Interpretation | --| -- | --|
-| 11 | 04/15 | Hands-On Lab: Feature Engineering (Part 1: Exogenous Variables)  | --| -- | --|
-|  | 04/17 | Hands-On Lab: Feature Engineering (Part 2: ML Prep)  | --| -- | --|
+| 01           |    08/26     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/fall2025/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
 
 
 ## Old Versions of the Course 
 
 * The Spring 2023 version of the course can be accessed by clicking on the tag titled [spring2023](https://github.com/fmegahed/isa444/releases/tag/spring2023).
-
+* The Spring 2025 version of the course can be accessed by clicking on the tag titled [spring2024](https://github.com/fmegahed/isa444/releases/tag/spring2024).
 
  
 ## Notes

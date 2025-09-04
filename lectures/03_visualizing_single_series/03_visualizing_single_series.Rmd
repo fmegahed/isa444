@@ -131,7 +131,7 @@ tidyr::table4a |> knitr::kable()
 
 .pull-right[
 
-.center[**Wide Format**]
+.center[**Long Format**]
 
 ```{r long_format, echo=FALSE}
 tidyr::table1 |> data.frame() |> knitr::kable()

@@ -11,6 +11,8 @@
 |            |    08/28     | Introduction to Python    | [02_basics.html](https://fmegahed.github.io/isa444/fall2025/class02/02_basics.html) | [02_basics.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_basics.pdf) | [02_basics.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_basics.pptx) |
 | 02           |    09/02     | Visualizing a Single Time Series       | [03_visualizing_single_series.html](https://fmegahed.github.io/isa444/fall2025/class03/03_visualizing_single_series.html) | [03_visualizing_single_series.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_visualizing_single_series.pdf) | [03_visualizing_single_series.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_visualizing_single_series.pptx) |
 |            |    09/04     | Lags and the ACF Plot      | [04_lags_and_acf.html](https://fmegahed.github.io/isa444/fall2025/class04/04_lags_and_acf.html) | [04_lags_and_acf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_lags_and_acf.pdf) | [04_lags_and_acf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_lags_and_acf.pptx) |
+|    03        |    09/10     | Review and Catch Up     | -- | -- | -- |
+|            |    09/12     | Centered Moving Average and Decomposition  | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/fall2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
 
 
 

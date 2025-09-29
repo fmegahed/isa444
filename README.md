@@ -14,14 +14,22 @@
 |    03        |    09/09     | Review and Catch Up     | -- | -- | -- |
 |            |    09/11     | Centered Moving Average and Decomposition  | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/fall2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
 |    04        |    09/16     | Catch Up and Many TS    | [07_many_ts.html](https://fmegahed.github.io/isa444/fall2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
+|           |    09/18     | Many TS (Cont.)    | [07_many_ts.html](https://fmegahed.github.io/isa444/fall2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
+|    05        |    09/23    | Exam 01   | -- | -- | -- |
+|            |    09/25     |Exam 01 Recap and Review   | -- | -- | -- |
+|    06        |    09/30     | Forecasting Environment, Windows and Baseline Forecasts    | [11_forecasting_env_baseline_forecasts.html](https://fmegahed.github.io/isa444/fall2025/class11/11_forecasting_env_baseline_forecasts.html) | [11_forecasting_env_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/11_forecasting_env_baseline_forecasts.pdf) | [11_forecasting_env_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/11_forecasting_env_baseline_forecasts.pptx) |
+
+
+
+
 
 
 
 ## Old Versions of the Course 
 
 * The Spring 2023 version of the course can be accessed by clicking on the tag titled [spring2023](https://github.com/fmegahed/isa444/releases/tag/spring2023).
-* The Spring 2025 version of the course can be accessed by clicking on the tag titled [spring2024](https://github.com/fmegahed/isa444/releases/tag/spring2024).
-
+* The Spring 2024 version of the course can be accessed by clicking on the tag titled [spring2024](https://github.com/fmegahed/isa444/releases/tag/spring2024).
+* The Spring 2025 version of the course can be accessed by clicking on the tag titled [spring2025](https://github.com/fmegahed/isa444/releases/tag/spring2025)
  
 ## Notes
  * I did my best to add references whenever possible. If I missed a reference, please let me know.

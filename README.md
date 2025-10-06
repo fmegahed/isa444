@@ -18,6 +18,8 @@
 |    05        |    09/23    | Exam 01   | -- | -- | -- |
 |            |    09/25     |Exam 01 Recap and Review   | -- | -- | -- |
 |    06        |    09/30     | Forecasting Environment, Windows and Baseline Forecasts    | [11_forecasting_env_baseline_forecasts.html](https://fmegahed.github.io/isa444/fall2025/class11/11_forecasting_env_baseline_forecasts.html) | [11_forecasting_env_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/11_forecasting_env_baseline_forecasts.pdf) | [11_forecasting_env_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/11_forecasting_env_baseline_forecasts.pptx) |
+|            |    10/02     | Forecasting Environment, Windows and Baseline Forecasts (Cont.)    | [11_forecasting_env_baseline_forecasts.html](https://fmegahed.github.io/isa444/fall2025/class11/11_forecasting_env_baseline_forecasts.html) | [11_forecasting_env_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/11_forecasting_env_baseline_forecasts.pdf) | [11_forecasting_env_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/11_forecasting_env_baseline_forecasts.pptx) |
+|    07        |    10/07     | Baseline Forecasts with Exponential Smoothing   | [13_exponential_smoothing.html](https://fmegahed.github.io/isa444/fall2025/class13/13_exponential_smoothing.html) | [13_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/13_exponential_smoothing.pdf) | [13_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/13_exponential_smoothing.pptx) |
 
 
 

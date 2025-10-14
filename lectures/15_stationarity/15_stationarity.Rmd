@@ -1,0 +1,1254 @@
+---
+title: "ISA 444/544: Business Forecasting"
+subtitle: "15: Stationarity, Differencing and Unit Root Tests" 
+author: '<br>Fadel M. Megahed, PhD <br><br> Professor <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Fall 2025"
+output:
+  xaringan::moon_reader:
+    self_contained: true
+    css: [default, "../../style_files/fonts.css", "../../style_files/my-theme.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightLanguage: ["python"]
+      countIncrementalSlides: false
+      ratio: "16:9"
+header-includes:  
+  - "../../style_files/header.html"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = FALSE,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      progress = FALSE, 
+                      verbose = FALSE,
+                      dev = 'png',
+                      fig.height = 2.75,
+                      dpi = 300,
+                      fig.align = 'center')
+
+options(htmltools.dir.version = FALSE)
+
+
+miamired = '#C3142D'
+
+if(require(pacman)==FALSE) install.packages("pacman")
+if(require(devtools)==FALSE) install.packages("devtools")
+if(require(countdown)==FALSE) devtools::install_github("gadenbuie/countdown")
+if(require(xaringanExtra)==FALSE) devtools::install_github("gadenbuie/xaringanExtra")
+if(require(urbnmapr)==FALSE) devtools::install_github('UrbanInstitute/urbnmapr')
+if(require(emo)==FALSE) devtools::install_github("hadley/emo")
+
+pacman::p_load(tidyverse, magrittr, lubridate, janitor, # data analysis pkgs
+               DataExplorer, scales, plotly, calendR, pdftools, # plots
+               tmap, sf, urbnmapr, tigris, # maps
+               bibliometrix, # for bibliometric analysis of my papers
+               gifski, av, gganimate, ggtext, glue, extrafont, # for animations
+               emojifont, emo, RefManageR, xaringanExtra, countdown) # for slides
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+if(require(xaringanthemer) == FALSE) install.packages("xaringanthemer")
+library(xaringanthemer)
+
+style_mono_accent(base_color = "#84d6d3",
+                  base_font_size = "20px")
+
+xaringanExtra::use_extra_styles(
+  hover_code_line = TRUE,         
+  mute_unhighlighted_code = TRUE  
+)
+
+xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "panelset", "broadcast", "share_again", "search", "fit_screen", "editable", "clipboard"))
+
+ggplot2::theme_set(
+  ggplot2::theme_bw(base_size = 12) + 
+    ggplot2::theme(
+      plot.title = ggtext::element_markdown(),
+      plot.subtitle = ggtext::element_markdown(),
+      plot.caption = ggtext::element_markdown(),
+      legend.position = 'bottom',
+      legend.title = ggtext::element_markdown(),
+      legend.text = ggtext::element_markdown(),
+      axis.title.x = ggtext::element_markdown(face = 'bold'),
+      axis.title.y = ggtext::element_markdown(face = 'bold'),
+      axis.text.x = ggtext::element_markdown(face= 'bold'),
+      axis.text.y = ggtext::element_markdown(face = 'bold'),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+    )
+  )
+
+```
+
+
+## Learning Objectives for Today's Class
+
+- Define a **stationary time series**.    
+
+- Understand how plotting techniques can help identify non-stationarity.  
+
+- Understand how we can **stabilize a non-stationary time series to achieve stationarity** (differencing to stabilize the mean, and log transformation to stabilize the variance).  
+
+- Understand how to use **unit root tests** to test for stationarity.
+
+
+---
+class: inverse, center, middle
+
+# What is Stationarity?
+
+---
+
+## Stationarity
+
+.content-box-gray[
+**Definition**: If $\{y_t\}$ is a **stationary time series**, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
+]
+
+```{python animated_stationary, include=FALSE}
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import datetime
+import matplotlib.animation as animation
+
+# Set seed for reproducibility
+np.random.seed(2025)
+
+# Generate a truly stationary time series (white noise)
+n = 365  # Total days (1 year of data)
+window_size = 60  # Length of each window
+mu, sigma = 50, 5  # Mean and standard deviation
+time_series = np.random.normal(mu, sigma, n)  # White noise = stationary
+
+# Generate dates from one year ago to today
+end_date = datetime.date.today()
+start_date = end_date - datetime.timedelta(days=n)
+dates = pd.date_range(start=start_date, periods=n)
+
+# Select window start indices
+window_starts = [3, 63, 123, 183, 243, 303]  # Example start indices
+
+# Create figure and axis
+fig, ax = plt.subplots(figsize=(10, 3.6))
+
+def update(frame):
+    ax.clear()
+    ax.plot(dates, time_series, linewidth=1, color='black')
+
+    start = window_starts[frame]
+    window_data = time_series[start:start + window_size]
+
+    mean, std = np.round(np.mean(window_data), 2), np.round(np.std(window_data), 2)
+
+    # Highlight the window
+    ax.axvline(dates[start], color='#C3142D', linestyle='--', linewidth=2)
+    ax.axvline(dates[start + window_size - 1], color='#C3142D', linestyle='--', linewidth=2)
+    ax.axvspan(dates[start], dates[start + window_size - 1], color='gray', alpha=0.4, label="Highlighted Window")
+
+    # Draw an arrow for window range
+    ax.annotate(
+        '', xy=(dates[start + window_size - 1], min(time_series) - 2),
+        xytext=(dates[start], min(time_series) - 2),
+        arrowprops=dict(arrowstyle='<->', color='#C3142D', linewidth=2)
+    )
+
+    # Label the window length
+    ax.text(dates[start + window_size // 2], max(time_series) + 3,
+            f"Window (60 days)", color='#C3142D', fontsize=8, ha='center')
+
+    # Annotate statistics
+    ax.text(dates[start + window_size // 2], max(time_series) - 2,
+            f"Mean: {mean}\nStd: {std}", color='#C3142D', fontsize=10,
+            ha='center', bbox=dict(facecolor='white', edgecolor='#C3142D', boxstyle='round,pad=0.3'))
+
+    # Formatting
+    ax.set_title("Illustration of Stationarity in Time Series", fontsize=14, fontweight='bold')
+    ax.set_xlim(dates[0], dates[-1])
+    ax.set_ylim(min(time_series) - 5, max(time_series) + 5)
+
+# Create animation
+ani = animation.FuncAnimation(fig, update, frames=len(window_starts), interval=4000)  # 0.25 fps (4000 ms per frame)
+
+# Save animation as GIF
+ani.save("../../figures/time_series_animation_stationarity.gif", writer='pillow', fps=0.25)
+
+```
+
+```{r animated_stationary_out, echo=FALSE, out.width='100%', fig.alt="Animated illustration of a stationary time series with highlighted windows and statistics."}
+knitr::include_graphics("../../figures/time_series_animation_stationarity.gif", dpi = 300)
+```
+
+
+---
+count:false
+
+## Stationarity
+
+.content-box-gray[
+**Definition**: If $\{y_t\}$ is a **stationary time series**, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
+]
+
+- This means that a **stationary time series**:  
+  - is roughly horizontal (i.e., no trend)  
+  - has a constant variance (i.e., no heteroskedasticity)  
+  - no patterns are predictable in the long-term (i.e., no seasonality)
+
+
+---
+
+## Class Activity: Stationarity or Non-Stationarity?  
+
+.panelset[
+
+.panel[.panel-name[Task]
+
+In a **Kahoot**, we will explore various time series data and determine whether they are stationary or non-stationary.  
+
+]
+
+.panel[.panel-name[KR]
+
+```{r kroger, echo=FALSE, fig.alt="Kroger's Stock Price Last Year", fig.height=3.3, fig.width=8, out.width='100%'}
+
+current_date = Sys.Date()
+last_year = lubridate::year(current_date) - 1
+start_last_year = as.Date(paste0(lubridate::year(current_date) - 1, "-01-01"))
+end_last_year = as.Date(paste0(lubridate::year(current_date) - 1, "-12-31"))
+
+
+kroger = tidyquant::tq_get("KR", 
+  from = start_last_year, to = end_last_year) |>
+  dplyr::select(date, adjusted) |>
+  dplyr::rename(price = adjusted)
+
+ggplot2::ggplot(
+  data = kroger, ggplot2::aes(x = date, y = price)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::scale_x_date(date_labels = "%b %Y") +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=8),
+    labels = scales::dollar_format(prefix = "$")
+  ) +
+  ggplot2::labs(
+    x = "Date",
+    y = "Adjusted Daily Closing Price",
+    title = "**Krogers <span style='color:#C3142D'>Daily</span> Adjusted Closing Price in 2024**"
+  )
+
+readr::write_csv(
+  kroger, 
+  file = paste0("../../data/kroger_stock_", last_year,".csv") 
+  )
+
+ggplot2::ggsave(
+    filename = paste0("../../figures/kroger_stock_", last_year,".png"),
+    width = 3*16/9, height = 3, units = "in",
+    dpi = 300
+  )
+
+```
+
+]
+
+
+.panel[.panel-name[Δ KR]
+
+```{r delta_kroger, echo=FALSE, fig.alt="Kroger's Stock Price Last Year", fig.height=3.3, fig.width=8, out.width='100%'}
+kroger |>
+  dplyr::mutate(
+    delta = price - dplyr::lag(price, 1)
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(x = date, y = delta)) +
+  ggplot2::geom_line() +
+  ggplot2::scale_x_date(date_labels = "%b %Y") +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=8),
+    labels = scales::dollar_format(prefix = "$")
+  ) +
+  ggplot2::labs(
+    x = "Date",
+    y = "Change in Price",
+    title = "**Krogers <span style='color:#C3142D'>Daily</span> Change in Stock Price in 2024**"
+  ) 
+
+ggplot2::ggsave(
+    filename = paste0("../../figures/kroger_stock_change_", last_year,".png"),
+    width = 3*16/9, height = 3, units = "in",
+    dpi = 300
+  )
+
+```
+
+]
+
+.panel[.panel-name[Strikes]
+
+```{r strikes, echo=FALSE, fig.alt="A line plot showing the number of workers involved in strikes in the U.S. from 1947 to 2024.", fig.height=3.3, fig.width=8, cache=TRUE, out.width='100%'}
+"https://www.bls.gov/web/wkstp/annual-listing.htm" |> 
+  rvest::read_html_live() |> 
+  rvest::html_element("table") |> 
+  rvest::html_table() -> strikes
+
+strikes_clean = strikes[-c(1,2, 3, nrow(strikes) ), c(1,4)]
+colnames(strikes_clean) = c('year', 'workers_in_thousands')
+
+strikes_clean = strikes_clean |>
+  janitor::clean_names() |>
+  dplyr::mutate(
+    year = lubridate::year(lubridate::mdy(paste0('01-01-', year))),
+    workers_in_thousands = 
+      stringr::str_replace_all(workers_in_thousands, ",", "") |> 
+      as.numeric() |> magrittr::divide_by(1000) # convert to millions
+  )
+
+ggplot2::ggplot(
+  data= strikes_clean, ggplot2::aes(x = year, y = workers_in_thousands)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(color = miamired, size = 2) +
+  ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=6)
+  ) +
+  ggplot2::labs(
+    x = "Year",
+    y = "Workers in Millions",
+    title = "**<span style='color:#C3142D'>Annual</span> Number of U.S. Workers Involved in Labor Strikes (1947-2024)**",
+  )
+
+
+readr::write_csv(strikes_clean, file = "../../data/strikes.csv")
+
+ggplot2::ggsave(
+    filename = "../../figures/strikes.png",
+    width = 3*16/9, height = 3, units = "in",
+    dpi = 300
+  )
+  
+```
+
+]
+
+.panel[.panel-name[House Sales]
+
+```{r house_sales, echo=FALSE, fig.alt="A line plot showing the number of monthly new home sales in the U.S.", fig.height=3.3, fig.width=8, out.width='100%'}
+
+house_sales = tidyquant::tq_get(
+ 'HSN1FNSA', 
+ from = Sys.Date() - lubridate::years(10) - lubridate::days(60),
+ to = Sys.Date(),
+ get = 'economic.data'
+  ) |> 
+  dplyr::mutate(
+    month = lubridate::month(date, abbr = TRUE, label = TRUE),
+  )
+
+ggplot2::ggplot(
+  data= house_sales, ggplot2::aes(x =date, y =price)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=6)
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Thousands of Units",
+    title = "**<span style='color:#C3142D'>Monthly</span> New One Family Houses Sold in the U.S.**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+
+ggplot2::ggsave(
+    filename = "../../figures/house_sales_2025.png",
+    width = 3*16/9, height = 3, units = "in",
+    dpi = 300
+  )
+
+```
+
+]
+
+.panel[.panel-name[Lynx]
+
+```{r lynx, echo=FALSE, fig.alt="A line plot showing the number of lynx trappings in Canada from 1821 to 1934.", fig.height=3.3, fig.width=8, cache=TRUE, out.width='100%'}
+lynx = datasets::lynx |>
+  as.data.frame() |>
+  dplyr::rename(lynx = x) |>
+  dplyr::mutate(
+    year = seq(from = 1821, to = 1934, by = 1)
+  )
+
+ggplot2::ggplot(
+  data = lynx, ggplot2::aes(x = year, y = lynx)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(color = miamired, size = 2) +
+  ggplot2::scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=6), labels = scales::comma
+  ) +
+  ggplot2::labs(
+    x = "Year",
+    y = "Number of Lynx Trappings",
+    title = "**<span style='color:#C3142D'>Annual</span> Number of Lynx Trappings in Canada (1821-1934)**",
+  )
+
+readr::write_csv(lynx, file = "../../data/lynx.csv")
+
+ggplot2::ggsave(
+    filename = "../../figures/lynx.png",
+    width = 3*16/9, height = 3, units = "in",
+    dpi = 300
+  )
+
+```
+]
+
+.panel[.panel-name[Beer]
+
+```{r beer, echo=FALSE, fig.alt="A line plot showing Australias quarterly beer production.", fig.height=3.3, fig.width=8, out.width='100%'}
+aus_production = data.frame(
+  date = time(fpp2::ausbeer) |> zoo::as.Date() |> lubridate::as_date(),
+  beer = fpp2::ausbeer |> as.numeric()
+) |> 
+  dplyr::mutate(
+    year = lubridate::year(date),
+    quarter = lubridate::quarter(date) |> 
+      as.character() |> 
+      stringr::str_pad(width = 2, side = "left", pad = "Q")
+  )
+
+aus_production |> 
+  dplyr::filter(year %in% 1991:1995) |> 
+  ggplot2::ggplot(
+    ggplot2::aes(x = date, y = beer)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = quarter), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Dark2') +
+  ggplot2::labs(
+    x = "",
+    y = "Millions of Liters",
+    title = "**<span style='color:#C3142D'>Quarterly</span> Beer Production in Australia (1991-1995)**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 4)
+  )
+
+```
+]
+
+
+.panel[.panel-name[Travel]
+
+```{r air_passengers, echo=FALSE, fig.alt="A line plot showing the number of monthly airline passengers from 1949 to 1960.", fig.height=3.3, fig.width=8, cache=TRUE, out.width='100%'}
+air = data.frame(
+  date = time(datasets::AirPassengers) |> zoo::as.Date() |> lubridate::as_date(),
+  passengers = datasets::AirPassengers |> as.numeric()
+) |> 
+  dplyr::mutate(
+    month = lubridate::month(date, abbr = TRUE, label = TRUE)
+  )
+
+ggplot2::ggplot(
+  data = air, ggplot2::aes(x = date, y = passengers)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Thousands of Passengers",
+    title = "**<span style='color:#C3142D'>Monthly</span> U.S. Airline Passengers (1949-1960)**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+```
+]
+
+]
+
+---
+
+## How to Identify Non-Stationarity in the Mean
+
+- **Visual Inspection** of the **time series plot (line-chart)**:  
+  - Look for trends in the time series plot.  
+  - Look for seasonality in the time series plot.  
+  
+- Examine the **ACF** of the time series:  
+  + A **slow decay** in the ACF plot $\longrightarrow$ **non-stationary**.  
+  + On the other hand, if the ACF plot **drops to zero quickly** $\longrightarrow$ **likely stationary**.  
+  + **Note:** For non-stationary time series, the **value of $r_1$ is often large and positive**.
+  
+
+---
+
+## Example: The Non-Stationarity in Kroger Stock Price
+
+.left-code[
+.font90[
+```{python kroger1, results='hide', fig.alt="Kroger's Stock Price Last Year", out.width='100%', fig.show='hide'}
+import pandas as pd
+import datetime as dt
+import seaborn as sns
+
+path = "../../data/kroger_stock_2024.csv"
+kr = (
+  pd.read_csv(path)
+  .assign(
+    ds=lambda x: pd.to_datetime(x['date']),
+    m=lambda x: x['ds'].dt.month_name().str[:3],
+  )
+)
+
+plt.figure(figsize=(8, 5))
+ax = sns.lineplot(
+  data=kr, x='ds', y='price', color='black'
+  )
+sns.scatterplot(
+  data = kr, x = 'ds', y = 'price', hue = 'm', 
+  s=40, ax=ax, palette='Paired'
+  )
+ax.set(
+  title="Kroger's Daily Adjusted Closing Price",
+  xlabel="Date",
+  ylabel="Adjusted Daily Closing Price",
+)
+```
+]
+]
+
+.right-plot[
+
+<br><br>
+
+```{python kroger1_out, echo=FALSE, results='hide', fig.alt="Kroger's Stock Price Last Year", ref.label='kroger1', out.width='100%'}
+plt.tight_layout(pad=0.5)
+plt.show()
+```
+]
+
+---
+
+## Example: The Non-Stationarity in Kroger Stock Price
+
+.left-code[
+.font90[
+```{python kroger2, fig.alt="ACF of Kroger's Stock Price", out.width='100%', eval=FALSE}
+from statsmodels.tsa.stattools import acf
+from statsmodels.graphics.tsaplots import plot_acf
+
+# Using the data from Slide 7
+acf_df = pd.DataFrame(
+  {'lag': range(0, 21),
+   'acf': acf(kr['price'], nlags=20)
+  }
+)
+
+# Print the first few rows of the ACF df
+acf_df.head()
+
+# Plot the ACF and beautify the plot
+plt.figure( figsize=(8, 5) )
+plot_acf(  kr['price'], lags=20 )
+plt.xticks( ticks=range(0, 21) )
+plt.xlabel('Lag')
+plt.ylabel('ACF')
+plt.title("ACF of Kroger's Stock Price")
+plt.show()
+```
+]
+]
+
+.right-plot[
+.font80[
+
+```{python kroger2_pre_out, echo=FALSE, paged.print=TRUE}
+from statsmodels.tsa.stattools import acf
+from statsmodels.graphics.tsaplots import plot_acf
+
+# Using the data from Slide 7
+acf_df = pd.DataFrame(
+  {'lag': range(0, 21),
+   'acf': acf(kr['price'], nlags=20).round(4)
+  }
+)
+acf_df.head()
+```
+
+
+```{python kroger2_out, echo=FALSE, fig.alt="ACF of Kroger's Stock Price", ref.label='kroger2', out.width='100%', eval=TRUE, results = 'hide'}
+
+```
+]
+]
+
+
+---
+
+## How Does the ACF of a Stationary Time Series Look?
+
+- For a **stationary time series**, the **ACF** plot will **decay (cut off) quickly** to zero.   
+  + Non-significant autocorrelations are within the **blue shaded region**, and are **statistically not different from zero**.  
+
+.left-code[
+.font90[
+```{python krog_diff, fig.alt="ACF of Kroger's Change in Stock Price", out.width='100%', eval=FALSE}
+kr['delta'] = kr['price'].diff() #<<
+
+acf_df = pd.DataFrame(
+  {'lag': range(0, 21),
+   'acf': acf(
+     kr['delta'], nlags=20, missing='drop' #<<
+     ).round(4)
+  }
+)
+
+acf_df.head()
+
+plt.figure( figsize=(8, 5) )
+plot_acf(kr['delta'], lags=20, missing='drop') #<<
+plt.xticks( ticks=range(0, 21) )
+plt.xlabel('Lag')
+plt.ylabel('ACF')
+plt.title("ACF of Kroger's Diff in Stock Price")
+```
+]
+]
+
+.right-plot[
+
+.font80[
+```{python krog_diff_pre_out, echo=FALSE, paged.print=TRUE}
+kr['delta'] = kr['price'].diff() #<<
+
+acf_df = pd.DataFrame(
+  {'lag': range(0, 21),
+   'acf': acf(
+     kr['delta'].dropna(), nlags=20 #<<
+     ).round(4)
+  }
+)
+
+acf_df.head()
+```
+]
+
+```{python krog_diff_out, echo=FALSE, fig.alt="ACF of Kroger's Change in Stock Price", ref.label='krog_diff', out.width='100%', eval=TRUE, results='hide'}
+
+```
+]
+
+
+---
+class: inverse, center, middle
+
+# Mathematical Background on the 95% Limits of the ACF Plot 
+# (Understanding how `statsmodels` computes confidence intervals)
+
+---
+
+## 1. Standard Error of ACF for White Noise
+
+For an **uncorrelated white noise** process, the standard error (SE) of the sample ACF at lag \( k \) is:
+
+$$\text{SE}(\hat{\rho}_k) \approx \frac{1}{\sqrt{N}}$$
+
+- Here, \( N \) is the **sample size**.
+- Assumes the series is **white noise**: no autocorrelation beyond lag 0.
+- The **95% confidence interval (CI)** is:
+
+$$\pm 1.96 \times 
+\underbrace{\frac{1}{\sqrt{N}}}_{\color{black}{\text{Standard Error (SE)}}}$$
+
+💡 **Key idea:** More data $\longrightarrow$ **Smaller SE** $\longrightarrow$ **Narrower confidence bands**.
+
+???
+**Speaker Notes:**
+- The standard error of the ACF is inversely proportional to the square root of \( N \).
+- This formula applies under the assumption that the time series is **white noise**.
+- The confidence intervals are computed as **\( \pm 1.96 \times SE \)**, meaning that the limits shrink when \( N \) is large.
+- However, real-world time series often **exhibit autocorrelation**, requiring a more complex SE formula.
+
+---
+
+## 2. Bartlett’s Formula for SE of ACF
+
+For a **stationary** time series, the **SE must account for autocorrelation**:
+$$\text{SE}(\hat{\rho}_k) \approx 
+\sqrt{
+\frac{1}{N} 
+\left( 1 + 2 \sum_{j=1}^{k-1} \hat{\rho}_j^2 \right)
+}$$
+
+The **sum of squared autocorrelations**, $\underbrace{2 \sum_{j=1}^{k-1} \hat{\rho}_j^2}_{\color{black}{\text{Effect of past lags}}}$, increases SE, which leads to **wider confidence bands**.  
+
+**Hence:**  
+-  If the time series is **highly correlated** (e.g., a **random walk**), SE **increases**.  
+
+- **Differencing reduces autocorrelation**, making the sum **smaller** and the SE **lower**.
+
+???
+**Speaker Notes:**
+- In **real-world** time series, past values influence future values, which means autocorrelation exists.
+- Bartlett’s formula modifies the white noise SE formula by incorporating **autocorrelation at prior lags**.
+- The key takeaway is that **higher autocorrelation increases SE**, which **widens** the confidence intervals.
+- If the time series is highly persistent (like a random walk), the CI will be **much wider**.
+- Differencing **reduces autocorrelation**, leading to **smaller** SE and **narrower** CIs.
+
+---
+
+## 3. Why Do CIs Widen at Larger Lags?
+
+Even though **autocorrelations shrink at higher lags**, the confidence intervals still widen. .black[.bold[Why?]] 
+
+$$\text{SE}(\hat{\rho}_k) \approx 
+\sqrt{
+\frac{1}{N} 
+\left( 1 + 2 \sum_{j=1}^{k-1} \hat{\rho}_j^2 \right)
+}$$
+
+<br>
+
+**Larger lags** $\longrightarrow$  $(\underbrace{1 + 2 \sum_{j=1}^{k-1} \hat{\rho}_j^2}_{\color{black}{\text{Cumulative sum increases}}})$ $\longrightarrow$ **Higher SE**.  
+
+**Fewer overlapping observations** at higher lags $\longrightarrow$ **Increased uncertainty**.  
+
+<br>
+
+ **Result:** Confidence intervals **widen at larger lags**, even if $\hat{\rho}_k$ is small.
+
+???
+**Speaker Notes:**
+- Many assume that since \( \hat{\rho}_k \) shrinks at larger lags, the CI should also shrink, but the opposite happens.
+- The **cumulative sum** of past autocorrelations **grows** in Bartlett’s formula, leading to **larger SE**.
+- Another reason: At higher lags, **fewer pairs of observations** contribute to the estimate, increasing uncertainty.
+- This is why **ACF plots often show wider CIs for larger lags**, even if \( \hat{\rho}_k \) is close to zero.
+
+---
+
+## 4. Impact of Differencing on Confidence Limits
+
+When **differencing** a time series:
+
+$$Y_t = X_t - X_{t-1}$$
+
+- **Reduces autocorrelation**, shrinking the **Bartlett sum** in SE computation:
+
+$$\underbrace{\sum_{j=1}^{k-1} \hat{\rho}_j^2}_{\color{black}{\text{smaller after differencing}}}$$
+
+- **Decreases SE**, leading to **narrower CIs** compared to the original series.
+- Explains **why** `plot_acf()` **shows:**
+  - .black[.bold[Wider limits for a trending or non-stationary series.]]
+  - .black[.bold[Narrower limits after differencing.]]
+
+???
+**Speaker Notes:**
+- Differencing **transforms** a highly autocorrelated series into a more **stationary** one.
+- This has a direct impact on **Bartlett’s formula**: The sum of past autocorrelations **shrinks**, lowering SE.
+- Lower SE $\longrightarrow$ **Narrower confidence intervals**.
+- This explains why:
+  - A **non-stationary series (random walk)** has **wide CIs**.
+  - A **stationary differenced series** has **narrower CIs**.
+
+---
+
+## 🔑 Key Takeaways
+
+✅   Original series with .black[.bold[strong autocorrelation]]  $\longrightarrow$ **Wider confidence bands**  
+
+✅   Differenced series with .black[.bold[weaker autocorrelation]]  $\longrightarrow$ **Narrower confidence bands**  
+
+✅   **CIs widen at larger lags** due to .black[.bold[accumulating estimation uncertainty]]  
+
+
+
+???
+**Speaker Notes:**
+- To summarize:
+  - If a time series has strong **autocorrelation**, its **confidence intervals are wide**.
+  - If we **difference the series**, autocorrelation decreases $\longrightarrow$ **narrower** CIs.
+  - Higher lags **accumulate uncertainty**, which is why CIs expand for larger lags.
+- Understanding these statistical effects helps correctly **interpret ACF plots** in time series analysis.
+
+
+---
+class: inverse, center, middle
+
+# Stabilizing Non-Stationary Time Series
+
+
+---
+
+## Stabilizing the Mean: Differencing
+
+- **Differencing** is a common technique to **stabilize the mean** of a time series.  
+
+- The **first difference** of a time series is the **change** between consecutive observations in the original series:  
+  - $\Delta y_t = \underbrace{y'_t}_{\begin{array}{c} \text{First} \\ \text{Difference} \end{array}} = \underbrace{y_t - y_{t-1}}_{\begin{array}{c} \text{Current value} \\ \text{minus previous value} \end{array}}$  
+  
+- The **differenced series** will have only $N-1$ observations since it is not possible to calculate a difference $y_1'$ for the first observation.
+
+
+---
+
+## Second-order Differencing
+
+Occasionally the differenced data will not appear stationary and it may be necessary to difference the data a second time:  
+
+$$\begin{align}
+\underbrace{y''_{t}}_{\text{Second Difference}} & = \underbrace{y'_{t} - y'_{t - 1}}_{\text{First Difference of the First Difference}} \\
+& = \underbrace{(y_t - y_{t-1})}_{\text{First Difference at } t} - \underbrace{(y_{t-1}-y_{t-2})}_{\text{First Difference at } t-1}\\
+& = \underbrace{y_t - 2y_{t-1} +y_{t-2}}_{\text{Final expanded form}}.
+\end{align}$$
+
+* $y_t''$ will have $T-2$ values.  
+
+* In practice, it is unlikely to go beyond second-order differences (a different representation of the **data generation process** may be needed). 
+
+
+---
+
+## Seasonal Differencing  
+
+A **seasonal difference** is the difference between an observation and the corresponding observation from the previous year.
+$$y'_t = y_t - y_{t-m}$$
+where $m=$ number of seasons.
+
+* For monthly data $m=12$.  
+* For quarterly data $m=4$.  
+* Seasonally differenced series will have .red[ $T-m$ ] observations.  
+
+
+---
+
+## Interpretation of Differencing
+
+- **First differences** are the change between **one observation and
+the next**.  
+
+- **Seasonal differences** are the change between **one observation and the same observation in the previous year** (i.e., year over year changes or changes between one year to the next).
+
+
+---
+
+## Stabilizing the Variance: Log Transformation  
+
+**Log transformation** is a common technique to **stabilize the variance** of a time series.  
+
+```{r airpassengers_out2, echo=FALSE, out.width='85%', cache=TRUE}
+air = data.frame(
+  date = time(datasets::AirPassengers) |> zoo::as.Date() |> lubridate::as_date(),
+  passengers = datasets::AirPassengers |> as.numeric()
+) |> 
+  dplyr::mutate(
+    month = lubridate::month(date, abbr = TRUE, label = TRUE),
+    log_passengers = log(passengers)
+  )
+
+p1 = ggplot2::ggplot(
+  data = air, ggplot2::aes(x = date, y = passengers)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Thousands of Passengers",
+    title = "**<span style='color:#C3142D'>Monthly</span> U.S. Airline Passengers (1949-1960)**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+
+p2 = ggplot2::ggplot(
+  data = air, ggplot2::aes(x = date, y = log_passengers)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Log Passengers",
+    title = "**<span style='color:#C3142D'>Monthly</span> U.S. Airline Passengers <span style='color:#C3142D'>Logged</span> (1949-1960)**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+
+ggplot2::ggsave(
+    filename = "../../figures/airpassengers_raw.png",
+    plot = p1,
+    width = 4.25*16/9, height = 4.25, units = "in",
+    dpi = 300
+  )
+
+ggplot2::ggsave(
+    filename = "../../figures/airpassengers_log.png",
+    plot = p2,
+    width = 4.25*16/9, height = 4.25, units = "in",
+    dpi = 300
+  )
+
+# Load saved images using magick
+img1 <- magick::image_read("../../figures/airpassengers_raw.png")
+img2 <- magick::image_read("../../figures/airpassengers_log.png")
+
+# Duplicate frames to create a slower transition (5 seconds per image)
+img1_repeated <- rep(list(img1), 5) # Show for 5 frames
+img2_repeated <- rep(list(img2), 5) # Show for 5 frames
+
+# Combine images into animation
+animation <- magick::image_animate(
+  magick::image_join(c(img1_repeated, img2_repeated)),
+  fps = 1 # Show each frame for 1 second
+)
+
+magick::image_write(animation, "../../figures/air_passengers_animation.gif")
+
+knitr::include_graphics("../../figures/air_passengers_animation.gif", dpi = 300)
+
+```
+
+---
+
+## Stabilizing the Variance and the Mean: Log-Differencing
+
+**Log-differencing** is a combination of **log transformation** and **differencing**.  
+
+```{r airpassengers_out3, echo=FALSE, out.width='85%', cache=TRUE}
+air = data.frame(
+  date = time(datasets::AirPassengers) |> zoo::as.Date() |> lubridate::as_date(),
+  passengers = datasets::AirPassengers |> as.numeric()
+) |> 
+  dplyr::mutate(
+    month = lubridate::month(date, abbr = TRUE, label = TRUE),
+    log_passengers = log(passengers),
+    log_diff = c(NA, diff(log_passengers))
+  )
+
+
+p3 = ggplot2::ggplot(
+  data = air, ggplot2::aes(x = date, y = log_diff)
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Log Diff of Passengers",
+    title = "**<span style='color:#C3142D'>Monthly</span> U.S. Airline Passengers <span style='color:#C3142D'>Log Differenced</span> (1949-1960)**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+
+
+ggplot2::ggsave(
+    filename = "../../figures/airpassengers_log_diff.png",
+    plot = p3,
+    width = 4.25*16/9, height = 4.25, units = "in",
+    dpi = 300
+  )
+
+
+# Load saved images using magick
+img1 <- magick::image_read("../../figures/airpassengers_raw.png")
+img2 <- magick::image_read("../../figures/airpassengers_log.png")
+img3 <- magick::image_read("../../figures/airpassengers_log_diff.png")
+
+# Duplicate frames to create a slower transition (5 seconds per image)
+img1_repeated <- rep(list(img1), 5) # Show for 5 frames
+img2_repeated <- rep(list(img2), 5) # Show for 5 frames
+img3_repeated <- rep(list(img3), 5) # Show for 5 frames
+
+# Combine images into animation
+animation <- magick::image_animate(
+  magick::image_join(c(img1_repeated, img2_repeated, img3_repeated)),
+  fps = 1 # Show each frame for 1 second
+)
+
+magick::image_write(animation, "../../figures/air_passengers_animation_log_diff.gif")
+
+knitr::include_graphics("../../figures/air_passengers_animation_log_diff.gif", dpi = 300)
+
+```
+
+---
+
+## One Final Step: DeSeasonalizing the Time Series
+
+
+```{r airpassengers_out4, echo=FALSE, out.width='85%', cache=TRUE}
+air = data.frame(
+  date = time(datasets::AirPassengers) |> zoo::as.Date() |> lubridate::as_date(),
+  passengers = datasets::AirPassengers |> as.numeric()
+) |> 
+  dplyr::mutate(
+    month = lubridate::month(date, abbr = TRUE, label = TRUE),
+    log_passengers = log(passengers),
+    log_diff = c(NA, diff(log_passengers)),
+    log_diff_seas = c(rep(NA, 12), diff(log_passengers, lag = 12))
+  )
+
+p4 = ggplot2::ggplot(
+  data = air, ggplot2::aes(x = date, y = log_diff_seas )
+  ) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point(ggplot2::aes(color = month), size = 1.5) +
+  ggplot2::scale_x_date(breaks = scales::pretty_breaks(n = 10)) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::pretty_breaks(n=12), labels = scales::comma
+  ) +
+  ggplot2::scale_color_brewer(palette = 'Paired') +
+  ggplot2::labs(
+    x = "",
+    y = "Log Diff and Seasonal Diff of Passengers",
+    title = "**<span style='color:#C3142D'>Monthly</span> U.S. Airline Passengers <span style='color:#C3142D'>Log Differenced + Seasonal Differenced</span>**",
+  ) +
+  ggplot2::guides(
+    color = ggplot2::guide_legend(title = "", ncol = 12),
+    fill = ggplot2::guide_legend(ncol = 12)
+  )
+
+
+ggplot2::ggsave(
+    filename = "../../figures/airpassengers_log_diff_seas.png",
+    plot = p4,
+    width = 4.25*16/9, height = 4.25, units = "in",
+    dpi = 300
+  )
+
+
+# Load saved images using magick
+img1 <- magick::image_read("../../figures/airpassengers_raw.png")
+img2 <- magick::image_read("../../figures/airpassengers_log.png")
+img3 <- magick::image_read("../../figures/airpassengers_log_diff.png")
+img4 <- magick::image_read("../../figures/airpassengers_log_diff_seas.png")
+
+# Duplicate frames to create a slower transition (5 seconds per image)
+img1_repeated <- rep(list(img1), 5) # Show for 5 frames
+img2_repeated <- rep(list(img2), 5) # Show for 5 frames
+img3_repeated <- rep(list(img3), 5) # Show for 5 frames
+img4_repeated <- rep(list(img4), 5) # Show for 5 frames
+
+# Combine images into animation
+animation <- magick::image_animate(
+  magick::image_join(c(img1_repeated, img2_repeated, img3_repeated, img4_repeated)),
+  fps = 1 # Show each frame for 1 second
+)
+
+magick::image_write(animation, "../../figures/air_passengers_animation_log_diff_seas.gif")
+
+knitr::include_graphics("../../figures/air_passengers_animation_log_diff_seas.gif", dpi = 300)
+
+```
+
+
+---
+
+## Order Does Not Matter: Seasonal and First Differences
+
+When both seasonal and first differences are applied $\dots$
+
+* it makes no difference which is done first---the result will be the same.
+
+
+If $y'_t = y_t - y_{t-12}$ denotes seasonally differenced series, then twice-differenced series is
+
+$$\begin{align}
+y^*_t &= y'_t - y'_{t-1} \\
+      &= (y_t - y_{t-12}) - (y_{t-1} - y_{t-13}) \\
+      &= y_t - y_{t-1} - y_{t-12} + y_{t-13}\: .
+\end{align}$$
+
+This is equivalent to the first-differenced series of the seasonally differenced series:
+$$\begin{align}
+y^*_t &= y'_t - y'_{t-1} \\
+      &= (y_t - y_{t-12}) - (y_{t-1} - y_{t-13}) \\
+      &= y_t - y_{t-1} - y_{t-12} + y_{t-13}\: .
+\end{align}$$
+
+
+---
+
+## Why Do Seasonal Differencing First?
+
+Hyndman & Athanasopoulos (2022) recommend applying seasonal differencing first because:  
+
+- If seasonal differencing alone makes the series stationary, we don not need further differencing.  
+
+- If we first apply regular differencing, the seasonal pattern may remain strong, meaning an extra seasonal differencing step will still be necessary.  
+
+- **Seasonal differencing is often more effective** at removing non-stationarity in data with **strong seasonality**.
+
+
+---
+class: inverse, center, middle
+
+# Unit Root Tests
+
+
+---
+
+## Unit Root Tests: ADF Test
+
+- **Unit root tests** are used to determine whether a time series is **stationary** or **non-stationary**.  
+
+- The most common unit root test is the **Augmented Dickey-Fuller (ADF) test**.  
+- The null hypothesis of the ADF test is that the time series has a **unit root** (i.e., it is **non-stationary**).
+
+- If the null hypothesis is rejected (e.g., if $p < 0.05$), the time series is considered **stationary**.
+
+- The ADF test is available in Python through the `statsmodels` library, and can be accessed using the `adfuller()` function as follows: 
+
+.center[
+`from statsmodels.tsa.stattools import adfuller`
+]
+
+**Note:** See [this link](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html) for more information on the `adfuller()` function.
+
+
+---
+
+## Unit Root Tests: KPSS Test
+
+- The **Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test** is another unit root test used to determine whether a time series is **stationary** or **non-stationary**.  
+
+- The null hypothesis of the KPSS test is that the time series is **stationary** around a **fixed level**.  
+
+- If the null hypothesis is rejected (e.g., if $p < 0.05$), the time series is considered **non-stationary**.  
+
+- The KPSS test is available in Python through the `statsmodels` library, and can be accessed using the `kpss()` function as follows:  
+
+.center[
+`from statsmodels.tsa.stattools import kpss`
+]
+
+**Note:** See [this link](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.kpss.html) for more information on the `kpss()` function.
+
+
+---
+
+## CoreForecast's Short Cut Based on R's `forecast` Package
+
+- In R, the `forecast` package provides a convenient function `ndiffs()` to determine the number of differences required to make a time series stationary.  
+- This function uses the **KPSS test** to determine the number of differences required to make the time series stationary.  
+
+- In [CoreForecast](https://nixtlaverse.nixtla.io/coreforecast/differences), we can use the `num_diffs(x: ndarray, max_d: int = 1) -> int` function to determine the number of differences required to make a time series stationary. Similarly, we can use `num_seas_diffs(x: ndarray, season_length: int, max_d: int = 1) → int` to determine the number of seasonal differences required to make a time series stationary.
+
+- **Reference:** [CoreForecast Documentation](https://nixtlaverse.nixtla.io/coreforecast/differences).
+
+
+---
+
+## Demo: Determining the Number of Differences Required
+
+Let us examine the [airpassengers](https://raw.githubusercontent.com/fmegahed/isa444/refs/heads/main/data/airpassengers.csv) dataset. Our goal is to make this dataset stationary by making the appropriate transformations.
+
+```{python, eval=FALSE, include=FALSE}
+
+from statsmodels.tsa.stattools import adfuller, kpss
+from coreforecast.differences import diff, num_diffs, num_seas_diffs
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import numpy as np
+
+passengers = ( 
+  pd.read_csv("../../data/airpassengers.csv")
+  .assign(
+    date = lambda x: pd.to_datetime(x.date),
+    month = lambda x: x.date.dt.month_name().str[:3],
+    log_passengers = lambda x: np.log(x.passengers),
+    log_seas_diff = lambda x: diff(x.log_passengers, 12),
+    diff_log_seas_diff = lambda x: diff(x.log_seas_diff, 1)
+    )
+  )
+
+kpss(passengers.log_passengers)
+adfuller(passengers.log_passengers)
+
+passengers.head(15)
+
+plt.figure(figsize=(12, 6))
+sns.lineplot(data=passengers, x='date', y='diff_log_seas_diff', color = 'darkgray')
+sns.scatterplot(data=passengers, x='date', y='diff_log_seas_diff', hue = 'month', palette = 'Paired')
+plt.legend(loc='upper left', ncol = 6)
+plt.show()
+
+num_diffs(passengers.log_seas_diff)
+num_seas_diffs(passengers.log_seas_diff, season_length = 12)
+
+```
+
+
+
+
+---
+
+class: inverse, center, middle
+
+# Recap
+
+---
+
+## Summary of Main Points
+
+By now, you should be able to do the following:  
+
+- Define a **stationary time series**.    
+
+- Understand how plotting techniques can help identify non-stationarity.  
+
+- Understand how we can **stabilize a non-stationary time series to achieve stationarity** (differencing to stabilize the mean, and log transformation to stabilize the variance).  
+
+- Understand how to use **unit root tests** to test for stationarity.
+
+---
+
+## 📝 Review and Clarification 📝
+
+1. **Class Notes**: Take some time to revisit your class notes for key insights and concepts.
+2. **Zoom Recording**: The recording of today's class will be made available on Canvas approximately 3-4 hours after the session ends.
+3. **Questions**: Please don't hesitate to ask for clarification on any topics discussed in class. It's crucial not to let questions accumulate. 
+

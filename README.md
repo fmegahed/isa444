@@ -22,6 +22,7 @@
 |    07        |    10/07     | Baseline Forecasts with Exponential Smoothing   | [13_exponential_smoothing.html](https://fmegahed.github.io/isa444/fall2025/class13/13_exponential_smoothing.html) | [13_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/13_exponential_smoothing.pdf) | [13_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/13_exponential_smoothing.pptx) |
 |            |    10/09     | Lab: Forecasting U.S. Gasoline Prices with Baseline Forecasts   | -- | -- | -- |
 |    08        |    10/14     | Stationarity, Differencing and Unit Root Tests   | [15_stationarity.html](https://fmegahed.github.io/isa444/fall2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) |
+|            |    10/16    | AR, MA, and ARMA Model Selection   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
 
 
 

@@ -24,6 +24,8 @@
 |    08        |    10/14     | Stationarity, Differencing and Unit Root Tests   | [15_stationarity.html](https://fmegahed.github.io/isa444/fall2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) |
 |            |    10/16    | AR, MA, and ARMA Model Selection   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
 
+|     09       |    10/21   | AR, MA, and ARMA Model Selection (Cont.)   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
+|            |    10/23    | ARIMA: Hands-On Walk Through  | -- | -- | -- |
 
 
 

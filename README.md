@@ -26,8 +26,8 @@
 
 |     09       |    10/21   | AR, MA, and ARMA Model Selection (Cont.)   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
 |            |    10/23    | ARIMA: Hands-On Walk Through  | -- | -- | -- |
-
-
+|     10       |    10/28    | Exam 02 | -- | -- | -- |
+|            |    10/30    | Exam 02 Review and Project Introduction | -- | -- | -- |
 
 
 

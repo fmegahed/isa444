@@ -1,8 +1,8 @@
 ---
-title: "ISA 444/544: Business Forecasting"
+title: "ISA 444: Business Forecasting"
 subtitle: "01: Introduction to Time Series Analysis and Forecasting"
-author: '<br>Fadel M. Megahed, PhD <br><br> Raymond E. Glos Professor in Business <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("twitter"), fill = "white")` @FadelMegahed](https://twitter.com/FadelMegahed) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
-date: "Fall 2025"
+author: '<br>Fadel M. Megahed, PhD <br><br>Raymond E. Gloss Professor in Business <br> Farmer School of Business<br> Miami University<br><br> [`r icons::icon_style(icons::fontawesome("linkedin"), fill = "white")` @Fadel Megahed](https://www.linkedin.com/in/fadel-megahed-289046b4) <br> [`r icons::icon_style(icons::fontawesome("github"), fill = "white")` fmegahed](https://github.com/fmegahed/) <br> [`r icons::icon_style(icons::fontawesome("paper-plane", style = "solid"), fill = "white")` fmegahed@miamioh.edu](mailto:fmegahed@miamioh.edu)<br> [`r icons::icon_style(icons::fontawesome("question"), fill = "white")` Automated Scheduler for Office Hours](https://calendly.com/fmegahed)<br><br>'
+date: "Spring 2026"
 output:
   xaringan::moon_reader:
     self_contained: true
@@ -61,23 +61,33 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "animate_css", "tachyons", "pan
 ```
 
 
+<script>
+function xrToggle(id){
+  var el = document.getElementById(id);
+  if(!el) return;
+  var isHidden = (el.style.display === "none" || el.style.display === "");
+  el.style.display = isHidden ? "block" : "none";
+}
+</script>
+
+
 # Learning Objectives for Today's Class
 
-- Describe the role of forecasting in business.  
+.font90[
+- **Explain why forecasting is both valuable and difficult**, using real-world business and policy examples.
 
-- Describe the key components of a **time-series** (**trend**, **seasonality**, **multiple seasonality**, and **cycles**).
+- **Recognize the fundamental limits of forecasting**, including uncertainty, randomness, and the difference between prediction and explanation.
 
-- Explain the concept of data-generating process (DGP)
+- **Distinguish forecasting problems from other analytics tasks**, such as regression and classification, and explain why time ordering matters.
 
-- Discuss limits of forecasting
+- **Identify what types of phenomena are forecastable and which are not**, based on the presence or absence of systematic structure.
 
-- Understand key forecasting terminology
+- **Describe the core components of a time series**, including trend, seasonality, and noise.
 
+- **Explain the concept of a data-generating process (DGP)** and why forecasting models aim to approximate processes rather than predict exact outcomes.
 
----
-class: inverse, center, middle
-
-# Course Motivation
+- **Interpret forecasts as distributions rather than single-point guesses**, and articulate why this perspective is essential for decision-making.
+]
 
 ---
 
@@ -157,13 +167,13 @@ Steve Ballmer, Former CEO of Microsoft in his infamous interview with [USA Today
 
 .font90[
 
-- Since Q1 2009, **Windows' Mobile OS's market share <= 2.5%**, and is now at 0.02% ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202403)).
+- Since Q1 2009, **Windows' Mobile OS's market share <= 2.5%**, and is now at 0.02% ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202601)).
 
-- **Apple's Mobile iOS market share > 19%**, and is now at **27.69%** ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202403)).
+- **Apple's Mobile iOS market share > 19%**, and is now at **29.12%** ([StatCounter](https://gs.statcounter.com/os-market-share/mobile/worldwide/#quarterly-200901-202601)).
 
-- Apple's **iPhone revenues** from 2007 to 2024 was **$2.037 trillion** (per [statista](https://www.statista.com/statistics/263402/apples-iphone-revenue-since-3rd-quarter-2007/)).
+- Apple's **iPhone revenues** from 2007 to 2025 was **$2.246 trillion** (per [statista](https://www.statista.com/statistics/263402/apples-iphone-revenue-since-3rd-quarter-2007/)).
 
-- Assuming Microsoft could have captured just **5%** of Apple's market revenue $\rightarrow$ **$102 billion**.
+- Assuming Microsoft could have captured just **5%** of Apple's market revenue $\rightarrow$ **$112 billion**.
 
 - This estimate **excludes app store and brand value**, which will make the missed opportunity even larger.
 ]
@@ -177,7 +187,7 @@ Steve Ballmer, Former CEO of Microsoft in his infamous interview with [USA Today
 import pandas as pd
 import matplotlib.pyplot as plt
 
-mshare = pd.read_csv("../../data/os_combined-ww-quarterly-20091-20243.csv")
+mshare = pd.read_csv("https://gs.statcounter.com/os-market-share/mobile/worldwide/chart.php?device=Mobile&device_hidden=mobile&statType_hidden=os_combined&region_hidden=ww&granularity=quarterly&statType=Operating%20System&region=Worldwide&fromInt=200901&toInt=202601&fromQuarterYear=2009-01&toQuarterYear=2026-01&csv=1")
 
 mshare['Date'] = pd.to_datetime(mshare['Date'])
 
@@ -191,7 +201,7 @@ ax = mshare.plot(
     color=['red', 'black', 'gray'],
     alpha=0.7,
     linewidth=2,
-    title="Mobile OS Market Share for Windows, iOS and Android (2009 - 2024)",
+    title="Mobile OS Market Share for Windows, iOS and Android (2009 - 2026)",
     xlabel="Date (Years)",
     ylabel="Market Share (%)",
     grid=True
@@ -210,7 +220,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2024.csv")
+apple_rev = pd.read_csv("../../data/statistic_id263402_apple-iphone-sales-revenue-2007-2025.csv")
 
 apple_rev['date'] = pd.to_datetime(apple_rev['date'])
 apple_rev['revenue'] = apple_rev['revenue'].str.replace(r',', '').astype(int)
@@ -225,7 +235,7 @@ ax = apple_rev.plot(
     color=['black'],
     alpha=0.7,
     linewidth=2,
-    title="Apple's iPhone Revenues (2007 - 2024)",
+    title="Apple's iPhone Revenues (2007 - 2025)",
     xlabel="Date",
     ylabel="Revenues in Millions",
     grid=True
@@ -303,20 +313,10 @@ plt.show()
 
 ---
 
-## Non-Tech Failures: Target's Overestimation
-
-.center[
-  <img src="../../figures/target.png" alt="Target Stock Plunges 21% on Weak Sales Ahead of Holiday Season" style="width: auto; height: 525px;" />
-]
-
-
-
----
-
 ## Why Do These Stories Matter?
 
 **(1) Forecasting Errors = Real Money Lost**  
-  - **Microsoft**: $102 billion in potential mobile phone revenues.
+  - **Microsoft**: $112 billion in potential mobile phone revenues.
   - **Target:** .bold[Overestimation] leads to unsold stock or overservicing (e.g., [Target's Stock Plunging by 21% due to lower profit and larger inventories](https://www.nytimes.com/2024/11/20/business/target-earnings-holiday-shopping.html?unlocked_article_code=1.sU4.BN7Y.DRvnq7F_52NO&smid=url-share)).
   - **Red Lobster**: $11M in losses due to .bold[underestimating] demand for their endless shrimp deal.
 
@@ -328,7 +328,10 @@ This class will teach you how to identify .black[.bold[trends]], .black[.bold[se
 
 
 
+---
+class: inverse, center, middle
 
+# Before we formalize forecasting, let’s try it
 
 
 ---
@@ -346,12 +349,11 @@ import numpy as np
 np.random.seed(2025)
 
 data = {
-    "date": pd.date_range(start="2022-01-01", end="2025-01-01", freq="MS"),
+    "date": pd.date_range(start="2023-01-01", end="2025-12-01", freq="MS"),
     "hotel_occupancy": [
         350, 375, 400, 425, 475, 500, 525, 500, 475, 450, 425, 400,
         375, 400, 425, 450, 500, 525, 550, 525, 500, 475, 450, 425,
         400, 425, 450, 475, 525, 550, 575, 550, 525, 500, 475, 450,
-        425
     ]
 }
 
@@ -376,7 +378,7 @@ ax = df_hotel.plot(
     color='darkgray',
     alpha=0.7,
     linewidth=2,
-    title="Simulated Monthly Room Occupancy Total (2022 - 2025)",
+    title="Simulated Monthly Room Occupancy Total (2023 - 2025)",
     xlabel="Date (Years)",
     ylabel="Hotel Occupancy (Rooms)",
     grid=True
@@ -430,30 +432,29 @@ yearly_avg = (
   df_hotel
   .groupby('year')['hotel_occupancy']
   .mean()
-  .drop(2025)
   )
   
 # compute the year-over-year growth rate
 yoy_growth = yearly_avg.pct_change().mean()
 
-# filter the data for 2024
-monthly_2024 = (
+# filter the data for 2025
+monthly_2025 = (
   df_hotel
-  .query("year == 2024")
+  .query("year == 2025")
   )
 
 # forecast the occupancy for 2025
 forecast = pd.DataFrame({
-    # generate the dates for 2025
-    "date": pd.date_range(start="2025-01-01", end="2025-12-01", freq="MS"),
-    # forecast the occupancy using the year-over-year growth rate for 2024
-    "forecasted_occupancy": monthly_2024['hotel_occupancy'] * (1 + yoy_growth)
+    # generate the dates for 2026
+    "date": pd.date_range(start="2026-01-01", end="2026-12-01", freq="MS"),
+    # forecast the occupancy using the year-over-year growth rate for 2026
+    "forecasted_occupancy": monthly_2025['hotel_occupancy'] * (1 + yoy_growth)
 })
 
 
 ```
 
-`r countdown(minutes = 8, seconds = 0, top = 0, font_size = "2em")`
+`r countdown(minutes = 7, seconds = 0, top = 0, font_size = "2em")`
 
 .panelset[
 
@@ -463,17 +464,17 @@ forecast = pd.DataFrame({
 
   - **Problem**: You are tasked with forecasting hotel occupancy for the next 11 months.  
 
-  - **Data**: You have access to the hotel's monthly room occupancy data from 2022 to January of 2025. Download the file [here]https://miamioh.instructure.com/courses/240425/files/36340085?module_item_id=6161473). 
+  - **Data**: You have access to the hotel's monthly room occupancy data from 2023 to 2025. Download the file from the [Week 01: Intro to Forecasting](https://miamioh.instructure.com/courses/250359/modules/924857) module. 
 
-  - **Task:** .black[.bold[Without the use of any AI tools]], create a forecast for the hotel's occupancy for the next 11 months. The forecast can be made in Excel, R, or Python. .black[.bold[Document the process and the rationale behind your forecasts.]] 
+  - **Task:** .black[.bold[Without the use of any AI tools]], create a forecast for the hotel's occupancy for the next 12 months. The forecast can be made in Excel, R, or Python. .black[.bold[Document the process and the rationale behind your forecasts.]] 
 
-  - **Non-graded Class Activity:** Input your logic for the 11-month forecast, and your quantitative forecast for **February 2025** in the next 2 tabs, respectively.
+  - **Non-graded Class Activity:** Briefly, input your logic for the 12-month forecast, and your quantitative forecast for **Janaury 2026** in the next 2 tabs, respectively.
 
 ]
 
 .panel[.panel-name[Your Logic]
 
-Use the editable text-box below to describe your logic for forecasting the hotel's occupancy for the next 11 months. Use bullet points to list your steps.
+Use the editable text-box below to describe your logic for forecasting the hotel's occupancy for the next 12 months. Use bullet points to list your steps.
 
 .can-edit.key-activity1_logic[
 
@@ -490,7 +491,7 @@ Use the editable text-box below to describe your logic for forecasting the hotel
 
 .panel[.panel-name[Your Sol]
 
-- Input your solution for **February 2025** by using the QR code below.
+- Input your solution for **January 2026** by using the QR code below.
 
 ```{r echo=FALSE, out.width='30%', fig.align='center'}
 knitr::include_graphics("../../figures/qr_code_activity01.png")
@@ -500,17 +501,35 @@ knitr::include_graphics("../../figures/qr_code_activity01.png")
 
 .panel[.panel-name[Class Results]
 
-<div style='position: relative; padding-bottom: 56.25%; padding-top: 35px; height: 0; overflow: hidden;'><iframe sandbox='allow-scripts allow-same-origin allow-presentation' allowfullscreen='true' allowtransparency='true' frameborder='0' height='285' src='https://www.mentimeter.com/app/presentation/alrufhucrqefifc266ma7ormoe6xntmw/embed' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' width='420'></iframe></div>
+<div style="position: relative; padding-bottom: 400px; height: 0; overflow: hidden;">
+  <iframe
+    sandbox="allow-scripts allow-same-origin allow-presentation"
+    allowfullscreen="true"
+    allowtransparency="true"
+    frameborder="0"
+    src="https://www.mentimeter.com/app/presentation/alrufhucrqefifc266ma7ormoe6xntmw/embed"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    width="800"
+    height="375"></iframe>
+</div>
 
 ]
 
 .panel[.panel-name[Fadel's Logic]
 
-<details>
-  <summary>Let us discuss how to approach such a problem. </summary>
+<button type="button"
+        onclick="xrToggle('hotel_logic')"
+        aria-controls="hotel_logic"
+        aria-expanded="false">
+  Let us discuss how to approach such a problem
+</button>
 
-  <img src="../../figures/sim_hotel_occupancy.png" alt="Fadel's Logic">
-</details>
+<div id="hotel_logic" style="display:none; margin-top:0.6rem;">
+  <img src="sim_hotel_occupancy.png"
+       alt="Fadel's Logic"
+       style="max-width: 100%; height: auto;">
+</div>
+
 
 .can-edit.key-activity1_viz[
 
@@ -522,6 +541,8 @@ knitr::include_graphics("../../figures/qr_code_activity01.png")
   
   - ...
 ]
+
+
 
 
 ]
@@ -545,18 +566,19 @@ df_hotel = (
 # plotting of the data hidden for brevity
 
 # compute the average occupancy per year and year-over-year growth rate
-yearly_avg = df_hotel.groupby('year')['hotel_occupancy'].mean().drop(2025)
+yearly_avg = df_hotel.groupby('year')['hotel_occupancy'].mean()
 yoy_growth = yearly_avg.pct_change().mean()
 
-monthly_2024 = df_hotel.query("year == 2024") # filter the data for 2024
+monthly_2025 = df_hotel.query("year == 2025") # filter the data for 2025
 
-# forecast the occupancy for 2025
+# forecast the occupancy for 2026
 forecast = pd.DataFrame({
-    "date": pd.date_range(start="2025-01-01", end="2025-12-01", freq="MS"),
-    "forecasted_occupancy": (monthly_2024['hotel_occupancy'] * (1 + yoy_growth) ).round(0).astype(int)
+    "date": pd.date_range(start="2026-01-01", end="2026-12-01", freq="MS"),
+    "forecasted_occupancy": (monthly_2025['hotel_occupancy'] * (1 + yoy_growth) ).round(0).astype(int)
 })
 
 forecast.iloc[0:2].reset_index(drop=True)
+
 
 </small> </details>
 ```
@@ -568,14 +590,538 @@ forecast.iloc[0:2].reset_index(drop=True)
 
 class: inverse, center, middle
 
-# Types of Data Over Time and the Components of a Time Series
+# Why was this Harder than it Looked?
 
 ---
+
+## Good Forecasts Result from a Rigorous Process
+
+<style>
+:root { --miami-red: #C3142D; }
+
+.process-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  margin-top:1.5rem;
+}
+
+.process-icon{
+  width:72px;
+  height:72px;
+  stroke:var(--miami-red);
+  fill:none;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  margin-bottom:0.5rem;
+}
+
+.step-number{
+  color:var(--miami-red);
+  font-size:1.5rem;
+  font-weight:700;
+  line-height:1.1;
+  margin-bottom:0.25rem;
+}
+
+.step-title{
+  height: 5rem;      /* increase to 4.2rem if you have long 3-line titles */
+  line-height: 1.15;
+  margin: 0;           /* remove any default spacing */
+  margin-top: 1rem;
+}
+
+
+.process-arrow{
+  font-size:2rem;
+  margin-top:1rem;
+  color:var(--miami-red);
+}
+
+.process-step p{
+  margin: 0;           /* important for alignment */
+  margin-top: 2rem;  /* optional, consistent gap under the title */
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+</style>
+
+<div class="process-row">
+
+  <div class="process-step">
+    <!-- 1) Magnifying glass with ? -->
+    <svg class="process-icon" viewBox="0 0 64 64" role="img" aria-label="Problem definition icon">
+      <circle cx="26" cy="26" r="16"></circle>
+      <line x1="38" y1="38" x2="54" y2="54"></line>
+      <path d="M23 22c0-3 2.4-5.4 5.4-5.4 2.8 0 5.1 2.1 5.4 4.8 0 3.5-3.2 3.8-4.7 5.6-.5.6-.7 1.2-.7 2.2"></path>
+      <circle cx="28.4" cy="36.8" r="1.2" fill="var(--miami-red)" stroke="var(--miami-red)"></circle>
+    </svg>
+
+    <div class="step-number">1.<br>Problem Definition</div>
+    <p>Understand how the forecasts will be used and who requires them.</p>
+  </div>
+
+  <div class="process-arrow" aria-hidden="true">→</div>
+
+  <div class="process-step">
+    <!-- 2) Document with plus + user -->
+    <svg class="process-icon" viewBox="0 0 64 64" role="img" aria-label="Gathering information icon">
+      <path d="M18 10h20l8 8v36H18z"></path>
+      <path d="M38 10v8h8"></path>
+      <line x1="24" y1="26" x2="38" y2="26"></line>
+      <line x1="24" y1="32" x2="38" y2="32"></line>
+      <line x1="28" y1="18" x2="28" y2="24"></line>
+      <line x1="25" y1="21" x2="31" y2="21"></line>
+      <circle cx="46" cy="34" r="4"></circle>
+      <path d="M38 48c1.8-5 14.2-5 16 0"></path>
+    </svg>
+
+    <div class="step-number">2. Gathering Information</div>
+    <p>Collect statistical data and the expertise of people involved.</p>
+  </div>
+
+  <div class="process-arrow" aria-hidden="true">→</div>
+
+  <div class="process-step">
+    <!-- 3) Chart with axes + line -->
+    <svg class="process-icon" viewBox="0 0 64 64" role="img" aria-label="Preliminary analysis icon">
+      <line x1="14" y1="50" x2="14" y2="14"></line>
+      <line x1="14" y1="50" x2="54" y2="50"></line>
+      <polyline points="18,44 28,36 36,40 46,28 54,22"></polyline>
+      <circle cx="28" cy="36" r="1.5" fill="var(--miami-red)" stroke="var(--miami-red)"></circle>
+      <circle cx="36" cy="40" r="1.5" fill="var(--miami-red)" stroke="var(--miami-red)"></circle>
+      <circle cx="46" cy="28" r="1.5" fill="var(--miami-red)" stroke="var(--miami-red)"></circle>
+    </svg>
+
+    <div class="step-number">3. Preliminary Analysis</div>
+    <p>Graph the data. Look for trends, seasonality, outliers, and patterns.</p>
+  </div>
+
+  <div class="process-arrow" aria-hidden="true">→</div>
+
+  <div class="process-step">
+    <!-- 4) Two simple gears (stylized) -->
+    <svg class="process-icon" viewBox="0 0 64 64" role="img" aria-label="Choosing and fitting models icon">
+      <!-- Gear 1 -->
+      <circle cx="26" cy="34" r="8"></circle>
+      <circle cx="26" cy="34" r="2.5"></circle>
+      <line x1="26" y1="22" x2="26" y2="18"></line>
+      <line x1="26" y1="50" x2="26" y2="46"></line>
+      <line x1="14" y1="34" x2="10" y2="34"></line>
+      <line x1="42" y1="34" x2="38" y2="34"></line>
+      <line x1="18" y1="26" x2="15" y2="23"></line>
+      <line x1="34" y1="42" x2="37" y2="45"></line>
+      <line x1="34" y1="26" x2="37" y2="23"></line>
+      <line x1="18" y1="42" x2="15" y2="45"></line>
+
+      <!-- Gear 2 -->
+      <circle cx="44" cy="20" r="6"></circle>
+      <circle cx="44" cy="20" r="2"></circle>
+      <line x1="44" y1="12" x2="44" y2="9"></line>
+      <line x1="44" y1="31" x2="44" y2="28"></line>
+      <line x1="36" y1="20" x2="33" y2="20"></line>
+      <line x1="55" y1="20" x2="52" y2="20"></line>
+      <line x1="39" y1="15" x2="37" y2="13"></line>
+      <line x1="49" y1="25" x2="51" y2="27"></line>
+      <line x1="49" y1="15" x2="51" y2="13"></line>
+      <line x1="39" y1="25" x2="37" y2="27"></line>
+    </svg>
+
+    <div class="step-number">4. Choosing and Fitting Models</div>
+    <p>Select and compare potential models based on the data and problem.</p>
+  </div>
+
+  <div class="process-arrow" aria-hidden="true">→</div>
+
+  <div class="process-step">
+    <!-- 5) Sync arrows with check -->
+    <svg class="process-icon" viewBox="0 0 64 64" role="img" aria-label="Using and evaluating the model icon">
+      <path d="M48 22a18 18 0 0 0-30-6"></path>
+      <polyline points="18,14 18,24 28,24"></polyline>
+      <path d="M16 42a18 18 0 0 0 30 6"></path>
+      <polyline points="46,50 46,40 36,40"></polyline>
+      <path d="M26 34l4 4 10-12"></path>
+    </svg>
+
+    <div class="step-number">5. Using and Evaluating the Model</div>
+    <p>Generate forecasts and evaluate their accuracy once actual data becomes available.</p>
+  </div>
+
+</div>
+
+
+---
+
+## Before You Touch Data, Ask the Right Questions
+
+### *A deeper look at Step 1: Problem Definition*
+
+
+**Example scenario:** Forecasting for a manufacturing company. 
+
+**Critical questions include:**
+
+- **Granularity:** Do we need forecasts for every single product line, or for groups of products?
+
+- **Aggregation:** Should we forecast for every sales outlet, for outlets grouped by region, or only for total sales?
+
+- **Frequency:** Are we working with weekly, monthly, or annual data?
+
+- **Horizon:**  Are forecasts needed for one month ahead, six months, or ten years?
+
+.black[.bold[Time spent with the people who will use the forecasts is essential.]]
+
+
+---
+
+## Choosing the Correct Forecasting Approach 
+
+**Key question:**  
+Do you have relevant numerical information about the past?
+
+- **No → Qualitative Forecasting**  
+  Uses structured, judgment-based approaches when historical data is unavailable or irrelevant  
+  (for example, a new product launch).
+
+- **Yes → Quantitative Forecasting**  
+  Appropriate when it is reasonable to assume that patterns from the past will persist into the future.
+  
+
+.black[.bold[The Correct Approach Depends on the Context of your Forecasting Problem.]] In this class, we will mainly focus on quantitative forecasting methods.
+
+---
+
+## How Will You Explain the Future?
+
+.bold[Quantitative forecasting uses two main approaches to model the future.]
+
+.pull-left[
+
+**Time Series Models**
+
+Uses past values of a variable to forecast its future values by extrapolating trends and seasonal patterns.
+
+.font80[
+$\text{Sales}_{t+1} = f(\text{Sales}_{t}, \ \text{Sales}_{t-1}, \ \text{Sales}_{t-2}, ...)$
+]
+
+![Schematic of a Forecast for Sales](../../figures/schematic_forecast.png)
+
+]
+
+
+.pull-right[
+
+**Explanatory Models**
+
+Uses other related variables to explain and predict the target variable. Typically, we also include the past values of the target.
+
+.font80[
+$\text{Sales}_{t+1} = f(\text{Sales}_{t}, \ \text{Price}_{t}, \ \text{Advertising}_{t}, \ \text{CompetitorPrice}_{t}, ...)$
+]
+
+![Schematic of an Explanatory Forecast](../../figures/explanatory_schematic.png)
+
+]
+
+---
+
+## The Heart of Forecasting: Data Observed Over Time
+
+```{r annotated_aus_beer, echo=FALSE, out.width="95%", fig.alt="Annotation of the Australian Quarterly Beer Production, showing seasonal patterns and a stable trend"}
+knitr::include_graphics("../../figures/annotated_aus_beer.png")
+```
+
+
+.center[.bold[Our goal is to choose a model that can capture these genuine patterns and project them into the future, while ignoring random fluctuations.]]
+
+
+---
+
+## The Best Forecast Is Not A number. It's A Distribution.
+
+**Core Idea:** The future is inherently uncertain, so we should think of it as a random variable that can take a range of possible values. The set of these values and their associated probabilities form the **forecast distribution**.
+
+```{r forecast_distribution, echo=FALSE, out.width="77%", fig.alt="Forecast distribution"}
+
+knitr::include_graphics("../../figures/forecast_distribution.png")
+
+```
+
+
+**Key Insight:** The further ahead we try to forecast, the wider the distribution becomes, reflecting the more uncertain we are.
+
+
+---
+
+## Embracing Uncertainty is the Mark of a Great Forecast[er]
+
+
+```{r forecast_with_uncertainty, echo=FALSE, out.width="85%", fig.alt="Forecast with prediction intervals"}
+
+knitr::include_graphics("../../figures/forecast_with_uncertainty.png")
+
+```
+
+
+.bold[This is clarity. Not just what we think will happen, but a rigorous explanation of how confident we are in that prediction.]
+
+
+---
+
+## Reality is Complicated!!
+
+.bold[The principles we have discussed are the tools needed to navigate the complexities of real-world forecasting challenges.]
+
+
+<style>
+:root { --miami-red: #C3142D; }
+
+.case-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:2rem;
+  margin-top:1.5rem;
+}
+
+.case-step{
+  flex: 1 1 0;
+  text-align:center;
+}
+
+.case-icon{
+  width:84px;
+  height:84px;
+  stroke:var(--miami-red);
+  fill:none;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  margin-bottom:0.75rem;
+}
+
+.case-title{
+  margin: 0;
+  margin-top: 0.25rem;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.case-subtitle{
+  margin: 0;
+  margin-top: 0.35rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.case-step p{
+  margin: 0;
+  margin-top: 0.9rem;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.case-divider{
+  width:1px;
+  background: rgba(195, 20, 45, 0.25);
+  align-self:stretch;
+  margin-top: 0.25rem;
+}
+</style>
+
+<div class="case-row">
+
+  <div class="case-step">
+    <!-- Tableware icon -->
+    <svg class="case-icon" viewBox="0 0 64 64" role="img" aria-label="Tableware icon">
+      <!-- plate -->
+      <circle cx="26" cy="28" r="16"></circle>
+      <circle cx="26" cy="28" r="10"></circle>
+      <!-- stacked napkins -->
+      <rect x="34" y="34" width="18" height="12" rx="2"></rect>
+      <rect x="30" y="38" width="18" height="12" rx="2"></rect>
+      <rect x="26" y="42" width="18" height="12" rx="2"></rect>
+    </svg>
+
+  <div class="case-title">Case 1</div>
+  <div class="case-subtitle">Tableware Manufacturer</div>
+  <p>Automating monthly forecasts for hundreds of items with diverse patterns (trends, seasonality, neither).</p>
+  </div>
+
+  <div class="case-divider" aria-hidden="true"></div>
+
+  <div class="case-step">
+    <!-- Rx bottle icon -->
+    <svg class="case-icon" viewBox="0 0 64 64" role="img" aria-label="Pharmaceutical icon">
+      <!-- bottle -->
+      <rect x="20" y="18" width="24" height="36" rx="4"></rect>
+      <rect x="18" y="10" width="28" height="10" rx="3"></rect>
+      <!-- label band -->
+      <line x1="20" y1="30" x2="44" y2="30"></line>
+      <line x1="20" y1="38" x2="44" y2="38"></line>
+      <!-- Rx -->
+      <path d="M26 46v-8h4c3 0 5 2 5 4s-2 4-5 4h-4"></path>
+      <line x1="35" y1="38" x2="40" y2="46"></line>
+      <line x1="40" y1="38" x2="35" y2="46"></line>
+    </svg>
+
+  <div class="case-title">Case 2</div>
+  <div class="case-subtitle">Pharmaceutical Benefits</div>
+  <p>Models must handle trends and seasonality, but also be robust to sudden structural breaks from drug subsidies and competitor entry.</p>
+  </div>
+
+  <div class="case-divider" aria-hidden="true"></div>
+
+  <div class="case-step">
+    <!-- Airplane icon -->
+    <svg class="case-icon" viewBox="0 0 64 64" role="img" aria-label="Airline icon">
+      <!-- fuselage -->
+      <path d="M10 34h20l22-10c3-1.4 6 0.6 6 3.6v0.8c0 2.2-1.3 4.2-3.3 5.1L30 44H10z"></path>
+      <!-- tail -->
+      <path d="M42 22l6-8h6l-4 10"></path>
+      <!-- wing -->
+      <path d="M24 34l-6-12h6l10 12"></path>
+      <!-- rear wing -->
+      <path d="M24 34l-8 10h6l10-10"></path>
+    </svg>
+
+  <div class="case-title">Case 3</div>
+  <div class="case-subtitle">Airline Passenger Traffic</div>
+  <p>Accounting for external shocks and irregular events like school holidays, major sporting events, pilot strikes, and competitor actions.</p>
+  </div>
+
+</div>
+
+
+
+---
+
+## From Chaos to Clarity: You have the Blueprint
+
+
+<style>
+:root { --miami-red: #C3142D; }
+
+.journey-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:2.5rem;
+  margin-top:1.5rem;
+}
+
+.journey-step{
+  flex:1 1 0;
+  position:relative;
+}
+
+.journey-title{
+  color:var(--miami-red);
+  font-size:2rem;
+  font-weight:700;
+  line-height:1.15;
+  margin:0;
+}
+
+.journey-text{
+  margin-top:0.75rem;
+  font-size:1.25rem;
+  line-height:1.35;
+}
+
+.chaos-box{
+  border-left:6px solid var(--miami-red);
+  padding-left:1rem;
+}
+
+.clarity-box{
+  border-left:6px dashed var(--miami-red);
+  padding-left:1rem;
+}
+
+.insight-box{
+  border-left:6px solid var(--miami-red);
+  padding-left:1rem;
+}
+
+.flow-arrow{
+  flex:0 0 80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:3rem;
+  color:var(--miami-red);
+}
+
+.footer-text{
+  margin-top:2.5rem;
+  text-align:center;
+  font-size:1.5rem;
+  font-weight:600;
+}
+</style>
+
+<div class="journey-row">
+
+  <div class="journey-step chaos-box">
+    <div class="journey-title">We started in Chaos…</div>
+    <div class="journey-text">
+      …with a history of high-stakes guesswork and
+      famous failed predictions.
+    </div>
+  </div>
+
+  <div class="flow-arrow" aria-hidden="true">➜</div>
+
+  <div class="journey-step clarity-box">
+    <div class="journey-title">We found a Path to Clarity…</div>
+    <div class="journey-text">
+      …by defining the problem, understanding predictability,
+      and following a rigorous 5-step process.
+    </div>
+  </div>
+
+  <div class="flow-arrow" aria-hidden="true">➜</div>
+
+  <div class="journey-step insight-box">
+    <div class="journey-title">The Destination is Insight.</div>
+    <div class="journey-text">
+      …moving beyond single numbers to think in forecast
+      distributions and embrace uncertainty.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-text">
+  You now have the foundational framework.<br>
+  You’re ready to build the models.
+</div>
+
+<br> 
+
+**So, with this conceptual understanding, let us get moving.**
+
+
+---
+class: inverse, center, middle
+
+# What Kind of Data are we Forecasting With? <br><br>(Types of Data Over Time and the Components of a Time Series)
+
+
+---
+
 
 ## Cross-Sectional Data
 
 **Cross-sectional data** captures multiple variables at a single point in time for each
-observation; e.g., .bold[all the variables within a given observation] in the [DoL's LCA Disclosure Data for 2025 Q3](https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/LCA_Disclosure_Data_FY2025_Q3.xlsx) were collected simultaneously.
+observation; e.g., .bold[all the variables within a given observation] in the [DoL's LCA Disclosure Data for 2025 Q4](https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/LCA_Disclosure_Data_FY2025_Q4.xlsx) were collected simultaneously.
 
 ```{python cross_sectional, echo=FALSE, results='asis'}
 import pandas as pd
@@ -797,7 +1343,7 @@ file_paths = [
     '../../data/Actual_Hourly_Loads_by_Class_2022_20230307.xlsx',
     '../../data/Actual_Hourly_Loads_by_Class_2023_20240507.xlsx',
     '../../data/Actual_Hourly_Loads_by_Class_2024.xlsx',
-    "../../data/Actual_Hourly_Loads_by_Class_2025_20250814.xlsx"
+    "../../data/Actual_Hourly_Loads_by_Class_2025.xlsx"
 ]
 
 # Function to process each file and extract relevant columns
@@ -851,7 +1397,7 @@ plt.ylabel('Average Total Usage')
 plt.grid(True)
 
 # Add a caption
-plt.figtext(0.5, 0.01, 'Data Source: Duke Energy, https://www.duke-energyohiocbp.com/Documents/LoadandOtherData.aspx, downloaded and charted on Aug 24, 2025 ', wrap=True, horizontalalignment='center', fontsize=8)
+plt.figtext(0.5, 0.01, 'Data Source: Duke Energy, https://www.duke-energyohiocbp.com/Documents/LoadandOtherData.aspx, downloaded and charted on Jan 20, 2026 ', wrap=True, horizontalalignment='center', fontsize=8)
 
 # Show the plots
 plt.tight_layout(pad = 4)
@@ -1034,7 +1580,7 @@ class: inverse, center, middle
 
 - **Rank** each scenario (in the next tab) from **easiest** (1) to **hardest** (6) to predict.   
 
-- **Submit** your ranking by clicking [here](https://www.menti.com/al4qbc8hg3jnm)
+- **Submit** your ranking by clicking [here](https://www.menti.com/al4qbc8hg3jn)
 
 ]
 
@@ -1056,66 +1602,23 @@ class: inverse, center, middle
 
 .panel[.panel-name[Class Results]
 
-<div style='position: relative; padding-bottom: 56.25%; padding-top: 35px; height: 0; overflow: hidden;'><iframe sandbox='allow-scripts allow-same-origin allow-presentation' allowfullscreen='true' allowtransparency='true' frameborder='0' height='285' src='https://www.mentimeter.com/app/presentation/alrufhucrqefifc266ma7ormoe6xntmw/embed' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' width='420'></iframe></div>
+
+
+<div style="position: relative; padding-bottom: 400px; height: 0; overflow: hidden;">
+  <iframe
+    sandbox="allow-scripts allow-same-origin allow-presentation"
+    allowfullscreen="true"
+    allowtransparency="true"
+    frameborder="0"
+    src="https://www.mentimeter.com/app/presentation/alrufhucrqefifc266ma7ormoe6xntmw/embed"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+    width="800"
+    height="375"></iframe>
+</div>
+
+
 
 ]
-
-]
-
----
-
-## Perfect (or Near-Perfect) Forecasts
-
-- **Examples**  
-  1. **Sunset Times**:  
-     - Based on precise astronomical calculations.  
-     - We can predict sunset to the exact minute, *tomorrow* or even a year from now.  
-  2. **Tides**:  
-     - Governed by well-modeled gravitational forces of the Moon and Sun.  
-     - Highly predictable for centuries into the future.
-
-- **Why So Certain?**  
-  - These phenomena follow *deterministic* (or near-deterministic) physical laws.  
-  - Little to no stochastic “noise” in the process.
-
----
-
-## Partially Predictable — Weather & Markets
-
-.pull-left[
-**Weather**    
-
-- *Tomorrow’s Forecast*: Quite accurate (initial conditions + physical models).  
-
-- *1 Year Ahead*: Chaos and changing conditions degrade accuracy significantly.  
-]
-
-.pull-right[
-**S&P 500**    
-
-- *Tomorrow’s Close*: Some short-term signals exist, but accuracy is limited (especially if you are attempting to beat the market; accuracy is relatively high if you just want to be in the ball park of the `adjusted close`).   
-
-- *1 Year Ahead*: Many unknown macro shocks, making precise forecasts very uncertain.
-]
-
-
----
-
-## Unpredictable — Lottery Numbers
-
-.pull-left[
-
-- **No Predictable Pattern**  
-  - Draws are *engineered* to be random.  
-  - No matter how much data you collect, you can’t *outpredict* chance.
-
-- **Why “Un-forecastable”?**  
-  - The Data-Generating Process (DGP) is effectively *pure noise* by design.  
-  - No structural or deterministic component to model.  
-]
-
-.pull-right[
-![](../../figures/lottery.png)
 
 ]
 
@@ -1131,137 +1634,7 @@ class: inverse, center, middle
 - **Key Lesson**  
   - *All* these processes have a DGP—some are more “knowable” than others.  
   - *Forecastability* depends on how much of that DGP is deterministic vs. random and how well we can model it.
-
-
----
-
-class: inverse, center, middle
-
-# Key Forecasting Terms
-
----
-
-## Forecasting
-
-
-- **Forecasting** is the process of using *historical data* and *patterns* to predict *future* values or events.  
-
-- The objective of most **time series analyses** is to provide forecasts of future values of the time series.
-
-
-```{python forecasting, echo=FALSE}
-import pandas as pd
-import datetime
-
-from statsforecast import StatsForecast
-from statsforecast.models import HoltWinters
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-import matplotlib.image as mpimg
-
-# Load the data
-df = (
-  pd.read_csv("../../data/01_hotel_occupancy.csv")
-  .rename(columns={"date": "ds", "hotel_occupancy": "y"})
-  .drop(columns=["month", "month_name"])
-  .assign(
-    ds = lambda x: pd.to_datetime(x['ds']),
-    unique_id = 'hotel_1'
-    )
-  )
   
-cut_off_date = pd.to_datetime("2025-01-01")
-train = df.query("ds < @cut_off_date")
-test = df.query("ds >= @cut_off_date")
-
-
-# fit a holtwinters model
-sf = StatsForecast(
-  models= [HoltWinters(season_length=12, error_type="A", alias="Add")],
-  freq='ME'
-  )
-
-# forecast
-Y_hat = sf.forecast(df=train, h=12, level=[95], fitted = True)
-
-plt.figure(figsize=(12, 4))
-
-# plot the forecast
-(
-  sf
-  .plot(train, Y_hat)
-  .savefig(
-    "../../figures/forecasting_example.png", dpi=600, bbox_inches='tight',
-    pad_inches=2.25
-    )
-  
-)
-```
-
-```{r forecasting_fig_show, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("../../figures/forecasting_example.png")
-```
-
-
----
-
-## Explanatory Forecasting
-
-- In addition to past data, **explanatory forecasting** uses *additional variables* to predict future values of the variable(s) of interest. To make the forecasts, we need to include both historical and future predictions for each of the explanatory variables. For example,   
-  - **Forecasting electricity demand** using weather forecasts, time of day, day of week, etc.
-  
-.pull-left[
-![](../../figures/cell-7-output-1.png)
-]
-
-.pull-right[
-![](../../figures/cell-12-output-1.png)
-]
-
-.footnote[
-<html>
-<hr>
-</html>
-
-**Image Sources:** Nixtla's demo for forecasting the remaining useful life of an engine using exogenous sensor data. See  [here](https://nixtlaverse.nixtla.io/neuralforecast/docs/getting-started/introduction.html) for more details. 
-]
-
-
----
-
-## Backtesting
-
-- Backtesting is the practice of **evaluating** a forecasting model by applying it to **historical data** and comparing the predictions with the actual outcomes.   
-- A way to see how the model **would have performed** in the past.  
-- Backtesting is the time series equivalent of a **train-test split** in ML; **not random though**.  
-
-```{r backtesting, echo=FALSE, out.width="60%", fig.align='center'}
-knitr::include_graphics("../../figures/ChainedWindows.gif")
-```
-
-.footnote[
-<html>
-<hr>
-</html>
-
-**Image Source:** [Chained Windows](https://github.com/Nixtla/statsforecast/blob/main/nbs/imgs/ChainedWindows.gif) from Nixtla's GitHub Repo for *statsforecast*. 
-]
-
-
----
-
-## Insample vs. Out-of-Sample Metrics
-
-- **In-Sample Metrics**:  
-  - Metrics calculated on the **same data** used to train the model.  
-  - Can be misleading, as the model has already seen this data.  
-  
-- **Out-of-Sample Metrics**:
-  - Metrics calculated on **data not seen by the model** during training (i.e., test/holdout/out-of-sample data).  
-  - More reliable indicators of how the model will perform on new data.
-
 
 ---
 
@@ -1271,48 +1644,105 @@ class: inverse, center, middle
 
 ---
 
-# Summary of Main Points
+## Summary of Main Points
 
 By now, you should be able to do the following:  
 
-- Describe the role of forecasting in business.  
+.font90[
+- **Explain why forecasting is both valuable and difficult**, using real-world business and policy examples.
 
-- Describe the key components of a **time-series** (**trend**, **seasonality**, **multiple seasonality**, and **cycles**).
+- **Recognize the fundamental limits of forecasting**, including uncertainty, randomness, and the difference between prediction and explanation.
 
-- Explain the concept of data-generating process (DGP)
+- **Distinguish forecasting problems from other analytics tasks**, such as regression and classification, and explain why time ordering matters.
 
-- Discuss limits of forecasting
+- **Identify what types of phenomena are forecastable and which are not**, based on the presence or absence of systematic structure.
 
-- Understand key forecasting terminology
+- **Describe the core components of a time series**, including trend, seasonality, and noise.
 
+- **Explain the concept of a data-generating process (DGP)** and why forecasting models aim to approximate processes rather than predict exact outcomes.
 
----
-
-# 📝 Review and Clarification 📝
-
-1. **Class Notes**: Take some time to revisit your class notes for key insights and concepts.
-2. **Zoom Recording**: The recording of today's class will be made available on Canvas approximately 3-4 hours after the session ends.
-3. **Questions**: Please don't hesitate to ask for clarification on any topics discussed in class. It's crucial not to let questions accumulate. 
+- **Interpret forecasts as distributions rather than single-point guesses**, and articulate why this perspective is essential for decision-making.
+]
 
 
 ---
 
-# 📖 Recommended Readings 📖
+## 📝 Review and Clarification 📝
+
+.pull-left[
+
+1. **Class Notes**: Take some time to revisit your class notes for key concepts.  
+
+2. **Zoom Recording**: Recording will be made available on Canvas ~ 3-4 hours after class.  
+
+3. **Reference Textbook**: [Chapter 01 of FPPPy](https://otexts.com/fpppy/nbs/01-intro.html) provides a comprehensive overview of the topics covered today.
+
+3. **Review AI Recaps:** Generated from the reference chapter and are meant to reinforce most of the same core ideas.
+
+4. **Questions**: Do not pile up. Ask in real-time, email or come to office hours.
+
+]
+
+.pull-right[
+
+**📺 Slide Deck Video (click to play)**
+<iframe width="100%" height="230"
+src="https://www.youtube.com/embed/lfPB8lH7UcE?si=uVeIfJhXq5idJqAi"
+title="NotebookLM Slide Deck Review"
+frameborder="0"
+allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
+
+<br>
+
+**🎧 Slide Deck Podcast (click to play)**
+<iframe src="https://drive.google.com/file/d/1bASIDZyUQBPa2uZDwB-fWqQJ0-qnQxgu/preview"
+width="100%" height="70"
+allow="clipboard-write">
+</iframe>
+
+]
 
 
-#### 🐍 Python Prep
+---
 
-- [Getting Started with Conda](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html)
+## 📖 Recommended Readings: 🐍 Python Prep 📖
+
+
+#### 🐍 Optional Python Prep
+
 - [Data Structures](https://docs.python.org/3/tutorial/datastructures.html)
 
-#### 🤖 LLM: Prep
-
-- [A Very Gentle Introduction to Large Language Models without the Hype](https://mark-riedl.medium.com/a-very-gentle-introduction-to-large-language-models-without-the-hype-5f67941fa59e)
-
 
 ---
 
-# 🎯 Assignment 🎯
+## 📖 Recommended Reading: LLM Prep 📖
 
-- Go over your notes and complete [Assignment 01](https://miamioh.instructure.com/courses/240425/quizzes/741952) on Canvas.  
+.pull-left[
+.font90[
+#### 🤖 LLM Prep (Scan for main concepts)
+- [A Very Gentle Introduction to Large Language Models without the Hype](https://mark-riedl.medium.com/a-very-gentle-introduction-to-large-language-models-without-the-hype-5f67941fa59e)
+]
+]
 
+.pull-right[
+.font90[
+**📺 Optional Video (LLM Prep)**  
+<iframe width="100%" height="260"
+src="https://www.youtube.com/embed/F5Gs6-C0DiA?autoplay=0"
+title="LLM Prep Review Video"
+frameborder="0"
+allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+allowfullscreen>
+</iframe>
+]
+]
+
+---
+
+## 🎯 Assignment 🎯
+
+- Complete [Assignment 01](https://miamioh.instructure.com/courses/250359/quizzes/776091) on Canvas to reinforce your understanding of today's class.
+
+<div style="background: #fefce8; border-left: 4px solid #facc15; padding: 18px 22px; margin-bottom: 25px; border-radius: 0 8px 8px 0;"><strong>Before You Begin:</strong><p style="margin: 10px 0 0 0; font-size: 14px; color: #451a03;">This assignment has two parts. Make sure you have reviewed the materials below.</p><ul style="margin: 12px 0 0 0; padding-left: 20px; font-size: 14px; color: #451a03;"><li><strong style="color: #000;">Recommended review for Class 01:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;"><li><strong style="color: #000;">Slide deck</strong></li><li><strong style="color: #000;">Reference Textbook:</strong> <a style="color: #2563eb; text-decoration: underline;" href="https://otexts.com/fpppy/nbs/01-intro.html" target="_blank" rel="noopener">Chapter 01 of FPPPy</a> provides a comprehensive overview of the topics covered today.</li><li><strong style="color: #000;">Zoom recording</strong></li></ul></li><li style="margin-top: 12px;"><strong style="color: #000;">NotebookLM GenAI Summaries</strong> <span style="font-size: 13px; color: #451a03;">(optional, but a different way to engage with the material)</span>:<ul style="margin: 8px 0 0 0; padding-left: 20px;"><li><a style="color: #2563eb; text-decoration: underline;" href="https://youtu.be/lfPB8lH7UcE" target="_blank" rel="noopener">01_BI__Data_to_Decisions.mp4</a> <span style="font-size: 13px; color: #451a03;">(7-minute video highlight)</span></li><li><a style="color: #2563eb; text-decoration: underline;" href="https://drive.google.com/open?id=1bASIDZyUQBPa2uZDwB-fWqQJ0-qnQxgu&usp=drive_fs" target="_blank" rel="noopener">01_From_Sheep_Liver_to_Forecasting_Algorithms.m4a</a> <span style="font-size: 13px; color: #451a03;">(~15-minute explanation in a podcast fashion; you may want to download first)</span></li></ul></li><li style="margin-top: 14px;"><strong style="color: #000;">Recommended Warmup for Class 02:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;"><li><strong>Python Data Structures:</strong> <a style="color: #2563eb; text-decoration: underline;" href="https://docs.python.org/3/tutorial/datastructures.html" target="_blank" rel="noopener">https://docs.python.org/3/tutorial/datastructures.html</a> <span style="font-size: 13px; color: #451a03;">(a bit dry, but I recommend scanning it)</span></li><li><strong>LLM Usage Prep:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;"><li>Scanning the <a style="color: #2563eb; text-decoration: underline;" href="https://mark-riedl.medium.com/a-very-gentle-introduction-to-large-language-models-without-the-hype-5f67941fa59e" target="_blank" rel="noopener">A Very Gentle Introduction to Large Language Models without the Hype</a> Medium article</li><li>Watching its <strong>10-minute</strong> NotebookLM GenAI Video Summary that I created based on it: <a style="color: #2563eb; text-decoration: underline;" href="https://youtu.be/F5Gs6-C0DiA" target="_blank" rel="noopener">https://youtu.be/F5Gs6-C0DiA</a></li></ul></li></ul></li></ul></div>

@@ -3,31 +3,40 @@
  
 ## Schedule
 
-*The raw .Rmds for all presentations can be found under the folder titled lectures. The schedule below has links to the associated GitHub Pages where the generated HTML slides are hosted.*
+*This schedule follows [Forecasting: Principles and Practice (Python)](https://otexts.com/fpppy/) by Hyndman and Athanasopoulos.*
 
-| Week          | Date        | Topic                                  | Slides (Hosted Page) | Slides (PDF) | Slides (PPTX)
-| :---:        |    :----:   |          :---                           | :---                 | :---         | :--  |
-| 01           |    08/26     | Introduction to Time Series Analysis and Forecasting       | [01_intro.html](https://fmegahed.github.io/isa444/fall2025/class01/01_intro.html) | [01_intro.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/01_intro.pdf) | [01_intro.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/01_intro.pptx) |
-|            |    08/28     | Introduction to Python    | [02_basics.html](https://fmegahed.github.io/isa444/fall2025/class02/02_basics.html) | [02_basics.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/02_basics.pdf) | [02_basics.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/02_basics.pptx) |
-| 02           |    09/02     | Visualizing a Single Time Series       | [03_visualizing_single_series.html](https://fmegahed.github.io/isa444/fall2025/class03/03_visualizing_single_series.html) | [03_visualizing_single_series.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/03_visualizing_single_series.pdf) | [03_visualizing_single_series.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/03_visualizing_single_series.pptx) |
-|            |    09/04     | Lags and the ACF Plot      | [04_lags_and_acf.html](https://fmegahed.github.io/isa444/fall2025/class04/04_lags_and_acf.html) | [04_lags_and_acf.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/04_lags_and_acf.pdf) | [04_lags_and_acf.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/04_lags_and_acf.pptx) |
-|    03        |    09/09     | Review and Catch Up     | -- | -- | -- |
-|            |    09/11     | Centered Moving Average and Decomposition  | [06_cma_and_decomposition.html](https://fmegahed.github.io/isa444/fall2025/class06/06_cma_and_decomposition.html) | [06_cma_and_decomposition.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/06_cma_and_decomposition.pdf) | [06_cma_and_decomposition.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/06_cma_and_decomposition.pptx) |
-|    04        |    09/16     | Catch Up and Many TS    | [07_many_ts.html](https://fmegahed.github.io/isa444/fall2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
-|           |    09/18     | Many TS (Cont.)    | [07_many_ts.html](https://fmegahed.github.io/isa444/fall2025/class07/07_many_ts.html) | [07_many_ts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/07_many_ts.pdf) | [07_many_ts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/07_many_ts.pptx) |
-|    05        |    09/23    | Exam 01   | -- | -- | -- |
-|            |    09/25     |Exam 01 Recap and Review   | -- | -- | -- |
-|    06        |    09/30     | Forecasting Environment, Windows and Baseline Forecasts    | [11_forecasting_env_baseline_forecasts.html](https://fmegahed.github.io/isa444/fall2025/class11/11_forecasting_env_baseline_forecasts.html) | [11_forecasting_env_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/11_forecasting_env_baseline_forecasts.pdf) | [11_forecasting_env_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/11_forecasting_env_baseline_forecasts.pptx) |
-|            |    10/02     | Forecasting Environment, Windows and Baseline Forecasts (Cont.)    | [11_forecasting_env_baseline_forecasts.html](https://fmegahed.github.io/isa444/fall2025/class11/11_forecasting_env_baseline_forecasts.html) | [11_forecasting_env_baseline_forecasts.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/11_forecasting_env_baseline_forecasts.pdf) | [11_forecasting_env_baseline_forecasts.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/11_forecasting_env_baseline_forecasts.pptx) |
-|    07        |    10/07     | Baseline Forecasts with Exponential Smoothing   | [13_exponential_smoothing.html](https://fmegahed.github.io/isa444/fall2025/class13/13_exponential_smoothing.html) | [13_exponential_smoothing.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/13_exponential_smoothing.pdf) | [13_exponential_smoothing.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/13_exponential_smoothing.pptx) |
-|            |    10/09     | Lab: Forecasting U.S. Gasoline Prices with Baseline Forecasts   | -- | -- | -- |
-|    08        |    10/14     | Stationarity, Differencing and Unit Root Tests   | [15_stationarity.html](https://fmegahed.github.io/isa444/fall2025/class15/15_stationarity.html) | [15_stationarity.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/15_stationarity.pdf) | [15_stationarity.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/15_stationarity.pptx) |
-|            |    10/16    | AR, MA, and ARMA Model Selection   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
-
-|     09       |    10/21   | AR, MA, and ARMA Model Selection (Cont.)   | [16_pacf_arma.html](https://fmegahed.github.io/isa444/fall2025/class16/16_pacf_arma.html) | [16_pacf_arma.pdf](https://github.com/fmegahed/isa444/raw/main/pdfs/16_pacf_arma.pdf) | [16_pacf_arma.pptx](https://github.com/fmegahed/isa444/raw/main/ppts/16_pacf_arma.pptx) |
-|            |    10/23    | ARIMA: Hands-On Walk Through  | -- | -- | -- |
-|     10       |    10/28    | Exam 02 | -- | -- | -- |
-|            |    10/30    | Exam 02 Review and Project Introduction | -- | -- | -- |
+| Week | Date | # | Topic | FPPPy Sections |
+|-----:|------|--:|-------|----------------|
+| 1 | 1/26 | 1 | Introduction to Forecasting | 1.1-1.7 |
+|   | 1/28 | 2 | Python Setup & Colab Basics | -- |
+| 2 | 2/2 | 3 | Time Plots, Patterns, and Seasonal Plots | 2.2-2.5 |
+|   | 2/4 | 4 | Scatterplots, Lag Plots, ACF, and White Noise | 2.6-2.9 |
+| 3 | 2/9 | 5 | Transformations and Components | 3.1-3.2 |
+|   | 2/11 | 6 | Moving Averages, Classical Decomposition, and STL | 3.3-3.4, 3.6 |
+| 4 | 2/16 | 7 | Time-Series Features | 4.1-4.4 |
+|   | 2/18 | 8 | Forecasting Workflow & Simple Methods | 5.1-5.2 |
+| 5 | 2/23 | 9 | Residuals, Diagnostics, and Prediction Intervals | 5.3-5.5 |
+|   | 2/25 | 10 | Accuracy Metrics & Cross-Validation + Lab/Review | 5.8, 5.10 |
+| 6 | 3/2 | 11 | **Exam 01** | Covers Ch 1-5 |
+|   | 3/4 | 12 | Exam 01 Discussion + Simple Exponential Smoothing | 8.1 |
+| 7 | 3/9 | 13 | Exponential Smoothing: Trend and Seasonality | 8.2-8.3 |
+|   | 3/11 | 14 | ETS Taxonomy and Model Selection | 8.4, 8.6-8.7 |
+| 8 | 3/16 | 15 | Stationarity and Differencing | 9.1 |
+|   | 3/18 | 16 | Backshift Notation, AR, and MA Models | 9.2-9.4 |
+| 9 | 3/23 | -- | No Class: Spring Break | -- |
+|   | 3/25 | -- | No Class: Spring Break | -- |
+| 10 | 3/30 | 17 | Non-seasonal ARIMA & Estimation | 9.5-9.6 |
+|    | 4/1 | 18 | ARIMA in StatsForecast & Forecasting | 9.7-9.8 |
+| 11 | 4/6 | 19 | Seasonal ARIMA & ARIMA vs ETS | 9.9-9.10 |
+|    | 4/8 | 20 | Dynamic Regression Models | 10.1-10.3 |
+| 12 | 4/13 | 21 | Hands-on Lab/Review for Exam 02 | -- |
+|    | 4/15 | 22 | **Exam 02** | Covers Ch 1-10 |
+| 13 | 4/20 | 23 | Exam 02 Discussion + Duke Energy: Data & Feature Engineering | 11.1 |
+|    | 4/22 | 24 | Duke Energy: Baseline Forecasting Methods | 11.2 |
+| 14 | 4/27 | 25 | Duke Energy: ML Forecasting Methods | 11.3 |
+|    | 4/29 | 26 | Duke Energy: Foundation Forecasting Models | 11.4 |
+| 15 | 5/4 | 27 | Project Work | -- |
+|    | 5/6 | 28 | Project Work | -- |
 
 
 
@@ -37,6 +46,8 @@
 * The Spring 2023 version of the course can be accessed by clicking on the tag titled [spring2023](https://github.com/fmegahed/isa444/releases/tag/spring2023).
 * The Spring 2024 version of the course can be accessed by clicking on the tag titled [spring2024](https://github.com/fmegahed/isa444/releases/tag/spring2024).
 * The Spring 2025 version of the course can be accessed by clicking on the tag titled [spring2025](https://github.com/fmegahed/isa444/releases/tag/spring2025)
+* The Fall 2025 version of the course can be accessed by clicking on the tag titled [fall2025](https://github.com/fmegahed/isa444/releases/tag/fall2025)
+
  
 ## Notes
  * I did my best to add references whenever possible. If I missed a reference, please let me know.
